@@ -1,0 +1,21 @@
+<project>
+	<property name="factory.dir" location="../../../Factory"/> 
+	
+	<import file="${factory.dir}/build-import.xml"/>
+
+	<property name="stdrules.plugin.dir" location="../../../Java/Rules/net.sf.prenzl.stdrules"/> 
+
+	<target name="build" depends="clean">
+		<gcc.compile component="StdRules"/>
+		<gcc.link.rule component="StdRules" output="stdrules.dll"/>
+
+		<copy todir="${stdrules.plugin.dir}" verbose="true" overwrite="true">
+			<fileset dir="${dist.dir}" includes="*.dll"/>
+		</copy>
+	</target>
+
+	<target name="clean">
+		<clean/>
+	</target>
+	
+</project>
