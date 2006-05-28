@@ -15,7 +15,7 @@
 			<exec executable="${gcc.bin.dir}/g++.exe" dir="." failonerror="true">
 				<env key="Path" path="${gcc.bin.dir}"/>
 				<arg line="-D_REENTRANT -D_GNU_SOURCE -D__int64=&quot;long long&quot; -O3 -Wall -c -fmessage-length=0  -mno-cygwin"/>
-				<arg line="-I..\include\jdk-1.4.1\win32 -I..\include\jdk-1.4.1 -I..\.."/>
+				<arg line="-I${factory.dir}\include\jdk-1.4.1\win32 -I${factory.dir}\include\jdk-1.4.1 -I..\.."/>
 				<arg line="-o${obj.dir}/@{component}.o ${src.dir}/@{component}.cpp"/>
 			</exec>
 		</sequential>
