@@ -1,0 +1,30 @@
+<project>
+	<property name="factory.dir" location="../../../Factory"/> 
+	<property name="prenzl.plugin.dir" location="../../../Java/PrenzlRCP/plugins/net.sf.prenzl"/> 
+	
+	<import file="${factory.dir}/build-import.xml"/>
+	
+	<target name="build" depends="clean">
+		<gcc.compile component="JNIComputation"/>
+
+		<mkdir dir="${dist.dir}"/>
+		<mkdir dir="${prenzl.lib.dir}"/>
+		<echo message="Link JNIComputation to prenzl.dll..."/>
+		<exec executable="${gcc.bin.dir}/g++.exe" dir=".">
+			<env key="Path" path="${gcc.bin.dir}"/>
+			<arg line="-mno-cygwin -Wl,--add-stdcall-alias -shared"/>
+			<arg line="-Wl,--out-implib=${prenzl.lib.dir}/libprenzl.a"/>
+			<arg line="-o${dist.dir}/prenzl.dll ${obj.dir}/JNIComputation.o"/>
+		</exec>
+		
+		<copy todir="${prenzl.plugin.dir}" verbose="true" overwrite="true">
+			<fileset dir="${dist.dir}" includes="*.dll"/>
+		</copy>
+	</target>
+	
+	<target name="clean">
+		<clean/>
+		<delete dir="${prenzl.lib.dir}"/>
+	</target>
+	
+</project>
