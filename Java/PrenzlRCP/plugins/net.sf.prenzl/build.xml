@@ -1,0 +1,14 @@
+<project>
+	<property name="dist.dir" location="dist"/>
+	<property name="build.dir" location="dist"/>
+	
+	<property name="prenzl.java.src" location="src"/>
+	<property name="prenzl.build.dir" location="${build.dir}/net.sf.prenzl"/>
+	
+	<target name="prenzl.build">
+		<mkdir dir="${prenzl.build.dir}"/>
+		<javac destdir="${prenzl.build.dir}">
+			<fileset dir="${prenzl.java.src}" includes="**/*.java"/>
+		</javac>
+	</target>
+</project>

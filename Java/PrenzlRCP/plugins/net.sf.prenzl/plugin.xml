@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="library" name="Prenzl library" schema="schema/library.exsd"/>
+
+   <extension
+         id="PrenzlRCP"
+         name="Prenzl"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="net.sf.prenzl.PrenzlRCP">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="Run"
+            class="net.sf.prenzl.Perspective"
+            id="net.sf.prenzl.runperspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="Prenzl"
+            class="net.sf.prenzl.ui.views.Display2dView"
+            id="net.sf.prenzl.display2dView"
+            name="Display2dView">
+      </view>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="net.sf.prenzl.PrenzlRCP"
+            name="Prenzl">
+         <property
+               name="windowImages"
+               value="images/logo-16.gif"/>
+         <property
+               name="aboutText"
+               value="Prenzl!!&#x0A;&#x0A;Home page: http://prenzl.sourceforge.net&#x0A;Dev page: http://sourceforge.net/projects/prenzl&#x0A;&#x0A;LGPL license&#x0A;(c) 2006 Mathieu Baudier and Olivier Capillon"/>
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionDefinitions">
+      <actionDefinition
+            id="net.sf.prenzl.run"
+            name="Run/Stop"/>
+      <actionDefinition
+            id="net.sf.prenzl.previousStep"
+            name="Previous Step"/>
+   </extension>
+
+</plugin>
