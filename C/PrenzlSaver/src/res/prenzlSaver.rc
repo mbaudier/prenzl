@@ -1,0 +1,317 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Anglais (États-Unis) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+DLG_SCRNSAVECONFIGURE DIALOGEX 0, 0, 237, 281
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "PrenzlSaver"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    RTEXT           "Slow",IDC_STATIC,15,140,16,8
+    CONTROL         "Slider1",IDC_SPEED,"msctls_trackbar32",TBS_BOTH | 
+                    TBS_NOTICKS | WS_TABSTOP,35,139,171,12
+    RTEXT           "=",IDC_STATIC,101,154,10,8
+    EDITTEXT        IDC_DELAY,117,152,44,12,ES_CENTER | ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    DEFPUSHBUTTON   "&OK",IDOK,123,242,50,14
+    PUSHBUTTON      "&Cancel",IDCANCEL,180,242,50,14
+    RTEXT           "Vertical Divisions:",IDC_STATIC,33,62,56,8
+    RTEXT           "Horizontal Divisions:",IDC_STATIC,33,76,64,8
+    COMBOBOX        IDC_RULECOMBO,22,15,108,74,CBS_DROPDOWNLIST | 
+                    CBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_VDIVCOMBO,106,60,91,74,CBS_DROPDOWNLIST | 
+                    CBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_HDIVCOMBO,106,74,91,74,CBS_DROPDOWNLIST | 
+                    CBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Properties",IDC_PROPBUTTON,158,14,50,14
+    RTEXT           "Fast",IDC_STATIC,207,140,14,8
+    RTEXT           "ms delay",IDC_STATIC,165,154,29,8
+    LTEXT           "PrenzlSaver 1.0 - Copyright 2006 - Mathieu Baudier/Olivier Capillon",
+                    IDC_STATIC,10,264,220,10
+    COMBOBOX        IDC_POSITION_COMBO,83,187,91,74,CBS_DROPDOWNLIST | 
+                    CBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    RTEXT           "Position:",IDC_STATIC,15,190,28,8
+    CONTROL         "Restart after",IDC_RESTART_CHECK,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,18,204,55,10
+    EDITTEXT        IDC_RESTART_NB,83,202,57,14,ES_RIGHT | ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    LTEXT           "iterations",IDC_STATIC,146,205,29,8
+    CONTROL         "Put last image in clipboard",IDC_CLIPBOARD_CHECK,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,18,219,98,10
+    CONTROL         "Use Screen as Input",IDC_SCREEN_RADIO,"Button",
+                    BS_AUTORADIOBUTTON,21,49,81,10
+    CONTROL         "Use Pictures from Directory as Input",IDC_DIR_RADIO,
+                    "Button",BS_AUTORADIOBUTTON,21,90,129,10
+    EDITTEXT        IDC_DIRECTORY,34,103,148,14,ES_AUTOHSCROLL
+    GROUPBOX        "Rule",IDC_STATIC,7,4,223,31
+    GROUPBOX        "Speed",IDC_STATIC,7,128,223,44
+    GROUPBOX        "Input",IDC_STATIC,7,38,223,86
+    GROUPBOX        "Other",IDC_STATIC,7,176,223,58
+    PUSHBUTTON      "...",IDC_BROWSEDIRBUTTON,186,103,31,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    DLG_SCRNSAVECONFIGURE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 230
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 274
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_MATRIX              ICON                    "prenzlSaver.ico"
+#endif    // Anglais (États-Unis) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Français (France) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FRA)
+#ifdef _WIN32
+LANGUAGE LANG_FRENCH, SUBLANG_FRENCH
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_PHASECHEULOUDIALOG DIALOGEX 0, 0, 178, 126
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "Phase Cheulou"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,65,105,50,14
+    PUSHBUTTON      "Annuler",IDCANCEL,121,105,50,14
+    EDITTEXT        IDC_PHASECHEULOU_coeffBB,43,48,40,14,ES_AUTOHSCROLL,
+                    WS_EX_RIGHT
+    EDITTEXT        IDC_PHASECHEULOU_coeffGB,43,64,40,14,ES_AUTOHSCROLL,
+                    WS_EX_RIGHT
+    EDITTEXT        IDC_PHASECHEULOU_coeffRB,43,80,40,14,ES_AUTOHSCROLL,
+                    WS_EX_RIGHT
+    EDITTEXT        IDC_PHASECHEULOU_coeffBG,85,48,40,14,ES_AUTOHSCROLL,
+                    WS_EX_RIGHT
+    EDITTEXT        IDC_PHASECHEULOU_coeffGG,85,64,40,14,ES_AUTOHSCROLL,
+                    WS_EX_RIGHT
+    EDITTEXT        IDC_PHASECHEULOU_coeffRG,85,80,40,14,ES_AUTOHSCROLL,
+                    WS_EX_RIGHT
+    EDITTEXT        IDC_PHASECHEULOU_coeffBR,127,48,40,14,ES_AUTOHSCROLL,
+                    WS_EX_RIGHT
+    EDITTEXT        IDC_PHASECHEULOU_coeffGR,127,64,40,14,ES_AUTOHSCROLL,
+                    WS_EX_RIGHT
+    EDITTEXT        IDC_PHASECHEULOU_coeffRR,127,80,40,14,ES_AUTOHSCROLL,
+                    WS_EX_RIGHT
+    COMBOBOX        IDC_PHASECHEULOU_PROFIL,39,7,132,74,CBS_DROPDOWNLIST | 
+                    CBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Profiles:",IDC_STATIC,7,10,27,8
+    LTEXT           "blue",IDC_STATIC,12,53,14,8
+    LTEXT           "green",IDC_STATIC,12,69,20,8
+    LTEXT           "red",IDC_STATIC,12,84,12,8
+    LTEXT           "blue",IDC_STATIC,56,37,14,8
+    LTEXT           "green",IDC_STATIC,97,37,20,8
+    LTEXT           "red",IDC_STATIC,142,37,12,8
+    GROUPBOX        "Delta",IDC_STATIC,7,27,30,71
+    GROUPBOX        "Sensibility to",IDC_STATIC,39,27,132,71
+END
+
+IDD_LSDDIALOG DIALOGEX 0, 0, 240, 99
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "LSD"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,127,78,50,14
+    PUSHBUTTON      "Annuler",IDCANCEL,183,78,50,14
+    EDITTEXT        IDC_DELTA_BLUE,182,21,40,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    EDITTEXT        IDC_DELTA_GREEN,182,37,40,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    EDITTEXT        IDC_DELTA_RED,182,53,40,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "blue",IDC_STATIC,13,24,14,8
+    LTEXT           "green",IDC_STATIC,13,40,20,8
+    LTEXT           "red",IDC_STATIC,13,56,12,8
+    COMBOBOX        IDC_BLUE_DX,50,22,48,57,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_BLUE_DY,114,22,48,57,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_GREEN_DX,50,38,48,57,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_GREEN_DY,114,38,48,57,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_RED_DX,50,54,48,57,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_RED_DY,114,54,48,57,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    GROUPBOX        "dx",IDC_STATIC,43,10,62,62
+    GROUPBOX        "dy",IDC_STATIC,107,10,62,62
+    GROUPBOX        "delta",IDC_STATIC,171,10,62,62
+    GROUPBOX        "colors",IDC_STATIC,7,10,34,62
+END
+
+IDD_STAELDIALOG DIALOGEX 0, 0, 166, 90
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "Nicolas de Stael"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,46,69,50,14
+    PUSHBUTTON      "Annuler",IDCANCEL,109,69,50,14
+    COMBOBOX        IDC_VOLATILITY_COMBO,97,12,37,97,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_SIGNBIT_COMBO,97,28,37,92,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_DIRBIT_COMBO,97,44,37,101,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Volatility",IDC_STATIC,36,15,28,8
+    LTEXT           "Sign bit",IDC_STATIC,36,31,24,8
+    LTEXT           "Direction bit",IDC_STATIC,36,46,42,8
+END
+
+IDD_CHANNELPROPDIALOG DIALOGEX 0, 0, 186, 123
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Channel Propagation"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,73,102,50,14
+    PUSHBUTTON      "Annuler",IDCANCEL,129,102,50,14
+    LTEXT           "blue",IDC_STATIC,40,20,14,8
+    GROUPBOX        "colors",IDC_STATIC,30,8,38,60
+    GROUPBOX        "propagation coeffs",IDC_STATIC,72,8,84,61
+    EDITTEXT        IDC_COEFF_B,93,18,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_COEFF_G,93,34,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_COEFF_R,93,49,40,14,ES_AUTOHSCROLL
+    LTEXT           "green",IDC_STATIC,39,36,20,8
+    LTEXT           "red",IDC_STATIC,40,52,12,8
+    EDITTEXT        IDC_COLOR_INTERACTION,94,77,40,14,ES_AUTOHSCROLL
+    LTEXT           "color interaction",IDC_STATIC,33,80,52,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_PHASECHEULOUDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 171
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 119
+    END
+
+    IDD_LSDDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 233
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 92
+    END
+
+    IDD_STAELDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 159
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 83
+    END
+
+    IDD_CHANNELPROPDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 116
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Français (France) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

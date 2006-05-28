@@ -1,0 +1,27 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PrenzlSaver", "prenzlSaver.vcproj", "{5AC50F0D-A0AA-4318-9F30-C6BED832808E}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "installer", "installer\installer.vdproj", "{150BFC8D-5A04-41AC-A2AE-EB020EC4A866}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{5AC50F0D-A0AA-4318-9F30-C6BED832808E}.Debug.ActiveCfg = Debug|Win32
+		{5AC50F0D-A0AA-4318-9F30-C6BED832808E}.Debug.Build.0 = Debug|Win32
+		{5AC50F0D-A0AA-4318-9F30-C6BED832808E}.Release.ActiveCfg = Release|Win32
+		{5AC50F0D-A0AA-4318-9F30-C6BED832808E}.Release.Build.0 = Release|Win32
+		{150BFC8D-5A04-41AC-A2AE-EB020EC4A866}.Debug.ActiveCfg = Debug
+		{150BFC8D-5A04-41AC-A2AE-EB020EC4A866}.Release.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
