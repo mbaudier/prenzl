@@ -17,13 +17,28 @@ public abstract class Library {
 	
 	public abstract String[] listComputations();
 	public abstract String[] listTopologies();
-	protected abstract int init(String ruleName, String topologyName, int width, int height, byte[] firstGen, String properties);
+	protected abstract int init(
+			String ruleName, 
+			String topologyName, 
+			int width, 
+			int height, 
+			byte[] firstGen, 
+			byte[] previous, 
+			String properties);
 	
-	public synchronized Computation createComputation(String ruleName,int width, int height, byte[] firstGen){
+	/** If previous is null, firstgen will be used to initialize it*/
+	public synchronized Computation createComputation(
+			String ruleName,
+			int width, 
+			int height, 
+			byte[] firstGen,
+			byte[] previous)
+	{
 		Computation computation = null;
 		
-		if(type==TYPE_JNI){			
-			int id = init(ruleName,null,width,height,firstGen,null);
+		if(type==TYPE_JNI){
+			byte[] previousTemp = previous!=null?previous:firstGen;
+			int id = init(ruleName,null,width,height,firstGen,previousTemp,null);
 			computation = new JNIComputation(ruleName,id);
 		}
 		else{

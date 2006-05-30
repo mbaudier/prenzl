@@ -120,9 +120,9 @@ public class ComputationUI {
 				for(int i=1; i<historySize; i++){
 					history[i] = new byte[imageData.data.length];
 				}
-				
+				// TODO: adds ability to load a previous state
 				computation = library.createComputation(ruleName, imageData.width, imageData.height,
-						imageData.data);
+						imageData.data,null);
 				
 				drawOrigin = new Point(0, 0);
 				drawImage();
