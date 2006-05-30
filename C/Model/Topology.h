@@ -28,7 +28,7 @@ namespace Prenzl {
 			current_ = new unsigned char[width*height*3];
 		}
 
-		JNIEXPORT Topology(int width, int height,unsigned char* firstGen)
+		JNIEXPORT Topology(int width, int height,unsigned char* firstGen,unsigned char* previousGen)
 			: width_(width)
 			, height_(height)
 		{
@@ -36,7 +36,7 @@ namespace Prenzl {
 			previous_ = new unsigned char[width*height*3];
 			current_ = new unsigned char[width*height*3];
 			memcpy(current_, firstGen, width*height*3);
-			memcpy(previous_, firstGen, width*height*3);
+			memcpy(previous_, previousGen, width*height*3);
 		}
 
 		JNIEXPORT ~Topology() {
