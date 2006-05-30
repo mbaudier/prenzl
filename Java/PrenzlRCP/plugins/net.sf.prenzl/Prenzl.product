@@ -21,7 +21,7 @@ LGPL license
       <vmArgs>-Xmx512m</vmArgs>
    </launcherArgs>
 
-   <windowImages small="/net.sf.prenzl/images/logo-16.gif"/>
+   <windowImages small="/net.sf.prenzl/icons/prenzl-16.gif" large="/net.sf.prenzl/icons/prenzl-32.gif"/>
 
    <splash location="net.sf.prenzl"/>
 

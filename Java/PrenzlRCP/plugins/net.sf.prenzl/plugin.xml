@@ -38,7 +38,7 @@
             name="Prenzl">
          <property
                name="windowImages"
-               value="images/logo-16.gif"/>
+               value="icons/prenzl-16.gif,icons/prenzl-32.gif"/>
          <property
                name="aboutText"
                value="Prenzl!!&#x0A;&#x0A;Home page: http://prenzl.sourceforge.net&#x0A;Dev page: http://sourceforge.net/projects/prenzl&#x0A;&#x0A;LGPL license&#x0A;(c) 2006 Mathieu Baudier and Olivier Capillon"/>
