@@ -14,7 +14,7 @@ public class StdRules extends Library{
 		super(LIB_NAME,TYPE_JNI);
 	} 
 
-	protected synchronized native int init(String ruleName, String topologyName,int width, int height, byte[] firstGen, String properties);
+	protected synchronized native int init(String ruleName, String topologyName,int width, int height, byte[] firstGen, byte[] previous, String properties);
 	public native String[] listComputations();
 	public native String[] listTopologies();
 }
