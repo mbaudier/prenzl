@@ -23,7 +23,7 @@ const char* RULE_CHANNEL_PROPAGATION = "ChannelPropagation";
 const char* RULE_BLUR = "Blur";
 
 JNIEXPORT jint JNICALL Java_net_sf_prenzl_stdrules_StdRules_init
-  (JNIEnv * env, jobject, jstring ruleNameJ, jstring topologyNameJ, jint width, jint height, jbyteArray firstGenJ, jstring propertiesJ){
+  (JNIEnv * env, jobject, jstring ruleNameJ, jstring topologyNameJ, jint width, jint height, jbyteArray firstGenJ, jbyteArray previousGenJ, jstring propertiesJ){
 	const char* ruleName = env->GetStringUTFChars(ruleNameJ, 0);
 	//Create rule
 	Rule* rule = NULL;
@@ -51,7 +51,8 @@ JNIEXPORT jint JNICALL Java_net_sf_prenzl_stdrules_StdRules_init
 	
 	// Create topology
     jbyte *firstGen = env->GetByteArrayElements(firstGenJ, 0);
-	Topology* topo = new Topology(width,height,(unsigned char*)firstGen);
+    jbyte *previousGen = env->GetByteArrayElements(previousGenJ, 0);
+	Topology* topo = new Topology(width,height,(unsigned char*)firstGen,(unsigned char*)previousGen);
 	jint id = registerRuleAndTopology(rule,topo);
 	return id;
   }

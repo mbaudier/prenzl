@@ -14,10 +14,10 @@ extern "C" {
 /*
  * Class:     net_sf_prenzl_stdrules_StdRules
  * Method:    init
- * Signature: (Ljava/lang/String;Ljava/lang/String;II[BLjava/lang/String;)I
+ * Signature: (Ljava/lang/String;Ljava/lang/String;II[B[BLjava/lang/String;)I
  */
 JNIEXPORT jint JNICALL Java_net_sf_prenzl_stdrules_StdRules_init
-  (JNIEnv *, jobject, jstring, jstring, jint, jint, jbyteArray, jstring);
+  (JNIEnv *, jobject, jstring, jstring, jint, jint, jbyteArray, jbyteArray, jstring);
 
 /*
  * Class:     net_sf_prenzl_stdrules_StdRules
