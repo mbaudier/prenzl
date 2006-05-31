@@ -1,0 +1,130 @@
+<project name="factory">
+	
+	<loadproperties srcfile="factory.properties"/>
+
+	<property name="prenzl.version" value="2.0.4"/>
+	
+	<property name="factory.dist.dir" location="dist/Prenzl"/>
+	<property name="factory.build.dir" location="build"/>
+	<property name="factory.dist.plugins.dir" location="${factory.dist.dir}/plugins"/>
+	<property name="factory.eclipse.dir" location="eclipse/3.1.2"/>
+	
+	<property name="prenzl.jni.home" location="../C/JNI/prenzl"/>
+	<property name="prenzl.java.home" location="../Java/PrenzlRCP/plugins/net.sf.prenzl"/>
+	<property name="prenzl.build.dir" location="${factory.build.dir}/net.sf.prenzl"/>
+	<property name="prenzl.build.manifest.dir" location="${prenzl.build.dir}/META-INF"/>
+	
+	<property name="stdrules.jni.home" location="../C/JNI/stdrules"/>
+	<property name="stdrules.java.home" location="../Java/Rules/net.sf.prenzl.stdrules"/>
+	<property name="stdrules.build.dir" location="${factory.build.dir}/net.sf.prenzlstdrules"/>
+	<property name="stdrules.build.manifest.dir" location="${stdrules.build.dir}/META-INF"/>
+	
+	<target name="prenzl.build">
+		<!-- Builds java -->
+		<mkdir dir="${prenzl.build.dir}"/>
+		<javac destdir="${prenzl.build.dir}" srcdir="${prenzl.java.home}/src">
+			<classpath>
+				<fileset dir="${factory.eclipse.dir}/plugins" includes="*.jar"/>
+			</classpath>
+		</javac>
+		<!-- Build JNI -->
+		<ant 
+			antfile="${prenzl.jni.home}/build.xml" 
+			target="build" 
+			dir="${prenzl.jni.home}"/>
+		<copy file="${prenzl.jni.home}/dist/prenzl.dll" todir="${prenzl.build.dir}"/>
+		<!-- Copies other files -->
+		<copy todir="${prenzl.build.dir}">
+			<fileset dir="${prenzl.java.home}">
+				<include name="icons/**"/>
+				<include name="schema/**"/>
+				<include name="plugin.xml"/>
+				<include name="licence-*.txt"/>
+				<include name="splash.bmp"/>
+			</fileset>
+		</copy>
+		<!-- Jars the file -->
+		<mkdir dir="${prenzl.build.manifest.dir}"/>
+		<copy file="${prenzl.java.home}/META-INF/MANIFEST.MF" todir="${prenzl.build.manifest.dir}"/>
+		<manifest file="${prenzl.build.manifest.dir}/MANIFEST.MF"  mode="update">
+			<attribute name="Bundle-Version" value="${prenzl.version}"/>
+		</manifest>
+		<mkdir dir="${factory.dist.plugins.dir}"/>
+		<jar destfile="${factory.dist.plugins.dir}/net.sf.prenzl_${prenzl.version}.jar"
+			manifest="${prenzl.build.manifest.dir}/MANIFEST.MF"
+		>
+			<fileset dir="${prenzl.build.dir}">
+				<include name="**/*"/>
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="stdrules.build" depends="prenzl.build">
+		<!-- Builds java -->
+		<mkdir dir="${stdrules.build.dir}"/>
+		<javac destdir="${stdrules.build.dir}" srcdir="${stdrules.java.home}/src">
+			<classpath>
+				<fileset dir="${factory.eclipse.dir}/plugins" includes="*.jar"/>
+				<path location="${prenzl.build.dir}"/>
+			</classpath>
+		</javac>
+		<!-- Build JNI -->
+		<ant 
+			antfile="${stdrules.jni.home}/build.xml" 
+			target="build" 
+			dir="${stdrules.jni.home}"/>
+		<copy file="${stdrules.jni.home}/dist/stdrules.dll" todir="${stdrules.build.dir}"/>
+		<!-- Copies other files -->
+		<copy todir="${stdrules.build.dir}">
+			<fileset dir="${stdrules.java.home}">
+				<include name="plugin.xml"/>
+			</fileset>
+		</copy>
+		<!-- Jars the file -->
+		<mkdir dir="${stdrules.build.manifest.dir}"/>
+		<copy file="${stdrules.java.home}/META-INF/MANIFEST.MF" todir="${stdrules.build.manifest.dir}"/>
+		<manifest file="${stdrules.build.manifest.dir}/MANIFEST.MF" mode="update">
+			<attribute name="Bundle-Version" value="${prenzl.version}"/>
+		</manifest>
+		<mkdir dir="${factory.dist.plugins.dir}"/>
+		<jar destfile="${factory.dist.plugins.dir}/net.sf.prenzl.stdrules_${prenzl.version}.jar"
+			manifest="${stdrules.build.manifest.dir}/MANIFEST.MF"
+		>
+			<fileset dir="${stdrules.build.dir}">
+				<include name="**/*"/>
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="prenzlrcp.build" depends="clean,prenzl.build,stdrules.build">
+		<copy todir="${factory.dist.dir}">
+			<fileset dir="${factory.eclipse.dir}">
+				<include name="*"/>
+				<exclude name=".eclipseproduct"/>
+				<include name="configuration/*"/>
+				<include name="plugins/*.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="${factory.dist.dir}">
+			<fileset dir="${factory.eclipse.dir}">
+				<include name=".eclipseproduct"/>
+			</fileset>
+			<filterset>
+				<filter token="prenzl.version" value="${prenzl.version}"/>
+			</filterset>
+		</copy>
+	</target>
+	
+	<target name="prenzlrcp.webstart" depends="prenzlrcp.build">
+		<copy file="webstart/prenzl.jnlp" todir="${factory.dist.dir}"/>
+		<signjar alias="mbaudier" storepass="mbaudier" keystore="D:\eclipse\workspaces\perso\PrenzlFactory\keystore\keystore">
+			<fileset dir="${factory.dist.dir}/plugins" includes="*.jar"/>
+		</signjar>
+	</target>
+	
+	<target name="clean">
+		<delete dir="${factory.dist.dir}"/>
+		<delete dir="${stdrules.build.dir}"/>
+		<delete dir="${prenzl.build.dir}"/>
+	</target>
+</project>

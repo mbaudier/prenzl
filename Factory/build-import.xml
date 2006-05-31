@@ -5,7 +5,7 @@
 	<property name="obj.dir" location="./obj"/> 
 	<property name="dist.dir" location="./dist"/> 
 	
-	<property name="prenzl.lib.dir" location="${factory.dir}/lib"/>
+	<property name="prenzljni.lib.dir" location="${factory.dir}/prenzljnilib"/>
 		
 	<macrodef name="gcc.compile">
 		<attribute name="component"/>
@@ -30,7 +30,7 @@
 			<exec executable="${gcc.bin.dir}/g++.exe" dir=".">
 				<env key="Path" path="${gcc.bin.dir}"/>
 				<arg line="-mno-cygwin -Wl,--add-stdcall-alias -shared"/>
-				<arg line="-L&quot;${prenzl.lib.dir}&quot;"/>
+				<arg line="-L&quot;${prenzljni.lib.dir}&quot;"/>
 				<arg line="-o${dist.dir}/@{output} ${obj.dir}/@{component}.o"/>
 				<arg line="-lprenzl"/>
 			</exec>
