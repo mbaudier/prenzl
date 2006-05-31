@@ -8,12 +8,12 @@
 		<gcc.compile component="JNIComputation"/>
 
 		<mkdir dir="${dist.dir}"/>
-		<mkdir dir="${prenzl.lib.dir}"/>
+		<mkdir dir="${prenzljni.lib.dir}"/>
 		<echo message="Link JNIComputation to prenzl.dll..."/>
 		<exec executable="${gcc.bin.dir}/g++.exe" dir=".">
 			<env key="Path" path="${gcc.bin.dir}"/>
 			<arg line="-mno-cygwin -Wl,--add-stdcall-alias -shared"/>
-			<arg line="-Wl,--out-implib=${prenzl.lib.dir}/libprenzl.a"/>
+			<arg line="-Wl,--out-implib=${prenzljni.lib.dir}/libprenzl.a"/>
 			<arg line="-o${dist.dir}/prenzl.dll ${obj.dir}/JNIComputation.o"/>
 		</exec>
 		
@@ -24,7 +24,9 @@
 	
 	<target name="clean">
 		<clean/>
-		<delete dir="${prenzl.lib.dir}"/>
+		<delete dir="${prenzljni.lib.dir}"/>
+		<!-- For retrocompatibility -->
+		<delete file="${factory.dir}/lib/libprenzl.a"/>
 	</target>
 	
 </project>
