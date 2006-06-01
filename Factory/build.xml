@@ -1,5 +1,4 @@
 <project name="factory">
-	
 	<loadproperties srcfile="factory.properties"/>
 
 	<property name="prenzl.version" value="2.0.4"/>
@@ -117,7 +116,8 @@
 	
 	<target name="prenzlrcp.webstart" depends="prenzlrcp.build">
 		<copy file="webstart/prenzl.jnlp" todir="${factory.dist.dir}"/>
-		<signjar alias="mbaudier" storepass="mbaudier" keystore="D:\eclipse\workspaces\perso\PrenzlFactory\keystore\keystore">
+		<copy file="${prenzl.java.home}/icons/prenzl-32.gif" todir="${factory.dist.dir}"/>
+		<signjar alias="${keystore.alias}" storepass="${keystore.password}" keystore="keystore/keystore">
 			<fileset dir="${factory.dist.dir}/plugins" includes="*.jar"/>
 		</signjar>
 	</target>

@@ -8,7 +8,7 @@
     <vendor>by Olivier Capillon and Mathieu Baudier</vendor>
     <homepage href="http://prenzl.sourceforge.net" /> 
     <description>CArt tool by Olivier Capillon and Mathieu Baudier</description> 
-    <icon href="prenzl.gif"/>
+    <icon href="prenzl-32.gif"/>
   </information>
  
   <security>
