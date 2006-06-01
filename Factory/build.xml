@@ -1,7 +1,7 @@
 <project name="factory">
 	<loadproperties srcfile="factory.properties"/>
 
-	<property name="prenzl.version" value="2.0.4"/>
+	<property name="prenzl.release.version" value="2.0.4"/>
 	
 	<property name="factory.dist.dir" location="dist/Prenzl"/>
 	<property name="factory.build.dir" location="build"/>
@@ -18,7 +18,49 @@
 	<property name="stdrules.build.dir" location="${factory.build.dir}/net.sf.prenzlstdrules"/>
 	<property name="stdrules.build.manifest.dir" location="${stdrules.build.dir}/META-INF"/>
 	
-	<target name="prenzl.build">
+	<target name="init.subversion.release" if="release">
+		<!-- Forces prenzl.version to prenzl.release.version in case the release property is set 
+			otherwise the build is considered as a development build 
+			(revision is added to the version in the standard init) -->
+		<property name="prenzl.version" value="${prenzl.release.version}"/>
+	</target>
+	
+	<target name="init.subversion" depends="init.subversion.release" unless="skip.subversion">
+		<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask">
+			<classpath>
+				<fileset dir="factorylib" includes="*.jar"/>
+			</classpath>
+		</taskdef>
+		
+		<!-- The checkout is not required each time.
+		Uncomment to make sure that the trunk directory (that is .. relative to Factory) 
+		has been properly initialized for SVN
+		<svn>
+			<checkout 
+				url="https://svn.sourceforge.net/svnroot/prenzl/Prenzl/trunk" 
+				destpath=".."
+			recurse="false"/>
+		</svn>
+		 -->
+		<!-- Refreshes the working copy -->
+		<svn>
+			<update dir=".."/>
+		</svn>
+		<!-- Get the revision -->
+		<svn>
+			<status revisionproperty="prenzl.svn.revision" path=".."/>
+		</svn>
+		<property name="prenzl.version" value="${prenzl.release.version}.${prenzl.svn.revision}"/>
+	</target>
+	
+	<target name="init" depends="init.subversion">
+		<!-- Sets the version in case the subversion phase had been skipped -->
+		<property name="prenzl.version" value="${prenzl.release.version}.${user.name}"/>
+		
+		<echo message="Version is ${prenzl.version}"/>
+	</target>
+	
+	<target name="prenzl.build" depends="init">
 		<!-- Builds java -->
 		<mkdir dir="${prenzl.build.dir}"/>
 		<javac destdir="${prenzl.build.dir}" srcdir="${prenzl.java.home}/src">
@@ -58,7 +100,7 @@
 		</jar>
 	</target>
 
-	<target name="stdrules.build" depends="prenzl.build">
+	<target name="stdrules.build" depends="init,prenzl.build">
 		<!-- Builds java -->
 		<mkdir dir="${stdrules.build.dir}"/>
 		<javac destdir="${stdrules.build.dir}" srcdir="${stdrules.java.home}/src">
@@ -95,7 +137,7 @@
 		</jar>
 	</target>
 	
-	<target name="prenzlrcp.build" depends="clean,prenzl.build,stdrules.build">
+	<target name="prenzlrcp.build" depends="init,prenzl.build,stdrules.build">
 		<copy todir="${factory.dist.dir}">
 			<fileset dir="${factory.eclipse.dir}">
 				<include name="*"/>
@@ -115,10 +157,20 @@
 	</target>
 	
 	<target name="prenzlrcp.webstart" depends="prenzlrcp.build">
-		<copy file="webstart/prenzl.jnlp" todir="${factory.dist.dir}"/>
+		<copy file="webstart/prenzl.jnlp" todir="${factory.dist.dir}">
+			<filterset>
+				<filter token="prenzl.version" value="${prenzl.version}"/>
+			</filterset>
+		</copy>
 		<copy file="${prenzl.java.home}/icons/prenzl-32.gif" todir="${factory.dist.dir}"/>
 		<signjar alias="${keystore.alias}" storepass="${keystore.password}" keystore="keystore/keystore">
-			<fileset dir="${factory.dist.dir}/plugins" includes="*.jar"/>
+			<fileset dir="${factory.dist.dir}/plugins" includes="net.sf.prenzl*.jar"/>
+		</signjar>
+	</target>
+	
+	<target name="prenzlrcp.signeclipse">
+		<signjar alias="${keystore.alias}" storepass="${keystore.password}" keystore="keystore/keystore">
+			<fileset dir="eclipse" includes="*/plugins/*.jar,*/startup.jar"/>
 		</signjar>
 	</target>
 	

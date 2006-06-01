@@ -1,1 +1,3 @@
 gcc.bin.dir=<bin directory where to find g++>
+keystore.alias=<keystore alias>
+keystore.password=<keystore password>

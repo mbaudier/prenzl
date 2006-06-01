@@ -5,7 +5,7 @@
     href="prenzl.jnlp">
   <information>
     <title>Prenzl!!</title>  
-    <vendor>by Olivier Capillon and Mathieu Baudier</vendor>
+    <vendor>v@prenzl.version@ by O. Capillon and M. Baudier</vendor>
     <homepage href="http://prenzl.sourceforge.net" /> 
     <description>CArt tool by Olivier Capillon and Mathieu Baudier</description> 
     <icon href="prenzl-32.gif"/>
@@ -20,10 +20,11 @@
   </application-desc>
   
   <resources os="Windows">
+ 	<!-- Prenzl jars -->
+	<jar href="plugins/net.sf.prenzl_@prenzl.version@.jar"/>
+	<jar href="plugins/net.sf.prenzl.stdrules_@prenzl.version@.jar"/>
+ 	<!-- Eclipse jars -->
     <jar href="startup.jar"/>
- 
-	<jar href="plugins/net.sf.prenzl_2.0.4.jar"/>
-	<jar href="plugins/net.sf.prenzl.stdrules_2.0.4.jar"/>
 	<jar href="plugins/org.eclipse.core.commands_3.1.0.jar"/>
 	<jar href="plugins/org.eclipse.core.expressions_3.1.0.jar"/>
 	<jar href="plugins/org.eclipse.core.runtime_3.1.2.jar"/>
