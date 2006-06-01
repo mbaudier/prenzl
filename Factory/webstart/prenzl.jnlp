@@ -20,11 +20,11 @@
   </application-desc>
   
   <resources os="Windows">
+    <jar href="startup.jar"/>
  	<!-- Prenzl jars -->
 	<jar href="plugins/net.sf.prenzl_@prenzl.version@.jar"/>
 	<jar href="plugins/net.sf.prenzl.stdrules_@prenzl.version@.jar"/>
  	<!-- Eclipse jars -->
-    <jar href="startup.jar"/>
 	<jar href="plugins/org.eclipse.core.commands_3.1.0.jar"/>
 	<jar href="plugins/org.eclipse.core.expressions_3.1.0.jar"/>
 	<jar href="plugins/org.eclipse.core.runtime_3.1.2.jar"/>
