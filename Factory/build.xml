@@ -32,16 +32,15 @@
 			</classpath>
 		</taskdef>
 		
-		<!-- The checkout is not required each time.
-		Uncomment to make sure that the trunk directory (that is .. relative to Factory) 
-		has been properly initialized for SVN
+		<!-- Checkout to make sure that the trunk directory (that is .. relative to Factory) 
+		has been properly initialized for SVN -->
 		<svn>
 			<checkout 
 				url="https://svn.sourceforge.net/svnroot/prenzl/Prenzl/trunk" 
 				destpath=".."
 			recurse="false"/>
 		</svn>
-		 -->
+		
 		<!-- Refreshes the working copy -->
 		<svn>
 			<update dir=".."/>
