@@ -62,7 +62,7 @@
 	<target name="prenzl.build" depends="init">
 		<!-- Builds java -->
 		<mkdir dir="${prenzl.build.dir}"/>
-		<javac destdir="${prenzl.build.dir}" srcdir="${prenzl.java.home}/src">
+		<javac source="1.3" debug="true" destdir="${prenzl.build.dir}" srcdir="${prenzl.java.home}/src">
 			<classpath>
 				<fileset dir="${factory.eclipse.dir}/plugins" includes="*.jar"/>
 			</classpath>
@@ -102,7 +102,7 @@
 	<target name="stdrules.build" depends="init,prenzl.build">
 		<!-- Builds java -->
 		<mkdir dir="${stdrules.build.dir}"/>
-		<javac destdir="${stdrules.build.dir}" srcdir="${stdrules.java.home}/src">
+		<javac source="1.3" debug="true" destdir="${stdrules.build.dir}" srcdir="${stdrules.java.home}/src">
 			<classpath>
 				<fileset dir="${factory.eclipse.dir}/plugins" includes="*.jar"/>
 				<path location="${prenzl.build.dir}"/>
@@ -155,21 +155,18 @@
 		</copy>
 	</target>
 	
-	<target name="prenzlrcp.webstart" depends="prenzlrcp.build">
+	<target name="prenzlrcp.webstart" depends="prenzlrcp.build,prenzlrcp.sign">
 		<copy file="webstart/prenzl.jnlp" todir="${factory.dist.dir}">
 			<filterset>
 				<filter token="prenzl.version" value="${prenzl.version}"/>
 			</filterset>
 		</copy>
 		<copy file="${prenzl.java.home}/icons/prenzl-32.gif" todir="${factory.dist.dir}"/>
-		<signjar alias="${keystore.alias}" storepass="${keystore.password}" keystore="keystore/keystore">
-			<fileset dir="${factory.dist.dir}/plugins" includes="net.sf.prenzl*.jar"/>
-		</signjar>
 	</target>
 	
-	<target name="prenzlrcp.signeclipse">
+	<target name="prenzlrcp.sign">
 		<signjar alias="${keystore.alias}" storepass="${keystore.password}" keystore="keystore/keystore">
-			<fileset dir="eclipse" includes="*/plugins/*.jar,*/startup.jar"/>
+			<fileset dir="${factory.dist.dir}" includes="plugins/*.jar,startup.jar"/>
 		</signjar>
 	</target>
 	
@@ -177,5 +174,38 @@
 		<delete dir="${factory.dist.dir}"/>
 		<delete dir="${stdrules.build.dir}"/>
 		<delete dir="${prenzl.build.dir}"/>
+
+		<ant 
+			antfile="${prenzl.jni.home}/build.xml" 
+			target="clean" 
+			dir="${prenzl.jni.home}"/>
+		<ant 
+			antfile="${stdrules.jni.home}/build.xml" 
+			target="clean" 
+			dir="${stdrules.jni.home}"/>
+
+	</target>
+	<target name="backup.src" depends="clean">
+		<!--
+		<property name="backup.src.dir" location="../../backup-src"/>
+		<copy todir="${backup.src.dir}">
+			<fileset dir="..">
+				<include name="**/*"/>
+				<exclude name="**/dist/*"/>
+				<exclude name="**/obj/*"/>
+				<exclude name="**/.svn/*"/>
+			</fileset>
+		</copy>
+		<zip destfile="../../Prenzl-trunk.zip"  basedir="${backup.src.dir}"/>
+		-->
+		<zip destfile="../../Prenzl-trunk.zip">
+			<fileset dir="..">
+				<include name="**/*"/>
+				<exclude name="**/*.class"/>
+				<exclude name="**/dist/*"/>
+				<exclude name="**/obj/*"/>
+				<exclude name="**/.svn/*"/>
+			</fileset>
+		</zip>
 	</target>
 </project>
