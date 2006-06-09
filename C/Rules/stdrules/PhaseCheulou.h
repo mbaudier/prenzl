@@ -39,7 +39,7 @@ namespace Prenzl {
 		}
 
 		inline void updateValues(int& blue, int& green, int& red, int totalB, int totalG, int totalR) {
-#if 0
+#if 1
 			int meansR = (totalR + 4) / 9 - 127;
 			int meansG = (totalG + 4) / 9 - 127;
 			int meansB = (totalB + 4) / 9 - 127;

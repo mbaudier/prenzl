@@ -3,9 +3,14 @@
 
 namespace Prenzl {
 
+
 	class Blur : public Rule {
 	public:
 		
+		Blur(unsigned int disturbanceShift = 12) 
+			: disturbanceShift(disturbanceShift)
+		{}
+
 		void computeNext(Topology& topo, int i, int j) {
 			int totalR = 0;
 			int totalG = 0;
@@ -17,10 +22,15 @@ namespace Prenzl {
 					totalR +=  topo.getPrevious(i + di, j + dj, Topology::RED) ; 
 				}
 			}
-
+#if 0
 			topo.setCurrent(i, j, Topology::BLUE, (char)((totalB + 5)/9));
 			topo.setCurrent(i, j, Topology::GREEN, (char)((totalG + 5)/9));
 			topo.setCurrent(i, j, Topology::RED, (char)((totalR + 5)/9 ));
+#else
+			topo.setCurrent(i, j, Topology::BLUE,  ((totalB + ((totalG-totalR)>>disturbanceShift) + 5)/9));
+			topo.setCurrent(i, j, Topology::GREEN, ((totalG + ((totalR-totalB)>>disturbanceShift) + 5)/9));
+			topo.setCurrent(i, j, Topology::RED,   ((totalR + ((totalB-totalG)>>disturbanceShift) + 5)/9 ));
+#endif
 		}
 
 
@@ -70,9 +80,15 @@ namespace Prenzl {
 							   + previous[I_BLUE(i+1,j+0,width)]
 							   + previous[I_BLUE(i+1,j+1,width)];
 
+#if 0
 					current[I_BLUE(i,j,width)] = (unsigned char)((totalB+5)/9);
 					current[I_GREEN(i,j,width)] = (unsigned char)((totalG+5)/9);
 					current[I_RED(i,j,width)] = (unsigned char)((totalR+5)/9);
+#else
+					current[I_BLUE(i,j,width)] = (totalB + ((totalG-totalR)>>disturbanceShift) + 5)/9;
+					current[I_GREEN(i,j,width)] = (totalG + ((totalR-totalB)>>disturbanceShift) + 5)/9;
+					current[I_RED(i,j,width)] = (totalR + ((totalB-totalG)>>disturbanceShift) + 5)/9;
+#endif
 				}
 			}
 			
@@ -91,6 +107,8 @@ namespace Prenzl {
 
 #endif
 		}
+
+		unsigned int disturbanceShift;
 
 	};
 

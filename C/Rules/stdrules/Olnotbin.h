@@ -53,6 +53,7 @@ namespace Prenzl {
 
 			for(int i = 1; i < width - 1; i++) {
 				for(int j = 1; j < height - 1; j++) {
+#if 1
 					int totalR = previous[3*((i-1)+(j-1)*width) + Topology::RED]
 							   + previous[3*((i-1)+(j+0)*width) + Topology::RED]
 							   + previous[3*((i-1)+(j+1)*width) + Topology::RED]
@@ -83,7 +84,19 @@ namespace Prenzl {
 							   + previous[3*((i+1)+(j+0)*width) + Topology::BLUE]
 							   + previous[3*((i+1)+(j+1)*width) + Topology::BLUE];
 
-				   int total = totalB + (totalG << 8) + (totalR << 16);
+					int total = totalB + (totalG << 8) + (totalR << 16);
+#else
+					int total  = (*((int*)(previous + 3*((i-1)+(j-1)*width)))&0x00FFFFFF)
+							   + (*((int*)(previous + 3*((i-1)+(j+0)*width)))&0x00FFFFFF)
+							   + (*((int*)(previous + 3*((i-1)+(j+1)*width)))&0x00FFFFFF)
+							   + (*((int*)(previous + 3*((i+0)+(j-1)*width)))&0x00FFFFFF)
+							   + (*((int*)(previous + 3*((i+0)+(j+0)*width)))&0x00FFFFFF)
+							   + (*((int*)(previous + 3*((i+0)+(j+1)*width)))&0x00FFFFFF)
+							   + (*((int*)(previous + 3*((i+1)+(j-1)*width)))&0x00FFFFFF)
+							   + (*((int*)(previous + 3*((i+1)+(j+0)*width)))&0x00FFFFFF)
+							   + (*((int*)(previous + 3*((i+1)+(j+1)*width)))&0x00FFFFFF);
+
+#endif
 				   int average = total / 9;
 
 					current[3*(i+j*width) + Topology::BLUE] = (unsigned char)(average & 0x0000FF);
