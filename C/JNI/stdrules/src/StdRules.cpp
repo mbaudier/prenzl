@@ -11,6 +11,9 @@
 #include "Rules/stdrules/GameOfLife.h"
 #include "Rules/stdrules/ChannelPropagation.h"
 #include "Rules/stdrules/Blur.h"
+#include "Rules/stdrules/Turner.h"
+#include "Rules/stdrules/Hydra.h"
+#include "Rules/stdrules/ColorHydra.h"
 
 #include "net_sf_prenzl_stdrules_StdRules.h"
 
@@ -23,6 +26,9 @@ const char* RULE_LSD = "LSD";
 const char* RULE_GAME_OF_LIFE = "GameOfLife";
 const char* RULE_CHANNEL_PROPAGATION = "ChannelPropagation";
 const char* RULE_BLUR = "Blur";
+const char* RULE_TURNER = "Turner";
+const char* RULE_HYDRA = "Hydra";
+const char* RULE_COLOR_HYDRA = "Color Hydra";
 
 JNIEXPORT jint JNICALL Java_net_sf_prenzl_stdrules_StdRules_init
   (JNIEnv * env, jobject, jstring ruleNameJ, jstring topologyNameJ, jint width, jint height, jbyteArray firstGenJ, jbyteArray previousGenJ, jstring propertiesJ){
@@ -62,6 +68,15 @@ JNIEXPORT jint JNICALL Java_net_sf_prenzl_stdrules_StdRules_init
 	else if(strcmp(ruleName,RULE_BLUR)==0){
 		rule = new Blur();
 	}
+	else if(strcmp(ruleName,RULE_TURNER)==0){
+		rule = new Turner();
+	}
+	else if(strcmp(ruleName,RULE_HYDRA)==0){
+		rule = new Hydra();
+	}
+	else if(strcmp(ruleName,RULE_COLOR_HYDRA)==0){
+		rule = new ColorHydra();
+	}
 	
 	// Create topology
     jbyte *firstGen = env->GetByteArrayElements(firstGenJ, 0);
@@ -76,7 +91,7 @@ JNIEXPORT jobjectArray JNICALL Java_net_sf_prenzl_stdrules_StdRules_listComputat
     jobjectArray ret;
     int i;
 
-	const int size = 7;
+	const int size = 10;
     const char* message[size] = {
     	RULE_PHASE_CHELOU,
     	RULE_OL_NOT_BIN,
@@ -84,7 +99,10 @@ JNIEXPORT jobjectArray JNICALL Java_net_sf_prenzl_stdrules_StdRules_listComputat
     	RULE_LSD,
     	RULE_GAME_OF_LIFE,
     	RULE_CHANNEL_PROPAGATION,
-    	RULE_BLUR
+    	RULE_BLUR,
+    	RULE_TURNER,
+    	RULE_HYDRA,
+    	RULE_COLOR_HYDRA
     };
 
     ret= (jobjectArray)env->NewObjectArray(
