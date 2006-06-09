@@ -144,6 +144,10 @@ namespace Prenzl {
 				// Square
 				profiles.push_back(std::pair<std::string, CoeffMatrix>("Squares", 
 					CoeffMatrix(90, 90, 90, -70, 0, 90, -70, 90, 0)));
+
+				// Groussherzogtum
+				profiles.push_back(std::pair<std::string, CoeffMatrix>("Groussherzogtum", 
+					CoeffMatrix(0, 90, -100, 90, 0, -100, 90, 90, 90)));
 			}
 
 			BOOL OnInitDialog( ) {

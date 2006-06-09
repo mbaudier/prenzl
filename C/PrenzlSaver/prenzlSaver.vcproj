@@ -179,7 +179,13 @@
 				RelativePath="..\Rules\stdrules\ChannelPropagation.h">
 			</File>
 			<File
+				RelativePath="..\Rules\stdrules\ColorHydra.h">
+			</File>
+			<File
 				RelativePath="..\Rules\stdrules\GameOfLife.h">
+			</File>
+			<File
+				RelativePath="..\Rules\stdrules\Hydra.h">
 			</File>
 			<File
 				RelativePath="..\Rules\stdrules\Lsd.h">
@@ -193,10 +199,16 @@
 			<File
 				RelativePath="..\Rules\stdrules\PhaseCheulou.h">
 			</File>
+			<File
+				RelativePath="..\Rules\stdrules\Turner.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Factories"
 			Filter="">
+			<File
+				RelativePath=".\src\Factories\AnyRuleF.h">
+			</File>
 			<File
 				RelativePath=".\src\Factories\BlurF.h">
 			</File>
@@ -204,7 +216,13 @@
 				RelativePath=".\src\Factories\ChannelPropagationF.h">
 			</File>
 			<File
+				RelativePath=".\src\Factories\ColorHydraF.h">
+			</File>
+			<File
 				RelativePath=".\src\Factories\GameOfLifeF.h">
+			</File>
+			<File
+				RelativePath=".\src\Factories\HydraF.h">
 			</File>
 			<File
 				RelativePath=".\src\Factories\LsdF.h">
@@ -220,6 +238,9 @@
 			</File>
 			<File
 				RelativePath=".\src\Factories\TestRuleF.h">
+			</File>
+			<File
+				RelativePath=".\src\Factories\TurnerF.h">
 			</File>
 		</Filter>
 		<Filter

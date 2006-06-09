@@ -9,11 +9,15 @@
 #include "Factories/OlNotBinF.h"
 #include "Factories/BlurF.h"
 #include "Factories/PhaseCheulouF.h"
-#include "Factories/TestRuleF.h"
 #include "Factories/LsdF.h"
 #include "Factories/NicolasDeStaelF.h"
 #include "Factories/GameOfLifeF.h"
 #include "Factories/ChannelPropagationF.h"
+#include "Factories/TurnerF.h"
+#include "Factories/HydraF.h"
+#include "Factories/ColorHydraF.h"
+#include "Factories/AnyRuleF.h"
+#include "Factories/TestRuleF.h"
 
 namespace Prenzl {
 
@@ -94,6 +98,10 @@ namespace Prenzl {
 				ruleFactories.push_back(new NicolasDeStaelF());
 				ruleFactories.push_back(new GameOfLifeF());
 				ruleFactories.push_back(new ChannelPropagationF());
+				ruleFactories.push_back(new TurnerF());
+				ruleFactories.push_back(new HydraF());
+				ruleFactories.push_back(new ColorHydraF());
+				ruleFactories.push_back(new AnyRuleF(ruleFactories));
 //				ruleFactories.push_back(new TestRuleF());
 			}
 		}

@@ -7,6 +7,8 @@
 #define IDD_LSDDIALOG                   107
 #define IDD_STAELDIALOG                 108
 #define IDD_CHANNELPROPDIALOG           109
+#define IDD_BLURDIALOG                  110
+#define IDD_HYDRADIALOG                 111
 #define IDC_SPEED                       1005
 #define IDC_DELAY                       1006
 #define IDC_TILE                        1014
@@ -49,15 +51,21 @@
 #define IDC_DIRECTORY                   1043
 #define IDC_BUTTON1                     1044
 #define IDC_BROWSEDIRBUTTON             1044
+#define IDC_DISTURBANCELEVEL            1045
+#define IDC_BODYLOWERSLIDER             1046
+#define IDC_HEADLOWERSLIDER             1047
+#define IDC_BODYLOWEREDIT               1048
+#define IDC_EDIT2                       1049
+#define IDC_HEADLOWEREDIT               1049
 #define DLG_SCRNSAVECONFIGURE           2003
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        110
+#define _APS_NEXT_RESOURCE_VALUE        112
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1045
+#define _APS_NEXT_CONTROL_VALUE         1049
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

@@ -17,14 +17,15 @@ namespace Prenzl {
 		PrenzlComputation(HWND hwnd)
 			: timeCounter(0)
 			, topology(0)
+			, rule(0)
 			, diplayBmp(0)
 			, screenBMP(0)
 		{
+			// initialise random generator
+			srand((unsigned)(time(0)*time(0)));
+
 			// read the configuration in the registries
 			config.readFromRegistry();
-
-			// create the rule
-			rule = config.createRule();
 
 			// get the client rectangle
 			GetClientRect(hwnd, &screen);
@@ -57,9 +58,6 @@ namespace Prenzl {
 					config.useFileAsInput = false;
 				}
 			}
-
-			// initialise random generator
-			srand((unsigned)time(0));
 
 			// init the first computation
 			initComputation();
@@ -184,6 +182,13 @@ namespace Prenzl {
 			int width = 0;
 			int height = 0;
 
+			// create the rule
+			if(rule) {
+				delete rule;
+				rule = 0;
+			}
+			rule = config.createRule();
+
 			// get the width and the height
 			if(config.useFileAsInput) {
 
@@ -243,8 +248,8 @@ namespace Prenzl {
 			if(config.position == PrenzlConfig::CENTER) {
 				displayZone.left = (screen.right - width)/2;
 				displayZone.top = (screen.bottom - height)/2;
-				displayZone.right = screen.right - displayZone.left;
-				displayZone.bottom = screen.bottom - displayZone.top;
+				displayZone.right = displayZone.left + width;
+				displayZone.bottom = displayZone.top + height;
 			}
 			else if(config.position == PrenzlConfig::TILE) {
 				displayZone = screen;

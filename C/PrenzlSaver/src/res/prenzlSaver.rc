@@ -257,6 +257,39 @@ BEGIN
     LTEXT           "color interaction",IDC_STATIC,33,80,52,8
 END
 
+IDD_BLURDIALOG DIALOGEX 0, 0, 181, 54
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Blur"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,67,33,50,14
+    PUSHBUTTON      "Annuler",IDCANCEL,124,33,50,14
+    LTEXT           "disturbance level:",IDC_STATIC,14,13,58,8
+    COMBOBOX        IDC_DISTURBANCELEVEL,81,10,93,97,CBS_DROPDOWNLIST | 
+                    CBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_HYDRADIALOG DIALOGEX 0, 0, 238, 83
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Hydra"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,119,61,50,14
+    PUSHBUTTON      "Annuler",IDCANCEL,181,61,50,14
+    CONTROL         "",IDC_BODYLOWERSLIDER,"msctls_trackbar32",TBS_BOTH | 
+                    TBS_NOTICKS | WS_TABSTOP,60,15,133,15
+    CONTROL         "",IDC_HEADLOWERSLIDER,"msctls_trackbar32",TBS_BOTH | 
+                    TBS_NOTICKS | WS_TABSTOP,60,36,133,15
+    EDITTEXT        IDC_BODYLOWEREDIT,200,15,31,14,ES_AUTOHSCROLL | 
+                    WS_DISABLED
+    EDITTEXT        IDC_HEADLOWEREDIT,200,36,31,14,ES_AUTOHSCROLL | 
+                    WS_DISABLED
+    LTEXT           "Body Lower Limit",IDC_STATIC,7,18,54,8
+    LTEXT           "Head Lower Limit",IDC_STATIC,7,39,55,8
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -296,6 +329,22 @@ BEGIN
         RIGHTMARGIN, 179
         TOPMARGIN, 7
         BOTTOMMARGIN, 116
+    END
+
+    IDD_BLURDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 174
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 47
+    END
+
+    IDD_HYDRADIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 231
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 75
     END
 END
 #endif    // APSTUDIO_INVOKED
