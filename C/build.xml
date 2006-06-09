@@ -1,0 +1,12 @@
+<project>
+	<target name="build">
+		<ant antfile="build.xml" target="build" dir="JNI/prenzl"/>
+		<ant antfile="build.xml" target="build" dir="JNI/stdrules"/>
+	</target>
+	
+	<target name="clean">
+		<ant antfile="JNI/prenzl/build.xml" target="clean" dir="JNI/prenzl"/>
+		<ant antfile="JNI/stdrules/build.xml" target="clean" dir="JNI/stdrules"/>
+	</target>
+	
+</project>

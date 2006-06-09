@@ -35,6 +35,14 @@ JNIEXPORT jobjectArray JNICALL Java_net_sf_prenzl_stdrules_StdRules_listComputat
 JNIEXPORT jobjectArray JNICALL Java_net_sf_prenzl_stdrules_StdRules_listTopologies
   (JNIEnv *, jobject);
 
+/*
+ * Class:     net_sf_prenzl_stdrules_StdRules
+ * Method:    describeRuleProperties
+ * Signature: (Ljava/lang/String;)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_net_sf_prenzl_stdrules_StdRules_describeRuleProperties
+  (JNIEnv *, jobject, jstring);
+
 #ifdef __cplusplus
 }
 #endif

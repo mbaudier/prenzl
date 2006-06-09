@@ -2,6 +2,8 @@
 
 #include "JNI/prenzl/h/Prenzl.h"
 
+#include "Model/CProperties.h"
+
 #include "Rules/stdrules/PhaseCheulou.h"
 #include "Rules/stdrules/OlNotBin.h"
 #include "Rules/stdrules/NicolasDeStael.h"
@@ -25,10 +27,22 @@ const char* RULE_BLUR = "Blur";
 JNIEXPORT jint JNICALL Java_net_sf_prenzl_stdrules_StdRules_init
   (JNIEnv * env, jobject, jstring ruleNameJ, jstring topologyNameJ, jint width, jint height, jbyteArray firstGenJ, jbyteArray previousGenJ, jstring propertiesJ){
 	const char* ruleName = env->GetStringUTFChars(ruleNameJ, 0);
+	const char* propertiesStr = env->GetStringUTFChars(propertiesJ, 0);
 	//Create rule
 	Rule* rule = NULL;
 	if(strcmp(ruleName,RULE_PHASE_CHELOU)==0){
-		rule = new PhaseCheulou();
+		CProperties prop(propertiesStr);
+		rule = new PhaseCheulou(
+			prop.getValueAsInt("pc.B.G"),
+			prop.getValueAsInt("pc.B.R"),
+			prop.getValueAsInt("pc.G.R"),
+			prop.getValueAsInt("pc.G.B"),
+			prop.getValueAsInt("pc.R.B"),
+			prop.getValueAsInt("pc.R.G"),
+			prop.getValueAsInt("pc.B.B"),
+			prop.getValueAsInt("pc.G.G"),
+			prop.getValueAsInt("pc.R.R")
+		);
 	}
 	else if(strcmp(ruleName,RULE_OL_NOT_BIN)==0){
 		rule = new OlNotBin();
@@ -84,6 +98,19 @@ JNIEXPORT jobjectArray JNICALL Java_net_sf_prenzl_stdrules_StdRules_listComputat
     }
     return(ret);
   }
+	
+	JNIEXPORT jstring JNICALL Java_net_sf_prenzl_stdrules_StdRules_describeRuleProperties
+	  (JNIEnv * env, jobject, jstring ruleNameJ){
+		const char* ruleName = env->GetStringUTFChars(ruleNameJ, 0);
+		if(strcmp(ruleName,RULE_PHASE_CHELOU)==0){
+			return env->NewStringUTF(
+			"pc.R.R=0\npc.R.G=0\npc.R.B=-90\npc.G.R=90\npc.G.G=0\npc.G.B=0\npc.B.R=0\npc.B.G=90\npc.B.B=0");
+		}
+		else if(strcmp(ruleName,RULE_LSD)==0){
+			return env->NewStringUTF("lsd.R.dx=90\nlsd.R.dy=0\nlsd.R.delta=20");
+		}
+		return env->NewStringUTF("");
+	}
 
   JNIEXPORT jobjectArray JNICALL Java_net_sf_prenzl_stdrules_StdRules_listTopologies
   (JNIEnv *, jobject){
