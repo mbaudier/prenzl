@@ -1,4 +1,4 @@
-package net.sf.prenzl.ui;
+package net.sf.prenzl.ui.computation;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Display;

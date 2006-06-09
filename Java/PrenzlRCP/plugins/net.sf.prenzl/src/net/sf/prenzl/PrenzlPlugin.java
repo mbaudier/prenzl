@@ -13,8 +13,9 @@ import java.util.Vector;
 
 import net.sf.prenzl.adapter.Computation;
 import net.sf.prenzl.adapter.Library;
+import net.sf.prenzl.launch.ICountListener;
 import net.sf.prenzl.launch.LaunchModel;
-import net.sf.prenzl.launch.RunModel;
+import net.sf.prenzl.ui.views.Display2dView;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -40,8 +41,10 @@ public class PrenzlPlugin extends AbstractUIPlugin {
 	private static PrenzlPlugin plugin;
 	
 	private LaunchModel launchModel;
-	private RunModel runModel;
+//	private RunModel runModel;
+
 	
+
 	public PrenzlPlugin() {
 		plugin = this;
 	}
@@ -49,19 +52,20 @@ public class PrenzlPlugin extends AbstractUIPlugin {
 	public static LaunchModel getLaunchModel(){
 		return getDefault().launchModel;
 	}
-	public static RunModel getRunModel(){
-		return getDefault().runModel;
-	}
+//	public static RunModel getRunModel(){
+//		return getDefault().runModel;
+//	}
 
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 
 		Computation.initRegistries();
-		List libraries = loadLibraries();
-		launchModel = new LaunchModel(libraries);
-		runModel = new RunModel();
+		LaunchModel.setLibraries(loadLibraries());
+		
+		launchModel = new LaunchModel();
+//		runModel = new RunModel();
 
-		launchModel.addLastPictureFiles(loadLastPicFilesState());
+		launchModel.addLastInputLocations(loadLastPicFilesState());
 		launchModel.notifyObservers();
 	}
 
@@ -117,7 +121,7 @@ public class PrenzlPlugin extends AbstractUIPlugin {
 	}
 	
 	private void saveLastPicFilesState(){
-		List list = launchModel.getLastPictures();
+		List list = launchModel.getLastInputLocations();
 		try {
 			File f = new File(getStateLocation()+STATE_LAST_PICFILES);		
 			f.createNewFile();
@@ -155,6 +159,15 @@ public class PrenzlPlugin extends AbstractUIPlugin {
 	
 	public static IViewPart findView(String id){
 		return getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(id);
+	}
+
+	public static Display2dView findRunView(){
+		return (Display2dView)getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(Display2dView.ID);
+	}
+
+	
+	public static void removeCountListener(ICountListener countListener){
+		findRunView().getComputationUI().removeCountListener(countListener);
 	}
 
 }

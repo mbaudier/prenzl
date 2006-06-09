@@ -20,14 +20,33 @@
             class="net.sf.prenzl.Perspective"
             id="net.sf.prenzl.runperspective">
       </perspective>
+      <perspective
+            class="net.sf.prenzl.ConfigPerspective"
+            id="net.sf.prenzl.configperspective"
+            name="Config"/>
    </extension>
    <extension
          point="org.eclipse.ui.views">
       <view
             category="Prenzl"
             class="net.sf.prenzl.ui.views.Display2dView"
+            icon="icons/runView.gif"
             id="net.sf.prenzl.display2dView"
-            name="Display2dView">
+            name="CArt">
+      </view>
+      <view
+            category="Prenzl"
+            class="net.sf.prenzl.ui.views.PropertiesView"
+            icon="icons/property.gif"
+            id="net.sf.prenzl.propertiesView"
+            name="Properties">
+      </view>
+      <view
+            category="Prenzl"
+            class="net.sf.prenzl.ui.views.ConfigurationsView"
+            icon="icons/configuration.gif"
+            id="net.sf.prenzl.configurationsView"
+            name="Configurations">
       </view>
    </extension>
    <extension
@@ -43,15 +62,6 @@
                name="aboutText"
                value="Prenzl!!&#x0A;&#x0A;Home page: http://prenzl.sourceforge.net&#x0A;Dev page: http://sourceforge.net/projects/prenzl&#x0A;&#x0A;LGPL license&#x0A;(c) 2006 Mathieu Baudier and Olivier Capillon"/>
       </product>
-   </extension>
-   <extension
-         point="org.eclipse.ui.actionDefinitions">
-      <actionDefinition
-            id="net.sf.prenzl.run"
-            name="Run/Stop"/>
-      <actionDefinition
-            id="net.sf.prenzl.previousStep"
-            name="Previous Step"/>
    </extension>
 
 </plugin>

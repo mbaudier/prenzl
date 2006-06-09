@@ -1,13 +1,13 @@
-package net.sf.prenzl.ui;
+package net.sf.prenzl.ui.computation;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.util.Observable;
+import java.util.Vector;
 
-import net.sf.prenzl.Log;
-import net.sf.prenzl.PrenzlPlugin;
 import net.sf.prenzl.adapter.Computation;
-import net.sf.prenzl.adapter.Library;
+import net.sf.prenzl.launch.ComputationInput;
+import net.sf.prenzl.launch.Configuration;
+import net.sf.prenzl.launch.ICountListener;
+import net.sf.prenzl.util.Log;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -15,45 +15,45 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
-public class ComputationUI {
+public class ComputationUI extends Observable{
+	private Vector countListeners = new Vector();
+	
+	// Rule
+	private Configuration configuration;
 	private Computation computation;
-
 	private RunnerThread runnerThread;
 
-	private Composite parent;
-
-	private DrawingContext dc;
-
+	// Data
 	private ImageData imageData = null;
 
+	// Graphics and SWT
+	private Composite parent;
+	private DrawingContext dc;
 	private Shell fullScreen = null;
-
 	private boolean isFullScreen = false;
-
 	private Point drawOrigin = null;
 	
+	private final MouseListener mouseListener;
+	// History
 	private final static int MAX_HISTORY_MEMORY = 100 * 1024 * 1024;// 100 MB
-	private int historySize = 100;
-	private int nextHistoryIndex = 0;
 	private byte[][] history = null;
+	private byte[] firstGeneration = null;
+	
+	private int cycleCount = 0;
 
-	public ComputationUI(Composite parent) {
+	public ComputationUI(Composite parent, MouseListener mouseListener) {
 		this.parent = parent;
+		this.mouseListener = mouseListener;
+		
 		drawOrigin = new Point(0, 0);
 		dc = new DrawingContext();
 		resetDrawingContext(false);
@@ -85,11 +85,25 @@ public class ComputationUI {
 		}
 	}
 
+	private void center(Rectangle bounds){
+		int locX = 0;
+		int locY = 0;
+		if(bounds!=null && imageData!=null){
+			if (bounds.width > imageData.width) {
+				locX = (bounds.width - imageData.width) / 2;
+			}
+			if (bounds.height > imageData.height) {
+				locY = (bounds.height - imageData.height) / 2;
+			}
+		}
+		dc.getLabel().setLocation(locX, locY);
+	}
+	
 	public void setFocus() {
 		dc.getLabel().setFocus();
 	}
 
-	public void paintBackground() {
+	private void paintBackground() {
 		// Paints background
 		GC gc = dc.getGC();
 		gc.setForeground(dc.getDisplay().getSystemColor(SWT.COLOR_BLACK));
@@ -97,7 +111,100 @@ public class ComputationUI {
 				dc.getDisplay().getClientArea().height);
 	}
 
+	private synchronized void resetThreadImpl(){
+		boolean wasRunning = isRunning();
+		setRunning(false);
+		if (runnerThread != null) {
+			runnerThread.dispose();
+		}
+		// First clean previous state
+		if (computation != null) {
+			computation.cleanUp();
+			computation = null;
+		}
+
+		runnerThread = new RunnerThread();
+		runnerThread.start();
+		if(wasRunning)setRunning(true);
+	}
+
+	/** @param computationInput should not be null*/ 
+	private synchronized void resetImpl(ImageData data) {
+		imageData = data;
+		// Initializes history
+		int dataLength = imageData.data.length;
+		history = new byte[MAX_HISTORY_MEMORY / dataLength][];
+		Log.verbose("Computation history size is "+history.length);
+		
+		// Clones first generation (history[0] will be empty for the first generations)
+		firstGeneration = new byte[imageData.data.length];
+		for(int i=0;i<imageData.data.length;i++){
+			firstGeneration[i] = imageData.data[i];
+		}
+		// Initializes history array
+		for(int i=0; i<history.length; i++){
+			history[i] = new byte[imageData.data.length];
+		}
+		
+		drawOrigin = new Point(0, 0);
+		center(dc.getLabel().getParent().getBounds());
+		drawImage();
+
+		cycleCount = 0;
+	}
+	
+	public synchronized void reset(Configuration configuration) {
+		this.configuration = configuration;
+		resetThreadImpl();
+		setChanged();
+		notifyObservers();
+	}
+	
+	public synchronized void reset(ComputationInput computationInput) {
+		paintBackground();
+		resetImpl(computationInput.getData());		
+		notifyCycleCount(cycleCount);
+		resetThreadImpl();		
+		setChanged();
+		notifyObservers();
+	}
+	public synchronized void resetFirstGeneration() {
+		if(firstGeneration!=null){
+			ImageData clone = (ImageData)imageData.clone();
+			clone.data = firstGeneration;
+			reset(new ComputationInput(clone));
+		}
+	}
+	
+	public synchronized void reset(Configuration configuration, ComputationInput computationInput) {
+		this.configuration = configuration;		
+		paintBackground();
+		if(computationInput!=null){
+			resetImpl(computationInput.getData());		
+			notifyCycleCount(cycleCount);
+			resetThreadImpl();		
+			setChanged();
+			notifyObservers();
+		}
+	}
+	
+	public void addCountListener(ICountListener countListener){
+		countListeners.add(countListener);
+	}
+	
+	public void removeCountListener(ICountListener countListener){
+		countListeners.remove(countListener);
+	}
+	
+	private void notifyCycleCount(int count){
+		for(int i=0;i<countListeners.size();i++){
+			((ICountListener)countListeners.get(i)).setCount(count);
+		}
+	}
+
+	/*
 	public void reset(Library library, String ruleName, String firstGenPicPath) {
+		
 		paintBackground();
 
 		// First clean previous state
@@ -112,44 +219,49 @@ public class ComputationUI {
 				
 				// Initializes history
 				int dataLength = imageData.data.length;
-				historySize = MAX_HISTORY_MEMORY / dataLength;
-				Log.verbose("Computation history size is "+historySize);
-				history = new byte[historySize][];
-				history[0] = imageData.data;
-				nextHistoryIndex = 0;
-				for(int i=1; i<historySize; i++){
+				history = new byte[MAX_HISTORY_MEMORY / dataLength][];
+				Log.verbose("Computation history size is "+history.length);
+				
+				// Clones first generation (history[0] will be empty for the first generations)
+				firstGeneration = new byte[imageData.data.length];
+				for(int i=0;i<imageData.data.length;i++){
+					firstGeneration[i] = imageData.data[i];
+				}
+				
+				for(int i=0; i<history.length; i++){
 					history[i] = new byte[imageData.data.length];
 				}
-				// TODO: adds ability to load a previous state
+				// TODO: adds ability to load an anteprevious state
 				computation = library.createComputation(ruleName, imageData.width, imageData.height,
 						imageData.data,null);
 				
 				drawOrigin = new Point(0, 0);
+				center(dc.getLabel().getParent().getBounds());
 				drawImage();
 
-				Shell shell = parent.getShell();
-				Rectangle shellOrigBounds = shell.getBounds();
-				Rectangle parentBounds = parent.getClientArea();
-				int dx = parentBounds.width>0?
-						shellOrigBounds.width - dc.getLabel().getBounds().width
-						:20;
-				int dy = parentBounds.height>0?
-						shellOrigBounds.height - dc.getLabel().getBounds().height
-						:55;
-				shell.setBounds(shellOrigBounds.x,shellOrigBounds.y,imageData.width+dx,imageData.height+dy);
+				cycleCount = 0;
+				PrenzlPlugin.notifyCycleCount(cycleCount);
 				
 				if (runnerThread != null) {
 					runnerThread.dispose();
 				}
 				runnerThread = new RunnerThread();
 				runnerThread.start();
+				
+				setChanged();
+				notifyObservers();
 			}
 			catch (Exception e) {
 				Log.error("Could not initialize computation",e);
 			}
 		}
 	}
+		*/
 
+	public void setFullScreen(boolean doFullScreen){
+		resetDrawingContext(doFullScreen);
+	}
+	
 	private void resetDrawingContext(boolean doFullScreen) {
 		if (doFullScreen) {
 			fullScreen = new Shell(dc.getLabel().getShell(), SWT.NO_TRIM);
@@ -157,16 +269,8 @@ public class ComputationUI {
 			fullScreen.setBounds(dispBounds);
 
 			Label label = createDrawingLabel(fullScreen, fullScreen.getBounds());
-			int locX = 0;
-			int locY = 0;
-			if (dispBounds.width > imageData.width) {
-				locX = (dispBounds.width - imageData.width) / 2;
-			}
-			if (dispBounds.height > imageData.height) {
-				locY = (dispBounds.height - imageData.height) / 2;
-			}
-			label.setLocation(locX, locY);
 			dc.setContext(label);
+			center(dispBounds);
 			fullScreen.open();
 		}
 		else {
@@ -200,6 +304,8 @@ public class ComputationUI {
 	public void setRunning(boolean running) {
 		if (runnerThread != null) {
 			runnerThread.setRunning(running);
+			setChanged();
+			notifyObservers();
 		}
 	}
 
@@ -209,22 +315,36 @@ public class ComputationUI {
 		label.setBackground(label.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 		label.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
+				center(dc.getLabel().getParent().getBounds());
 				drawImage();
 			}
 		});
 		LabelMouseListener lml = new LabelMouseListener();
 		label.addMouseListener(lml);
+		label.addMouseListener(mouseListener);
 		label.addMouseMoveListener(lml);
 		label.setBounds(bounds);
 		return label;
 	}
 	
+	private byte[] getData(){
+		if(cycleCount<0){// should never happen (protected by GUI)
+			throw new RuntimeException("Cycle count cannot be <0");
+		}
+		if(cycleCount==0){
+			return firstGeneration;
+		}
+		else{
+			return history[cycleCount%history.length];
+		}
+	}
+	
 	public void setToPreviousStep(){
 		if(!runnerThread.isRunning()){
-			nextHistoryIndex = nextHistoryIndex!=0 ? nextHistoryIndex-1 : historySize-1;
-			imageData.data = history[nextHistoryIndex-1>=0?nextHistoryIndex-1:historySize-1];
+			cycleCount--;
+			imageData.data = getData();
 			drawImage();
-			runnerThread.decrementCount();
+			notifyCycleCount(cycleCount);
 		}
 	}
 	
@@ -238,39 +358,60 @@ public class ComputationUI {
 			}
 		}
 	}
-	
+
+
+	public boolean isRunning(){
+		if(runnerThread==null)return false;
+		return runnerThread.isRunning();
+	}
+
+	public int getCycleCount() {
+		return cycleCount;
+	}
+
+	public DrawingContext getDc() {
+		return dc;
+	}
+
+	public ImageData getImageData() {
+		return imageData;
+	}
+
 	private class RunnerThread extends ComputationThread {
 
 		protected void computationStep() throws Exception {
+			if(computation==null){
+				computation = configuration.getLibrary().createComputation(
+						configuration.getRuleName(), 
+						imageData.width, imageData.height,
+						imageData.data,null,
+						configuration.getPropertiesAsString());
+			}
 			computation.compute();
 		}
 
 		protected void displayStep() throws Exception {
-			computation.getCurrent(history[nextHistoryIndex]);
-			imageData.data = history[nextHistoryIndex];
-			nextHistoryIndex++;
-			if(nextHistoryIndex==historySize){
-				nextHistoryIndex = 0;
-			}
+			if(computation==null)throw new Exception("Computation not initialized.");
+			cycleCount++;
+			computation.getCurrent(getData());
+			imageData.data = getData();
 			
 			if (!dc.getLabel().isDisposed()) {
 				drawImage();
 			}
+			notifyCycleCount(cycleCount);
 		}
 
 	}
 	private class LabelMouseListener implements MouseMoveListener, MouseListener {
 		private boolean isOrigMoveActive = false;
-
 		private int relX = 0;
-
 		private int relY = 0;
 
 		public void mouseDoubleClick(MouseEvent e) {
 			// interrupts the thread in order to prevent blocking
 			boolean wasRunning = runnerThread.isRunning();
-			if (wasRunning)
-				runnerThread.setRunning(false);
+			if (wasRunning) runnerThread.setRunning(false);
 			if (isFullScreen) {
 				resetDrawingContext(false);
 				isFullScreen = false;
@@ -279,8 +420,7 @@ public class ComputationUI {
 				resetDrawingContext(true);
 				isFullScreen = true;
 			}
-			if (wasRunning)
-				runnerThread.setRunning(true);
+			if (wasRunning)	runnerThread.setRunning(true);
 		}
 
 		public void mouseDown(MouseEvent e) {
@@ -290,93 +430,21 @@ public class ComputationUI {
 				relY = drawOrigin.y - e.y;
 				setOrigin(e);
 			}
-			else if (e.button == 2 || e.button == 3) {
-				if (!PrenzlPlugin.getRunModel().isRunning()) {
-					Menu menu = createMenu(new Point(e.x, e.y));
-					menu.setVisible(!menu.isVisible());
-				}
-			}
 		}
 
 		public void mouseUp(MouseEvent e) {
-			if (e.button == 1)
-				isOrigMoveActive = false;
+			if (e.button == 1) isOrigMoveActive = false;
 		}
 
 		public void mouseMove(MouseEvent e) {
-			if (isOrigMoveActive)
-				setOrigin(e);
+			if (isOrigMoveActive) setOrigin(e);
 		}
 
 		private void setOrigin(MouseEvent e) {
 			drawOrigin = new Point(e.x + relX, e.y + relY);
-			if (!PrenzlPlugin.getRunModel().isRunning()) {
+			if (!isRunning()) {
 				drawImage();
 			}
 		}
-
-		private Menu createMenu(Point ptArg) {
-			Point pt = dc.getLabel().toDisplay(ptArg);
-			Menu menu = new Menu(dc.getLabel().getShell(), SWT.POP_UP);
-			createSaveMenuItem(menu, "Save display as JPEG...", true, SWT.IMAGE_JPEG);
-			createSaveMenuItem(menu, "Save display as BMP...", true, SWT.IMAGE_BMP);
-			new MenuItem(menu, SWT.SEPARATOR);
-			createSaveMenuItem(menu, "Save image as JPEG...", false, SWT.IMAGE_JPEG);
-			createSaveMenuItem(menu, "Save image as BMP...", false, SWT.IMAGE_BMP);
-			menu.setLocation(pt.x, pt.y);
-			return menu;
-		}
-
-		private void createSaveMenuItem(Menu menu, String text, final boolean saveDisplay,
-				final int type) {
-			MenuItem mi = new MenuItem(menu, SWT.PUSH);
-			mi.setText(text);
-			mi.addSelectionListener(new SelectionListener() {
-				public void widgetDefaultSelected(SelectionEvent e) {
-				}
-
-				public void widgetSelected(SelectionEvent e) {
-					saveAsPicture(saveDisplay, type);
-				}
-			});
-		}
-
-		private void saveAsPicture(boolean saveDisplay, final int type) {
-			ImageData imgd = null;
-			Label label = dc.getLabel();
-			if (saveDisplay) {
-				int width = Math.min(imageData.width, label.getBounds().width);
-				int height = Math.min(imageData.height, label.getBounds().height);
-				System.out.println("width=" + width + ", height=" + height);
-				Image image = new Image(label.getDisplay(), width, height);
-				dc.getGC().copyArea(image, 0, 0);
-				imgd = image.getImageData();
-			}
-			else {
-				imgd = imageData;
-			}
-
-			FileDialog fileDialog = new FileDialog(label.getShell(), SWT.SAVE);
-			final String path;
-			if ((path = fileDialog.open()) != null) {
-				final ImageLoader imgl = new ImageLoader();
-				ImageData[] arr = {imgd};
-				imgl.data = arr;
-				label.getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						try {
-							OutputStream out = new FileOutputStream(path);
-							imgl.save(out, type);
-							out.close();
-						}
-						catch (IOException e1) {
-							Log.error("Could not save file " + path, e1);
-						}
-					}
-				});
-			}
-		}
-
 	}
-
 }

@@ -1,6 +1,9 @@
 /* Created on 4 mars 2006 */
 package net.sf.prenzl.adapter;
 
+import net.sf.prenzl.launch.Configuration;
+import net.sf.prenzl.launch.RuleProperties;
+
 
 
 public abstract class Library {
@@ -17,6 +20,12 @@ public abstract class Library {
 	
 	public abstract String[] listComputations();
 	public abstract String[] listTopologies();
+	public abstract String describeRuleProperties(String ruleName);
+	
+	public RuleProperties getDefaultRuleProperties(String ruleName){
+		return new RuleProperties(describeRuleProperties(ruleName));
+	}
+	
 	protected abstract int init(
 			String ruleName, 
 			String topologyName, 
@@ -32,13 +41,14 @@ public abstract class Library {
 			int width, 
 			int height, 
 			byte[] firstGen,
-			byte[] previous)
+			byte[] previous,
+			String properties)
 	{
 		Computation computation = null;
 		
 		if(type==TYPE_JNI){
 			byte[] previousTemp = previous!=null?previous:firstGen;
-			int id = init(ruleName,null,width,height,firstGen,previousTemp,null);
+			int id = init(ruleName,null,width,height,firstGen,previousTemp,properties);
 			computation = new JNIComputation(ruleName,id);
 		}
 		else{
@@ -51,5 +61,12 @@ public abstract class Library {
 		return name;
 	}
 
+	public boolean equals(Object o){
+		if(o instanceof Configuration){
+			Library other = (Library)o;
+			return other.name.equals(name);
+		}
+		return false;
+	}
 
 }

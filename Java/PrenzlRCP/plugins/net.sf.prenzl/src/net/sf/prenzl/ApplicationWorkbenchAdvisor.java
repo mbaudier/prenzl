@@ -13,7 +13,8 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	}
 
 	public String getInitialWindowPerspectiveId() {
-		return Perspective.ID;
+		//return Perspective.ID;
+		return ConfigPerspective.ID;
 	}
 
 	public void initialize(IWorkbenchConfigurer configurer) {

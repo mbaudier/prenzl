@@ -4,35 +4,113 @@ import java.util.Observable;
 import java.util.Observer;
 
 import net.sf.prenzl.PrenzlPlugin;
-import net.sf.prenzl.adapter.Library;
+import net.sf.prenzl.launch.ComputationInput;
+import net.sf.prenzl.launch.Configuration;
+import net.sf.prenzl.launch.ICountListener;
 import net.sf.prenzl.launch.LaunchModel;
-import net.sf.prenzl.ui.ComputationUI;
+import net.sf.prenzl.ui.actions.FirstGenerationAction;
+import net.sf.prenzl.ui.actions.NextStepAction;
+import net.sf.prenzl.ui.actions.PreviousStepAction;
+import net.sf.prenzl.ui.actions.RunAction;
+import net.sf.prenzl.ui.actions.SaveImageAction;
+import net.sf.prenzl.ui.computation.ComputationUI;
 
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.part.ViewPart;
 
-public class Display2dView extends ViewPart implements Observer{
+public class Display2dView extends ViewPart implements Observer, ICountListener{
 	public static final String ID = PrenzlPlugin.ID+".display2dView";
 	
 
 	private ComputationUI computationUI = null;
+	private MenuManager menuManager = null;
+	private IStatusLineManager statusLineManager = null;
 	
 	/** Creates the viewer and initialize it.*/
 	public void createPartControl(Composite parent) {
-		computationUI = new ComputationUI(parent);
+
+		
+		computationUI = new ComputationUI(parent, new ComputationUIlMouseListener());
+
+		FirstGenerationAction firstGenerationAction = new FirstGenerationAction(computationUI);
+		PreviousStepAction previousStepAction = new PreviousStepAction(computationUI);
+		NextStepAction nextStepAction = new NextStepAction(computationUI);
+		RunAction runAction = new RunAction(computationUI);
+		
+		SaveImageAction saveDisplayJPEG = 
+			new SaveImageAction(computationUI,true,SWT.IMAGE_JPEG);
+		SaveImageAction saveDisplayBMP = 
+			new SaveImageAction(computationUI,true,SWT.IMAGE_BMP);
+		SaveImageAction saveImageJPEG = 
+			new SaveImageAction(computationUI,false,SWT.IMAGE_JPEG);
+		SaveImageAction saveImageBMP = 
+			new SaveImageAction(computationUI,false,SWT.IMAGE_BMP);
+
+		IToolBarManager toolBarManager= getViewSite().getActionBars().getToolBarManager();
+    toolBarManager.add(firstGenerationAction);
+    toolBarManager.add(previousStepAction);
+    toolBarManager.add(nextStepAction);
+    toolBarManager.add(runAction);
+    //toolBarManager.add();
+
+    RunAction runActionText = new RunAction(computationUI,"");
+		menuManager = new MenuManager();
+		menuManager.add(runActionText);
+		menuManager.add(new Separator());
+		menuManager.add(saveDisplayJPEG);
+		menuManager.add(saveDisplayBMP);
+		menuManager.add(new Separator());
+		menuManager.add(saveImageJPEG);
+		menuManager.add(saveImageBMP);
+
+		IMenuManager viewMenuManager = getViewSite().getActionBars().getMenuManager();
+		viewMenuManager.add(runActionText);
+		viewMenuManager.add(new Separator());
+		viewMenuManager.add(saveDisplayJPEG);
+		viewMenuManager.add(saveDisplayBMP);
+		viewMenuManager.add(new Separator());
+		viewMenuManager.add(saveImageJPEG);
+		viewMenuManager.add(saveImageBMP);
+        
+		statusLineManager = getViewSite().getActionBars().getStatusLineManager();
+		computationUI.addCountListener(this);
+		//statusLineManager.add(new CountContributionItem(computationUI,statusLineManager));
 		
 		PrenzlPlugin.getLaunchModel().addObserver(this);
-		PrenzlPlugin.getRunModel().addObserver(this);
-		refresh();
+		update(null,null);
 	}
 
-	public void update(Observable o, Object arg) {
-		if (o==PrenzlPlugin.getLaunchModel()) {
-			refresh();					
-		}
-		else if (o==PrenzlPlugin.getRunModel()) {
-			if(computationUI!=null)
-				computationUI.setRunning(PrenzlPlugin.getRunModel().isRunning());					
+	public void update(Observable observable, Object arg) {
+		if (observable==PrenzlPlugin.getLaunchModel() || observable == null) {
+			LaunchModel launchModel = PrenzlPlugin.getLaunchModel();
+			if(arg instanceof Configuration){
+				Configuration configuration = (Configuration)arg; 
+				computationUI.reset(configuration);
+				setPartName(configuration.getRuleName());
+			}
+			else if(arg instanceof ComputationInput){
+				computationUI.reset(launchModel.getComputationInput());
+				
+			}
+			else if(arg == null){//complete reset
+				computationUI.reset(launchModel.getConfiguration(),launchModel.getComputationInput());
+			}
+//			if(launchModel.isReadyToLaunch()){
+//				Library library = launchModel.getLibrary();
+//				String ruleName = launchModel.getRuleName();
+//				String firstGenPicPath = launchModel.getPicturePath();
+//				computationUI.reset(library,ruleName,firstGenPicPath);
+//			}
 		}
 	}
 
@@ -41,21 +119,8 @@ public class Display2dView extends ViewPart implements Observer{
 		computationUI.setFocus();
 	}
 
-	public void refresh(){
-		computationUI.paintBackground();
-		
-		LaunchModel launchModel = PrenzlPlugin.getLaunchModel();
-		if(launchModel.isReadyToLaunch()){
-			Library library = launchModel.getLibrary();
-			String ruleName = launchModel.getRuleName();
-			String firstGenPicPath = launchModel.getPicturePath();
-			computationUI.reset(library,ruleName,firstGenPicPath);
-		}
-	}
-	
 	public void dispose() {
 		PrenzlPlugin.getLaunchModel().deleteObserver(this);
-		PrenzlPlugin.getRunModel().deleteObserver(this);
 		computationUI.dispose();
 		super.dispose();
 	}
@@ -63,5 +128,32 @@ public class Display2dView extends ViewPart implements Observer{
 	public ComputationUI getComputationUI() {
 		return computationUI;
 	}
+	public void setCount(final int count) {
+		computationUI.getDc().getLabel().getDisplay().asyncExec(new Runnable(){
+			public void run(){
+				if(statusLineManager!=null)
+					statusLineManager.setMessage(Integer.toString(count));
+			}
+		});
+	}
+
+	
+	
+	/** Separate MenuManager code from ComputationUI in order to remove a dependency to JFace*/
+	private class ComputationUIlMouseListener implements MouseListener {
+		public void mouseDoubleClick(MouseEvent e) {}
+		public void mouseUp(MouseEvent e) {}
+
+		public void mouseDown(MouseEvent e) {
+			if (e.button == 2 || e.button == 3) {
+				Point pt = computationUI.getDc().getLabel().toDisplay(new Point(e.x, e.y));
+				Menu menu = menuManager.createContextMenu(computationUI.getDc().getLabel());
+				menu.setLocation(pt.x, pt.y);
+				menu.setVisible(!menu.isVisible());
+			}
+		}
+
+	}
+
 
 }

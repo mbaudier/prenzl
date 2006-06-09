@@ -9,6 +9,7 @@ import net.sf.prenzl.PrenzlPlugin;
 import net.sf.prenzl.SharedImages;
 import net.sf.prenzl.adapter.Library;
 import net.sf.prenzl.launch.LaunchModel;
+import net.sf.prenzl.launch.RuleDescriptor;
 
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
@@ -46,7 +47,7 @@ public class ComputationContributionItem extends ContributionItem {
 			this.toolBar = toolBar;
 			PrenzlPlugin.getLaunchModel().addObserver(this);
 			
-			List libraries = PrenzlPlugin.getLaunchModel().getLibraries();
+			List libraries = LaunchModel.getLibraries();
 			if(libraries!=null && libraries.size()>0){
 				Library library = (Library)libraries.get(0);
 				String ruleNames[] = library.listComputations();
@@ -59,7 +60,7 @@ public class ComputationContributionItem extends ContributionItem {
 		
 		public void update(Observable o, Object arg) {
 			if(o==PrenzlPlugin.getLaunchModel()){
-				String ruleName = PrenzlPlugin.getLaunchModel().getRuleName();
+				String ruleName = PrenzlPlugin.getLaunchModel().getRuleDescriptor().getRuleName();
 				if(ruleName!=null){
 					toolItem.setText(ruleName);
 					//toolItem.setToolTipText(ruleName);
@@ -81,8 +82,7 @@ public class ComputationContributionItem extends ContributionItem {
 	    
 	    Menu menu = new Menu(toolBar.getShell(), SWT.POP_UP);
 	    
-	    LaunchModel model = PrenzlPlugin.getLaunchModel();
-	    List libraries = model.getLibraries();
+	    List libraries = LaunchModel.getLibraries();
 	    for(int j=0;j<libraries.size();j++){
 	    	final Library library = (Library)libraries.get(j);
 	    	MenuItem miLib = new MenuItem(menu,SWT.CASCADE);
@@ -110,7 +110,7 @@ public class ComputationContributionItem extends ContributionItem {
 	    return menu;
 		}
 		void updateComputation(Library library,String computation){
-			PrenzlPlugin.getLaunchModel().setComputation(library,computation);
+			PrenzlPlugin.getLaunchModel().setRuleDescriptor(new RuleDescriptor(library,computation));
 			PrenzlPlugin.getLaunchModel().notifyObservers();
 		}
 	}

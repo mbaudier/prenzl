@@ -8,6 +8,7 @@ import java.util.Observer;
 
 import net.sf.prenzl.PrenzlPlugin;
 import net.sf.prenzl.SharedImages;
+import net.sf.prenzl.launch.ComputationInput;
 
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
@@ -34,7 +35,7 @@ public class PictureContributionItem extends ContributionItem {
 	
 	public void fill(final ToolBar parent, int index) {
 		final ToolItem toolItem = new ToolItem(parent,SWT.DROP_DOWN);
-    List lastPictures = PrenzlPlugin.getLaunchModel().getLastPictures();
+    List lastPictures = PrenzlPlugin.getLaunchModel().getLastInputLocations();
 		toolItem.setText(lastPictures.size()>0?new File(lastPictures.get(0).toString()).getName()
 				:"<click to choose file>");
 		toolItem.setImage(SharedImages.IMG_FILE);
@@ -56,7 +57,7 @@ public class PictureContributionItem extends ContributionItem {
 		
 		public void update(Observable o, Object arg) {
 			if(o==PrenzlPlugin.getLaunchModel()){
-				String path = PrenzlPlugin.getLaunchModel().getPicturePath();
+				String path = PrenzlPlugin.getLaunchModel().getComputationInput().getLocation();
 				if(path!=null){					
 					toolItem.setText(new File(path).getName());
 					toolItem.setToolTipText(path);
@@ -95,7 +96,7 @@ public class PictureContributionItem extends ContributionItem {
 		private Menu createPicturesListMenu(Point pt){
 	    pt = toolBar.toDisplay(pt);
 	    Menu menu = new Menu(toolBar.getShell(), SWT.POP_UP);
-	    List lastPictures = PrenzlPlugin.getLaunchModel().getLastPictures();
+	    List lastPictures = PrenzlPlugin.getLaunchModel().getLastInputLocations();
 	    for(int i=0; i<lastPictures.size();i++){
 		    MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
 		    final String path = lastPictures.get(i).toString();
@@ -114,7 +115,7 @@ public class PictureContributionItem extends ContributionItem {
 	    return menu;
 		}
 		void updatePicturePath(String path){
-			PrenzlPlugin.getLaunchModel().setPicturePath(path);
+			PrenzlPlugin.getLaunchModel().setComputationInput(new ComputationInput(path));
 			PrenzlPlugin.getLaunchModel().notifyObservers();
 		}
 		
