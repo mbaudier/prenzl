@@ -9,12 +9,12 @@
 	<property name="factory.eclipse.dir" location="eclipse/3.1.2"/>
 	
 	<property name="prenzl.jni.home" location="../C/JNI/prenzl"/>
-	<property name="prenzl.java.home" location="../Java/PrenzlRCP/plugins/net.sf.prenzl"/>
+	<property name="prenzl.java.home" location="../net.sf.prenzl"/>
 	<property name="prenzl.build.dir" location="${factory.build.dir}/net.sf.prenzl"/>
 	<property name="prenzl.build.manifest.dir" location="${prenzl.build.dir}/META-INF"/>
 	
 	<property name="stdrules.jni.home" location="../C/JNI/stdrules"/>
-	<property name="stdrules.java.home" location="../Java/Rules/net.sf.prenzl.stdrules"/>
+	<property name="stdrules.java.home" location="../net.sf.prenzl.stdrules"/>
 	<property name="stdrules.build.dir" location="${factory.build.dir}/net.sf.prenzlstdrules"/>
 	<property name="stdrules.build.manifest.dir" location="${stdrules.build.dir}/META-INF"/>
 	
@@ -198,7 +198,7 @@
 		</copy>
 		<zip destfile="../../Prenzl-trunk.zip"  basedir="${backup.src.dir}"/>
 		-->
-		<zip destfile="../../Prenzl-trunk.zip">
+		<zip destfile="../../Prenzl-src-trunk.zip">
 			<fileset dir="..">
 				<include name="**/*"/>
 				<exclude name="**/*.class"/>
