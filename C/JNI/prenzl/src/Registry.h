@@ -1,10 +1,13 @@
 #pragma once
 
-#include <iostream.h>
+#include <iostream>
 #include <vector>
 
 #include "Model/Rule.h"
 #include "Model/Topology.h"
+
+using std::cout;
+using std::cerr; 
 
 namespace Prenzl {
 

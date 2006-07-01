@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <iostream.h>
-#include <string.h>
+#include <iostream>
 
 #include "Model/Topology.h"
 #include "Model/Rule.h"

@@ -1,6 +1,6 @@
 <project>
 	<property name="factory.dir" location="../../../Factory"/> 
-	<property name="prenzl.plugin.dir" location="../../../Java/PrenzlRCP/plugins/net.sf.prenzl"/> 
+	<property name="prenzl.plugin.dir" location="../../../net.sf.prenzl"/> 
 	
 	<import file="${factory.dir}/build-import.xml"/>
 	

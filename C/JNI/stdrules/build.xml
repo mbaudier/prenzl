@@ -3,7 +3,7 @@
 	
 	<import file="${factory.dir}/build-import.xml"/>
 
-	<property name="stdrules.plugin.dir" location="../../../Java/Rules/net.sf.prenzl.stdrules"/> 
+	<property name="stdrules.plugin.dir" location="../../../net.sf.prenzl.stdrules"/> 
 
 	<target name="build" depends="clean">
 		<gcc.compile component="StdRules"/>

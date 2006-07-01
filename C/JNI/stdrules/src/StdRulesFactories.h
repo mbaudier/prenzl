@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include <map>
 #include <string>
 
@@ -15,6 +14,7 @@
 #include "Rules/stdrules/Hydra.h"
 #include "Rules/stdrules/ColorHydra.h"
 #include "Rules/stdrules/Braque.h"
+
 namespace Prenzl {
 
 	class RFactory {
