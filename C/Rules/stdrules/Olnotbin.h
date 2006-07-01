@@ -53,55 +53,42 @@ namespace Prenzl {
 
 			for(int i = 1; i < width - 1; i++) {
 				for(int j = 1; j < height - 1; j++) {
-#if 1
-					int totalR = previous[3*((i-1)+(j-1)*width) + Topology::RED]
-							   + previous[3*((i-1)+(j+0)*width) + Topology::RED]
-							   + previous[3*((i-1)+(j+1)*width) + Topology::RED]
-							   + previous[3*((i+0)+(j-1)*width) + Topology::RED]
-							   + previous[3*((i+0)+(j+0)*width) + Topology::RED]
-							   + previous[3*((i+0)+(j+1)*width) + Topology::RED]
-							   + previous[3*((i+1)+(j-1)*width) + Topology::RED]
-							   + previous[3*((i+1)+(j+0)*width) + Topology::RED]
-							   + previous[3*((i+1)+(j+1)*width) + Topology::RED];
+					int totalR = previous[I_RED(i-1,j-1,width)]
+							   + previous[I_RED(i-1,j+0,width)]
+							   + previous[I_RED(i-1,j+1,width)]
+							   + previous[I_RED(i+0,j-1,width)]
+							   + previous[I_RED(i+0,j+0,width)]
+							   + previous[I_RED(i+0,j+1,width)]
+							   + previous[I_RED(i+1,j-1,width)]
+							   + previous[I_RED(i+1,j+0,width)]
+							   + previous[I_RED(i+1,j+1,width)];
 
-					int totalG = previous[3*((i-1)+(j-1)*width) + Topology::GREEN]
-							   + previous[3*((i-1)+(j+0)*width) + Topology::GREEN]
-							   + previous[3*((i-1)+(j+1)*width) + Topology::GREEN]
-							   + previous[3*((i+0)+(j-1)*width) + Topology::GREEN]
-							   + previous[3*((i+0)+(j+0)*width) + Topology::GREEN]
-							   + previous[3*((i+0)+(j+1)*width) + Topology::GREEN]
-							   + previous[3*((i+1)+(j-1)*width) + Topology::GREEN]
-							   + previous[3*((i+1)+(j+0)*width) + Topology::GREEN]
-							   + previous[3*((i+1)+(j+1)*width) + Topology::GREEN];
+					int totalG = previous[I_GREEN(i-1,j-1,width)]
+							   + previous[I_GREEN(i-1,j+0,width)]
+							   + previous[I_GREEN(i-1,j+1,width)]
+							   + previous[I_GREEN(i+0,j-1,width)]
+							   + previous[I_GREEN(i+0,j+0,width)]
+							   + previous[I_GREEN(i+0,j+1,width)]
+							   + previous[I_GREEN(i+1,j-1,width)]
+							   + previous[I_GREEN(i+1,j+0,width)]
+							   + previous[I_GREEN(i+1,j+1,width)];
 
-					int totalB = previous[3*((i-1)+(j-1)*width) + Topology::BLUE]
-							   + previous[3*((i-1)+(j+0)*width) + Topology::BLUE]
-							   + previous[3*((i-1)+(j+1)*width) + Topology::BLUE]
-							   + previous[3*((i+0)+(j-1)*width) + Topology::BLUE]
-							   + previous[3*((i+0)+(j+0)*width) + Topology::BLUE]
-							   + previous[3*((i+0)+(j+1)*width) + Topology::BLUE]
-							   + previous[3*((i+1)+(j-1)*width) + Topology::BLUE]
-							   + previous[3*((i+1)+(j+0)*width) + Topology::BLUE]
-							   + previous[3*((i+1)+(j+1)*width) + Topology::BLUE];
+					int totalB = previous[I_BLUE(i-1,j-1,width)]
+							   + previous[I_BLUE(i-1,j+0,width)]
+							   + previous[I_BLUE(i-1,j+1,width)]
+							   + previous[I_BLUE(i+0,j-1,width)]
+							   + previous[I_BLUE(i+0,j+0,width)]
+							   + previous[I_BLUE(i+0,j+1,width)]
+							   + previous[I_BLUE(i+1,j-1,width)]
+							   + previous[I_BLUE(i+1,j+0,width)]
+							   + previous[I_BLUE(i+1,j+1,width)];
 
 					int total = totalB + (totalG << 8) + (totalR << 16);
-#else
-					int total  = (*((int*)(previous + 3*((i-1)+(j-1)*width)))&0x00FFFFFF)
-							   + (*((int*)(previous + 3*((i-1)+(j+0)*width)))&0x00FFFFFF)
-							   + (*((int*)(previous + 3*((i-1)+(j+1)*width)))&0x00FFFFFF)
-							   + (*((int*)(previous + 3*((i+0)+(j-1)*width)))&0x00FFFFFF)
-							   + (*((int*)(previous + 3*((i+0)+(j+0)*width)))&0x00FFFFFF)
-							   + (*((int*)(previous + 3*((i+0)+(j+1)*width)))&0x00FFFFFF)
-							   + (*((int*)(previous + 3*((i+1)+(j-1)*width)))&0x00FFFFFF)
-							   + (*((int*)(previous + 3*((i+1)+(j+0)*width)))&0x00FFFFFF)
-							   + (*((int*)(previous + 3*((i+1)+(j+1)*width)))&0x00FFFFFF);
+					int average = total / 9;
 
-#endif
-				   int average = total / 9;
-
-					current[3*(i+j*width) + Topology::BLUE] = (unsigned char)(average & 0x0000FF);
-					current[3*(i+j*width) + Topology::GREEN] = (unsigned char)((average>>8) & 0x0000FF);
-					current[3*(i+j*width) + Topology::RED] = (unsigned char)((average>>16) & 0x0000FF);
+					current[I_BLUE(i,j,width) ] = (unsigned char)(average & 0x0000FF);
+					current[I_GREEN(i,j,width)] = (unsigned char)((average>>8) & 0x0000FF);
+					current[I_RED(i,j,width)  ] = (unsigned char)((average>>16) & 0x0000FF);
 				}
 			}
 			

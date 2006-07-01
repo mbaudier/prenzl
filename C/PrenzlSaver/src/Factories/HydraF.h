@@ -49,13 +49,11 @@ namespace Prenzl {
 			{}
 
 			BOOL OnInitDialog( ) {
-				this->SendDlgItemMessage(IDC_BODYLOWERSLIDER, TBM_SETRANGE, FALSE, MAKELONG(0, 255));
-				this->SendDlgItemMessage(IDC_BODYLOWERSLIDER, TBM_SETPAGESIZE, 0, 1);
-				this->SendDlgItemMessage(IDC_BODYLOWERSLIDER, TBM_SETPOS, TRUE, bodyLowerLimit);
+				configureSlider(IDC_BODYLOWERSLIDER, 0, 255, 1);
+				setSliderPosition(IDC_BODYLOWERSLIDER, bodyLowerLimit);
 
-				this->SendDlgItemMessage(IDC_HEADLOWERSLIDER, TBM_SETRANGE, FALSE, MAKELONG(0, 255));
-				this->SendDlgItemMessage(IDC_HEADLOWERSLIDER, TBM_SETPAGESIZE, 0, 1);
-				this->SendDlgItemMessage(IDC_HEADLOWERSLIDER, TBM_SETPOS, TRUE, headLowerLimit);
+				configureSlider(IDC_HEADLOWERSLIDER, 0, 255, 1);
+				setSliderPosition(IDC_HEADLOWERSLIDER, headLowerLimit);
 
 				setTextBoxIntValue(IDC_BODYLOWEREDIT, bodyLowerLimit);
 				setTextBoxIntValue(IDC_HEADLOWEREDIT, headLowerLimit);
@@ -64,26 +62,26 @@ namespace Prenzl {
 			}
 
 			void OnOK() {
-				bodyLowerLimit = (int) this->SendDlgItemMessage(IDC_BODYLOWERSLIDER, TBM_GETPOS, 0, 0);
-				headLowerLimit = (int) this->SendDlgItemMessage(IDC_HEADLOWERSLIDER, TBM_GETPOS, 0, 0);
+				bodyLowerLimit = getSliderPosition(IDC_BODYLOWERSLIDER);
+				headLowerLimit = getSliderPosition(IDC_HEADLOWERSLIDER);
 				PrenzlDialog::OnOK();
 			}
 
 			BOOL OnCmdMsg(UINT nID, int nCode, void*pExtra, AFX_CMDHANDLERINFO*pHandlerInfo) {
 				if(nID == IDC_BODYLOWERSLIDER) {
-					int body = (int) this->SendDlgItemMessage(IDC_BODYLOWERSLIDER, TBM_GETPOS, 0, 0);
-					int head = (int) this->SendDlgItemMessage(IDC_HEADLOWERSLIDER, TBM_GETPOS, 0, 0);
+					int body = getSliderPosition(IDC_BODYLOWERSLIDER);
+					int head = getSliderPosition(IDC_HEADLOWERSLIDER);
 					setTextBoxIntValue(IDC_BODYLOWEREDIT, body);
 					if(head < body) {
-						this->SendDlgItemMessage(IDC_HEADLOWERSLIDER, TBM_SETPOS, TRUE, body);
+						setSliderPosition(IDC_HEADLOWERSLIDER, body);
 					}
 				}
 				else if(nID == IDC_HEADLOWERSLIDER) {
-					int body = (int) this->SendDlgItemMessage(IDC_BODYLOWERSLIDER, TBM_GETPOS, 0, 0);
-					int head = (int) this->SendDlgItemMessage(IDC_HEADLOWERSLIDER, TBM_GETPOS, 0, 0);
+					int body = getSliderPosition(IDC_BODYLOWERSLIDER);
+					int head = getSliderPosition(IDC_HEADLOWERSLIDER);
 					setTextBoxIntValue(IDC_HEADLOWEREDIT, head);
 					if(head < body) {
-						this->SendDlgItemMessage(IDC_BODYLOWERSLIDER, TBM_SETPOS, TRUE, head);
+						setSliderPosition(IDC_BODYLOWERSLIDER, head);
 					}
 				}
 				return PrenzlDialog::OnCmdMsg(nID, nCode, pExtra, pHandlerInfo);

@@ -36,9 +36,9 @@ namespace Prenzl {
 
 			for(int i = 1; i < width - 1; i++) {
 				for(int j = 1; j < height - 1; j++) {
-					current[3*(i+j*width) + Topology::BLUE ] = previous[3*(i+dxB_+(j+dyB_)*width) + Topology::BLUE ] + deltaB_;
-					current[3*(i+j*width) + Topology::GREEN] = previous[3*(i+dxG_+(j+dyG_)*width) + Topology::GREEN] + deltaG_;
-					current[3*(i+j*width) + Topology::RED  ] = previous[3*(i+dxR_+(j+dyR_)*width) + Topology::RED  ] + deltaR_;
+					current[I_BLUE(i,j,width) ] = previous[I_BLUE (i+dxB_,j+dyB_,width)] + deltaB_;
+					current[I_GREEN(i,j,width)] = previous[I_GREEN(i+dxG_,j+dyG_,width)] + deltaG_;
+					current[I_RED(i,j,width)  ] = previous[I_RED  (i+dxR_,j+dyR_,width)] + deltaR_;
 				}
 			}
 

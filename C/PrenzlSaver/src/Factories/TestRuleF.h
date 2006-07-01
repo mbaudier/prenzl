@@ -22,7 +22,8 @@ namespace Prenzl {
 		public:
 
 			TestRule()
-			{}
+			{
+			}
 
 
 			void computeNext(Topology& topo) {
@@ -35,109 +36,105 @@ namespace Prenzl {
 
 		private:
 	
-			static const int bodyLowerLimit = 100;
-			static const int headLowerLimit = 200;
-
-			static int getMax(int a, int b, int c) {
-				return max(a, max(b, c));
-			}
+#if 0 /*phase cheulou avec zones grises*/
+			static const int coeffBG = 20;
+			static const int coeffBR = 0;
+			static const int coeffGR = 20;
+			static const int coeffGB = 0;
+			static const int coeffRB = -20;
+			static const int coeffRG = 0;
+			static const int coeffBB = 0;
+			static const int coeffGG = 0;
+			static const int coeffRR = 0;
+#elif 0 /*bof*/
+			static const int coeffBG = 20;
+			static const int coeffBR = -10;
+			static const int coeffGR = 20;
+			static const int coeffGB = -10;
+			static const int coeffRB = -20;
+			static const int coeffRG = 10;
+			static const int coeffBB = 0;
+			static const int coeffGG = 0;
+			static const int coeffRR = 0;
+#elif 0 /*sympa*/
+			static const int coeffBG = -20;
+			static const int coeffBR = 0;
+			static const int coeffGR = -20;
+			static const int coeffGB = 0;
+			static const int coeffRB = -20;
+			static const int coeffRG = 0;
+			static const int coeffBB = 10;
+			static const int coeffGG = 10;
+			static const int coeffRR = 10;
+#elif 1 /*type phaseCheulou squares*/
+			static const int coeffBG =  20;
+			static const int coeffBR =  20;
+			static const int coeffGR =  20;
+			static const int coeffGB =  20;
+			static const int coeffRB = -10;
+			static const int coeffRG = -10;
+			static const int coeffBB =   0;
+			static const int coeffGG =   0;
+			static const int coeffRR =   0;
+#elif 0
+			static const int coeffBG =  90;
+			static const int coeffBR =  90;
+			static const int coeffGR =  90;
+			static const int coeffGB =  90;
+			static const int coeffRB = -90;
+			static const int coeffRG = -90;
+			static const int coeffBB =   0;
+			static const int coeffGG =   0;
+			static const int coeffRR =   0;
+#else
+			static const int coeffBG =  90;
+			static const int coeffBR =  90;
+			static const int coeffGR =  90;
+			static const int coeffGB =  90;
+			static const int coeffRB = -90;
+			static const int coeffRG = -90;
+			static const int coeffBB =   0;
+			static const int coeffGG =   0;
+			static const int coeffRR =   0;
+#endif
 
 			void computeNext(Topology& topo, int i, int j) {
+				unsigned char * previous = topo.getPrevious();
+				unsigned char * anteprevious = topo.getAnteprevious();
+				unsigned char * current = topo.getCurrent();
+				int width = topo.getWidth();
 
-				// for blue
-				int bC = topo.getPrevious(i + 0, j + 0, Topology::BLUE);
-
-				// for green
-				int gC = topo.getPrevious(i + 0, j + 0, Topology::GREEN);
-
-				// for red
-				int rC = topo.getPrevious(i + 0, j + 0, Topology::RED);
-
-				// get the max and the max Color
-				int maxC = getMax(bC, gC, rC);
-
-				int newBlue = 0;
-				int newGreen = 0;
-				int newRed = 0;
-
-				if(maxC >= headLowerLimit) {
-					// we have a head
-					// a head dies and becomes a body
-
-					// we set the max to headLowerLimit - 1
-					newBlue  = (bC >= headLowerLimit) ? (headLowerLimit - 1) : bC;
-					newGreen = (gC >= headLowerLimit) ? (headLowerLimit - 1) : gC;
-					newRed   = (rC >= headLowerLimit) ? (headLowerLimit - 1) : rC;
-				}
-				else if(maxC < bodyLowerLimit) {
-					// we have a non animal
-					// may become a head if 
-					// - there is one and only one head around
-					// - there is no body
-
-					int bN = topo.getPrevious(i + 0, j - 1, Topology::BLUE);
-					int bS = topo.getPrevious(i + 0, j + 1, Topology::BLUE);
-					int bE = topo.getPrevious(i + 1, j + 0, Topology::BLUE);
-					int bW = topo.getPrevious(i - 1, j + 0, Topology::BLUE);
-
-					int gN = topo.getPrevious(i + 0, j - 1, Topology::GREEN);
-					int gS = topo.getPrevious(i + 0, j + 1, Topology::GREEN);
-					int gE = topo.getPrevious(i + 1, j + 0, Topology::GREEN);
-					int gW = topo.getPrevious(i - 1, j + 0, Topology::GREEN);
-
-					int rN = topo.getPrevious(i + 0, j - 1, Topology::RED);
-					int rS = topo.getPrevious(i + 0, j + 1, Topology::RED);
-					int rE = topo.getPrevious(i + 1, j + 0, Topology::RED);
-					int rW = topo.getPrevious(i - 1, j + 0, Topology::RED);
-
-					unsigned int nbHead = 0;
-					unsigned int nbBody = 0;
-
-					int maxN = getMax(bN, gN, rN);
-					if(maxN >= headLowerLimit) {nbHead++;newBlue=bN;newGreen=gN;newRed=rN;}
-					else if(maxN >= bodyLowerLimit) {nbBody++;}
-
-					int maxS = getMax(bS, gS, rS);
-					if(maxS >= headLowerLimit) {nbHead++;newBlue=bS;newGreen=gS;newRed=rS;}
-					else if(maxS >= bodyLowerLimit) {nbBody++;}
-
-					int maxE = getMax(bE, gE, rE);
-					if(maxE >= headLowerLimit) {nbHead++;newBlue=bE;newGreen=gE;newRed=rE;}
-					else if(maxE >= bodyLowerLimit) {nbBody++;}
-
-					int maxW = getMax(bW, gW, rW);
-					if(maxW >= headLowerLimit) {nbHead++;newBlue=bW;newGreen=gW;newRed=rW;}
-					else if(maxW >= bodyLowerLimit) {nbBody++;}
-
-					if((nbHead == 1)&&(nbBody==0)) {
-						// become a head
-						// let as it is
-					}
-					else {
-						// blur with no correction (blur + a little bit darker)
-						newBlue = (12*bC + bN + bS + bE + bW)/16;
-						newGreen = (12*gC + gN + gS + gE + gW)/16;
-						newRed = (12*rC + rN + rS + rE + rW)/16;
+				int totalR = 0;
+				int totalG = 0;
+				int totalB = 0;
+				for(int di = -1; di <= 1; di++) {
+					for(int dj = -1; dj <= 1; dj++) {
+						totalB +=  topo.getPrevious(i + di, j + dj, Topology::BLUE);
+						totalG +=  topo.getPrevious(i + di, j + dj, Topology::GREEN); 
+						totalR +=  topo.getPrevious(i + di, j + dj, Topology::RED) ; 
 					}
 				}
-				else {
-					// a body slowly returns to nature
-					newBlue  = (bC >= bodyLowerLimit) ? (bC - 1) : bC;
-					newGreen = (gC >= bodyLowerLimit) ? (gC - 1) : gC;
-					newRed   = (rC >= bodyLowerLimit) ? (rC - 1) : rC;
+				int meansR = (totalR + 4) / 9 - 127;
+				int meansG = (totalG + 4) / 9 - 127;
+				int meansB = (totalB + 4) / 9 - 127;
 
-//					newBlue = bC - 1;  if(newBlue < 0) {newBlue=0;}
-//					newGreen = gC - 1; if(newGreen < 0) {newGreen=0;} 
-//					newRed = rC - 1;   if(newRed < 0) {newRed=0;}
-				}
+				int blue  =  previous[I_BLUE (i,j,width)];
+				int green =  previous[I_GREEN(i,j,width)];
+				int red   =  previous[I_RED  (i,j,width)];
 
-				topo.setCurrent(i, j, Topology::BLUE,  newBlue);
+				int oldBlue  =  anteprevious[I_BLUE (i,j,width)];
+				int oldGreen =  anteprevious[I_GREEN(i,j,width)];
+				int oldRed   =  anteprevious[I_RED  (i,j,width)];
 
-				topo.setCurrent(i, j, Topology::GREEN, newGreen);
+				blue  = 2*blue  - oldBlue  + (coeffBG*meansG + coeffBR*meansR + coeffBB*meansB)/1024;			
+				green = 2*green - oldGreen + (coeffGR*meansR + coeffGB*meansB + coeffGG*meansG)/1024;
+				red   = 2*red   - oldRed   + (coeffRB*meansB + coeffRG*meansG + coeffRR*meansR)/1024;
 
-				topo.setCurrent(i, j, Topology::RED,   newRed);
-
+				current[I_BLUE (i,j,width)] = charSaturate(blue);
+				current[I_GREEN(i,j,width)] = charSaturate(green);
+				current[I_RED  (i,j,width)] = charSaturate(red);
 			}
+
 		};
 
 	};

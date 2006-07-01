@@ -3,15 +3,23 @@
 
 namespace Prenzl {
 
-	class Turner : public Rule {
+	class Braque : public Rule {
 
 	public:
 
-		Turner( int volatility = 2, int sign_bit = 3, int dir_bit = 4)
+		Braque( int volatility = 2, int shift = 2)
 			: volatility(volatility)
-			, sign_bit(sign_bit)
-			, dir_bit(dir_bit)
-		{}
+			, shift(shift)
+		{
+			directions.push_back(std::pair<int,int>(-1,-1));
+			directions.push_back(std::pair<int,int>(-1, 0));
+			directions.push_back(std::pair<int,int>(-1, 1));
+			directions.push_back(std::pair<int,int>( 0, 1));
+			directions.push_back(std::pair<int,int>( 1, 1));
+			directions.push_back(std::pair<int,int>( 1, 0));
+			directions.push_back(std::pair<int,int>( 1,-1));
+			directions.push_back(std::pair<int,int>( 0,-1));		
+		}
 
 		void computeNext(Topology& topo) {
 			// compute all non border cells (optimised)
@@ -27,28 +35,13 @@ namespace Prenzl {
 					unsigned int green =  previous[I_GREEN(i,j,width)];
 					unsigned int red   =  previous[I_RED(i,j,width)  ];
 
-					int sign = 1 - 2 * ((green >> sign_bit)&1);
-					int direction = (red >> dir_bit)&1;
+					const std::pair<int,int>& dir = directions[((red ^ green ^ blue)>>shift)&0x7];
 
-					int d_i = sign * direction;
-					int d_j = sign * (1-direction);
+					int d_i = dir.first;
+					int d_j = dir.second;
 
 					int newBlue =  (blue  + ((1<<volatility)-1) * previous[I_BLUE (i+d_i,j+d_j,width)] + (1<<(volatility-1))) >> volatility;
-
-					sign = 1 - 2 * ((red >> sign_bit)&1);
-					direction = (blue >> dir_bit)&1;
-
-					d_i = sign * direction;
-					d_j = sign * (1-direction);
-
 					int newGreen = (green + ((1<<volatility)-1) * previous[I_GREEN(i+d_i,j+d_j,width)] + (1<<(volatility-1))) >> volatility;
-
-					sign = 1 - 2 * ((blue >> sign_bit)&1);
-					direction = (green >> dir_bit)&1;
-
-					d_i = sign * direction;
-					d_j = sign * (1-direction);
-
 					int newRed =   (red   + ((1<<volatility)-1) * previous[I_RED  (i+d_i,j+d_j,width)] + (1<<(volatility-1))) >> volatility;
 
 					current[I_BLUE(i,j,width) ] = newBlue;
@@ -75,44 +68,30 @@ namespace Prenzl {
 	private:
 		void computeNext(Topology& topo, int i, int j) {
 			unsigned char * previous = topo.getPrevious();
+			unsigned char * current = topo.getCurrent();
 			int width = topo.getWidth();
 			unsigned int blue  =  previous[I_BLUE(i,j,width) ];
 			unsigned int green =  previous[I_GREEN(i,j,width)];
 			unsigned int red   =  previous[I_RED(i,j,width)  ];
 
-			int sign = 1 - 2 * ((green >> sign_bit)&1);
-			int direction = (red >> dir_bit)&1;
+			const std::pair<int,int>& dir = directions[((red ^ green ^ blue)>>shift)&0x7];
 
-			int d_i = sign * direction;
-			int d_j = sign * (1-direction);
+			int d_i = dir.first;
+			int d_j = dir.second;
 
 			int newBlue =  (blue  + ((1<<volatility)-1) * topo.getPrevious(i+d_i, j+d_j, Topology::BLUE ) + (1<<(volatility-1))) >> volatility;
-
-			sign = 1 - 2 * ((red >> sign_bit)&1);
-			direction = (blue >> dir_bit)&1;
-
-			d_i = sign * direction;
-			d_j = sign * (1-direction);
-
 			int newGreen = (green + ((1<<volatility)-1) * topo.getPrevious(i+d_i, j+d_j, Topology::GREEN) + (1<<(volatility-1))) >> volatility;
-
-			sign = 1 - 2 * ((blue >> sign_bit)&1);
-			direction = (green >> dir_bit)&1;
-
-			d_i = sign * direction;
-			d_j = sign * (1-direction);
-
 			int newRed =   (red   + ((1<<volatility)-1) * topo.getPrevious(i+d_i, j+d_j, Topology::RED  ) + (1<<(volatility-1))) >> volatility;
 
-			topo.setCurrent(i, j, Topology::BLUE, newBlue);
-			topo.setCurrent(i, j, Topology::GREEN, newGreen);
-			topo.setCurrent(i, j, Topology::RED, newRed);
+			current[I_BLUE(i,j,width) ] = newBlue;
+			current[I_GREEN(i,j,width)] = newGreen;
+			current[I_RED(i,j,width)  ] = newRed;
 		}
 
 	private: 
 		int volatility;
-		int sign_bit;
-		int dir_bit;
+		int shift;
+		std::vector<std::pair<int,int> > directions;
 
 	};
 

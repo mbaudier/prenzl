@@ -14,7 +14,7 @@
 #include "Rules/stdrules/Turner.h"
 #include "Rules/stdrules/Hydra.h"
 #include "Rules/stdrules/ColorHydra.h"
-
+#include "Rules/stdrules/Braque.h"
 namespace Prenzl {
 
 	class RFactory {
@@ -31,21 +31,29 @@ namespace Prenzl {
 		std::string getName() { return "Phase Cheulou";}
 		Rule * createRule(const CProperties& prop) {
 			return new PhaseCheulou(
-				prop.getValueAsInt("pc.B.G"),
-				prop.getValueAsInt("pc.B.R"),
-				prop.getValueAsInt("pc.G.R"),
-				prop.getValueAsInt("pc.G.B"),
-				prop.getValueAsInt("pc.R.B"),
-				prop.getValueAsInt("pc.R.G"),
-				prop.getValueAsInt("pc.B.B"),
-				prop.getValueAsInt("pc.G.G"),
-				prop.getValueAsInt("pc.R.R")
+				prop.getValueAsInt("BG"),
+				prop.getValueAsInt("BR"),
+				prop.getValueAsInt("GR"),
+				prop.getValueAsInt("GB"),
+				prop.getValueAsInt("RB"),
+				prop.getValueAsInt("RG"),
+				prop.getValueAsInt("BB"),
+				prop.getValueAsInt("GG"),
+				prop.getValueAsInt("RR")
 			);	
 		}
 		CProperties getDefaultProperties() {
-			return CProperties(
-				"pc.R.R=0\npc.R.G=0\npc.R.B=-90\npc.G.R=90\npc.G.G=0\npc.G.B=0\npc.B.R=0\npc.B.G=90\npc.B.B=0"
-			);
+			CProperties prop;
+			prop.setIntValue("RR", 0);
+			prop.setIntValue("RG", 0);
+			prop.setIntValue("RB", -90);
+			prop.setIntValue("GR", 90);
+			prop.setIntValue("GG", 0);
+			prop.setIntValue("GB", 0);
+			prop.setIntValue("BR", 0);
+			prop.setIntValue("BG", 90);
+			prop.setIntValue("BB", 0);
+			return prop;			
 		}		
 	};
 	
@@ -62,13 +70,17 @@ namespace Prenzl {
 		std::string getName() { return "Nicolas De Stael";}
 		Rule * createRule(const CProperties& prop) {
 			return new NicolasDeStael(
-				prop.getValueAsInt("nds.volatility"),
-				prop.getValueAsInt("nds.sign_bit"),
-				prop.getValueAsInt("nds.dir_bit")
+				prop.getValueAsInt("Volatility"),
+				prop.getValueAsInt("SignBit"),
+				prop.getValueAsInt("DirectionBit")
 			);
 		}		
 		CProperties getDefaultProperties() {
-			return CProperties( "nds.volatility=2\nnds.sign_bit=6\nnds.dir_bit=3\n" );
+			CProperties prop;
+			prop.setIntValue("Volatility", 2);
+			prop.setIntValue("SignBit", 6);
+			prop.setIntValue("DirectionBit", 3);			
+			return prop;
 		}		
 	};	
 
@@ -77,23 +89,29 @@ namespace Prenzl {
 		std::string getName() { return "LSD";}
 		Rule * createRule(const CProperties& prop) {
 			return new Lsd(
-				prop.getValueAsInt("lsd.B.delta"),
-				prop.getValueAsInt("lsd.G.delta"),
-				prop.getValueAsInt("lsd.R.delta"),
-				prop.getValueAsInt("lsd.B.dx"),
-				prop.getValueAsInt("lsd.B.dy"),
-				prop.getValueAsInt("lsd.G.dx"),
-				prop.getValueAsInt("lsd.G.dy"),
-				prop.getValueAsInt("lsd.R.dx"),
-				prop.getValueAsInt("lsd.R.dy")
+				prop.getValueAsInt("DeltaBlue"),
+				prop.getValueAsInt("DeltaGreen"),
+				prop.getValueAsInt("DeltaRed"),
+				prop.getValueAsInt("DxBlue"),
+				prop.getValueAsInt("DyBlue"),
+				prop.getValueAsInt("DxGreen"),
+				prop.getValueAsInt("DyGreen"),
+				prop.getValueAsInt("DxRed"),
+				prop.getValueAsInt("DyRed")
 			);
 		}	
-		CProperties getDefaultProperties() {		
-			return CProperties(
-				"lsd.R.dx=1\nlsd.R.dy=-1\nlsd.R.delta=1\n"
-				"lsd.G.dx=1\nlsd.G.dy=1\nlsd.G.delta=1\n"
-				"lsd.B.dx=-1\nlsd.B.dy=0\nlsd.B.delta=2\n"
-			);
+		CProperties getDefaultProperties() {	
+			CProperties prop;
+			prop.setIntValue("DeltaBlue", 2);
+			prop.setIntValue("DeltaGreen", 1);
+			prop.setIntValue("DeltaRed", 1);
+			prop.setIntValue("DxBlue", -1);
+			prop.setIntValue("DyBlue", 0);
+			prop.setIntValue("DxGreen", 1);
+			prop.setIntValue("DyGreen", 1);
+			prop.setIntValue("DxRed", 1);
+			prop.setIntValue("DyRed", -1);			
+			return prop;
 		}			
 	};	
 	
@@ -110,14 +128,19 @@ namespace Prenzl {
 		std::string getName() { return "Channel Propagation";}
 		Rule * createRule(const CProperties& prop) {
 			return new ChannelPropagation(
-				prop.getValueAsInt("cp.B"),
-				prop.getValueAsInt("cp.G"),
-				prop.getValueAsInt("cp.R"),
-				prop.getValueAsInt("cp.colorInteraction")
+				prop.getValueAsInt("BlueConstant"),
+				prop.getValueAsInt("GreenConstant"),
+				prop.getValueAsInt("RedConstant"),
+				prop.getValueAsInt("ColorInteraction")
 			);
 		}
 		CProperties getDefaultProperties() {		
-			return CProperties("cp.B=30\ncp.G=30\ncp.R=30\ncp.colorInteraction=4\n");
+			CProperties prop;
+			prop.setIntValue("BlueConstant", 500);
+			prop.setIntValue("GreenConstant", 500);
+			prop.setIntValue("RedConstant", 500);
+			prop.setIntValue("ColorInteraction", 0);
+			return prop;
 		}				
 	};	
 	
@@ -125,10 +148,12 @@ namespace Prenzl {
 	public:
 		std::string getName() { return "Blur";}
 		Rule * createRule(const CProperties& prop) {
-			return new Blur(prop.getValueAsInt("blur.disturbanceShift"));
+			return new Blur(prop.getValueAsInt("DisturbanceShift"));
 		}	
-		CProperties getDefaultProperties() {		
-			return CProperties("blur.disturbanceShift=12\n");
+		CProperties getDefaultProperties() {	
+			CProperties prop;
+			prop.setIntValue("DisturbanceShift", 12);
+			return prop;				
 		}			
 	};		
 	
@@ -137,13 +162,17 @@ namespace Prenzl {
 		std::string getName() { return "Turner";}
 		Rule * createRule(const CProperties& prop) {
 			return new Turner(
-				prop.getValueAsInt("turner.volatility"),
-				prop.getValueAsInt("turner.sign_bit"),
-				prop.getValueAsInt("turner.dir_bit")
+				prop.getValueAsInt("Volatility"),
+				prop.getValueAsInt("SignBit"),
+				prop.getValueAsInt("DirectionBit")
 			);
 		}		
 		CProperties getDefaultProperties() {
-			return CProperties( "turner.volatility=2\nturner.sign_bit=5\nturner.dir_bit=6\n" );
+			CProperties prop;
+			prop.setIntValue("Volatility", 2);
+			prop.setIntValue("SignBit", 5);
+			prop.setIntValue("DirectionBit", 6);			
+			return prop;			
 		}			
 	};
 		
@@ -152,12 +181,15 @@ namespace Prenzl {
 		std::string getName() { return "Hydra";}
 		Rule * createRule(const CProperties& prop) {
 			return new Hydra(
-				prop.getValueAsInt("hydra.bodyLowerLimit"),
-				prop.getValueAsInt("hydra.headLowerLimit")
+				prop.getValueAsInt("BodyLowerLimit"),
+				prop.getValueAsInt("HeadLowerLimit")
 			);
 		}	
 		CProperties getDefaultProperties() {
-			return CProperties( "hydra.bodyLowerLimit=100\nhydra.headLowerLimit=200\n" );
+			CProperties prop;
+			prop.setIntValue("BodyLowerLimit", 100);
+			prop.setIntValue("HeadLowerLimit", 200);
+			return prop;			
 		}			
 	};	
 	
@@ -166,12 +198,32 @@ namespace Prenzl {
 		std::string getName() { return "Color Hydra";}
 		Rule * createRule(const CProperties& prop) {
 			return new ColorHydra(
-				prop.getValueAsInt("chydra.bodyLowerLimit"),
-				prop.getValueAsInt("chydra.headLowerLimit")
+				prop.getValueAsInt("BodyLowerLimit"),
+				prop.getValueAsInt("HeadLowerLimit")
 			);
 		}		
 		CProperties getDefaultProperties() {
-			return CProperties( "chydra.bodyLowerLimit=300\nchydra.headLowerLimit=550\n" );
+			CProperties prop;
+			prop.setIntValue("BodyLowerLimit", 300);
+			prop.setIntValue("HeadLowerLimit", 550);
+			return prop;			
+		}			
+	};		
+	
+	class BraqueFact : public RFactory {
+	public:
+		std::string getName() { return "Braque";}
+		Rule * createRule(const CProperties& prop) {
+			return new Braque(
+				prop.getValueAsInt("Volatility"),
+				prop.getValueAsInt("Shift")
+			);
+		}		
+		CProperties getDefaultProperties() {
+			CProperties prop;
+			prop.setIntValue("Volatility", 2);
+			prop.setIntValue("Shift", 2);
+			return prop;			
 		}			
 	};		
 	
@@ -192,6 +244,7 @@ namespace Prenzl {
 		registerFactory( new TurnerFact(), factories);
 		registerFactory( new HydraFact(), factories);
 		registerFactory( new ColorHydraFact(), factories);
+		registerFactory( new BraqueFact(), factories);
 		std::cout << factories.size() << " Factories created" << std::endl;
 		return factories;
 	}	

@@ -52,9 +52,8 @@ namespace Prenzl {
 
 			// get all the pictures files if config.useFileAsInput is true 
 			if(config.useFileAsInput) {
-				addPicturesInDirectory(config.inputDirectory.c_str(), pictureFiles);
-				if(pictureFiles.size() == 0) {
-					// no file found, use screen input
+				fileAccessor.init(config.inputDirectory.c_str());
+				if(fileAccessor.hasNoFiles()) {
 					config.useFileAsInput = false;
 				}
 			}
@@ -141,17 +140,11 @@ namespace Prenzl {
 		}
 
 		HBITMAP findBitMapInPictureFiles() {
-			unsigned int nbPictureFiles = (unsigned int) pictureFiles.size();
 
-			// choose randomly a file among pictureFiles
-			unsigned int randomIndex = rand() % nbPictureFiles;
+			unsigned int nbPictureFiles = fileAccessor.getNumberOfFiles();
 
 			for(unsigned int i = 0; i < nbPictureFiles; i++) {
-				unsigned int index = randomIndex + i;
-				if(index >= nbPictureFiles) {
-					index -= nbPictureFiles;
-				}
-				std::string pictureFile = pictureFiles.at(index);
+				std::string pictureFile = fileAccessor.getFile();
 
 				// try to load the file.
 #if 0
@@ -344,11 +337,11 @@ namespace Prenzl {
 		//! Time (Generation) counter
 		unsigned int timeCounter;
 
-		//! list of all files that can be used as input 
+		//! Random File Accessor
 		/*!
 			Used only when config.useFileAsInput is true
 		*/
-		std::vector<std::string> pictureFiles;
+		RandomFileAccessor fileAccessor;
 
 	};
 

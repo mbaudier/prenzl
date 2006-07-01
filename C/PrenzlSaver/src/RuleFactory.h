@@ -21,6 +21,10 @@ namespace Prenzl {
 
 		}
 
+		static bool alphaNameSort(RuleFactory * first, RuleFactory * second) {
+			return first->getName() < second->getName();
+		}
+
 	};
 
 }

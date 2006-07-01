@@ -12,10 +12,10 @@ namespace Prenzl {
 	public:
 		
 		ChannelPropagationF()
-			: cB(30)
-			, cG(30)
-			, cR(30)
-			, colorInteraction(4)
+			: cB(500)
+			, cG(500)
+			, cR(500)
+			, colorInteraction(0)
 		{
 			readFromRegistry();
 		}

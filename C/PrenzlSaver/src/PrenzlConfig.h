@@ -16,6 +16,7 @@
 #include "Factories/TurnerF.h"
 #include "Factories/HydraF.h"
 #include "Factories/ColorHydraF.h"
+#include "Factories/BraqueF.h"
 #include "Factories/AnyRuleF.h"
 #include "Factories/TestRuleF.h"
 
@@ -101,6 +102,7 @@ namespace Prenzl {
 				ruleFactories.push_back(new TurnerF());
 				ruleFactories.push_back(new HydraF());
 				ruleFactories.push_back(new ColorHydraF());
+				ruleFactories.push_back(new BraqueF());
 				ruleFactories.push_back(new AnyRuleF(ruleFactories));
 //				ruleFactories.push_back(new TestRuleF());
 			}

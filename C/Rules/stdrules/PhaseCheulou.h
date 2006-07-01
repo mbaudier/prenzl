@@ -102,41 +102,41 @@ namespace Prenzl {
 					int green =  previous[3*(i+j*width) + Topology::GREEN];
 					int red   =  previous[3*(i+j*width) + Topology::RED];
 
-					int totalR = previous[3*((i-1)+(j-1)*width) + Topology::RED]
-							   + previous[3*((i-1)+(j+0)*width) + Topology::RED]
-							   + previous[3*((i-1)+(j+1)*width) + Topology::RED]
-							   + previous[3*((i+0)+(j-1)*width) + Topology::RED]
-							   + previous[3*((i+0)+(j+1)*width) + Topology::RED]
-							   + previous[3*((i+1)+(j-1)*width) + Topology::RED]
-							   + previous[3*((i+1)+(j+0)*width) + Topology::RED]
-							   + previous[3*((i+1)+(j+1)*width) + Topology::RED]
+					int totalR = previous[I_RED(i-1,j-1,width)]
+							   + previous[I_RED(i-1,j+0,width)]
+							   + previous[I_RED(i-1,j+1,width)]
+							   + previous[I_RED(i+0,j-1,width)]
+							   + previous[I_RED(i+0,j+1,width)]
+							   + previous[I_RED(i+1,j-1,width)]
+							   + previous[I_RED(i+1,j+0,width)]
+							   + previous[I_RED(i+1,j+1,width)]
 							   + red ;
 
-					int totalG = previous[3*((i-1)+(j-1)*width) + Topology::GREEN]
-							   + previous[3*((i-1)+(j+0)*width) + Topology::GREEN]
-							   + previous[3*((i-1)+(j+1)*width) + Topology::GREEN]
-							   + previous[3*((i+0)+(j-1)*width) + Topology::GREEN]
-							   + previous[3*((i+0)+(j+1)*width) + Topology::GREEN]
-							   + previous[3*((i+1)+(j-1)*width) + Topology::GREEN]
-							   + previous[3*((i+1)+(j+0)*width) + Topology::GREEN]
-							   + previous[3*((i+1)+(j+1)*width) + Topology::GREEN]
+					int totalG = previous[I_GREEN(i-1,j-1,width)]
+							   + previous[I_GREEN(i-1,j+0,width)]
+							   + previous[I_GREEN(i-1,j+1,width)]
+							   + previous[I_GREEN(i+0,j-1,width)]
+							   + previous[I_GREEN(i+0,j+1,width)]
+							   + previous[I_GREEN(i+1,j-1,width)]
+							   + previous[I_GREEN(i+1,j+0,width)]
+							   + previous[I_GREEN(i+1,j+1,width)]
 							   + green ;
 
-					int totalB = previous[3*((i-1)+(j-1)*width) + Topology::BLUE]
-							   + previous[3*((i-1)+(j+0)*width) + Topology::BLUE]
-							   + previous[3*((i-1)+(j+1)*width) + Topology::BLUE]
-							   + previous[3*((i+0)+(j-1)*width) + Topology::BLUE]
-							   + previous[3*((i+0)+(j+1)*width) + Topology::BLUE]
-							   + previous[3*((i+1)+(j-1)*width) + Topology::BLUE]
-							   + previous[3*((i+1)+(j+0)*width) + Topology::BLUE]
-							   + previous[3*((i+1)+(j+1)*width) + Topology::BLUE]
+					int totalB = previous[I_BLUE(i-1,j-1,width)]
+							   + previous[I_BLUE(i-1,j+0,width)]
+							   + previous[I_BLUE(i-1,j+1,width)]
+							   + previous[I_BLUE(i+0,j-1,width)]
+							   + previous[I_BLUE(i+0,j+1,width)]
+							   + previous[I_BLUE(i+1,j-1,width)]
+							   + previous[I_BLUE(i+1,j+0,width)]
+							   + previous[I_BLUE(i+1,j+1,width)]
 							   + blue ;
 
 					updateValues(blue, green, red, totalB, totalG, totalR);
 
-					current[3*(i+j*width) + Topology::BLUE] = (unsigned char)(charSaturate(blue));
-					current[3*(i+j*width) + Topology::GREEN] = (unsigned char)(charSaturate(green));
-					current[3*(i+j*width) + Topology::RED] = (unsigned char)(charSaturate(red));
+					current[I_BLUE(i,j,width) ] = (unsigned char)(charSaturate(blue));
+					current[I_GREEN(i,j,width)] = (unsigned char)(charSaturate(green));
+					current[I_RED(i,j,width)  ] = (unsigned char)(charSaturate(red));
 
 				}
 			}

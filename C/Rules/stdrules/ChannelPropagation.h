@@ -8,7 +8,7 @@ namespace Prenzl {
 
 	public:
 
-		ChannelPropagation(int cB = 30, int cG = 30, int cR = 30, int colorInteraction = 4)
+		ChannelPropagation(int cB = 500, int cG = 500, int cR = 500, int colorInteraction = 0)
 			: cB(cB)
 			, cG(cG)
 			, cR(cR)
@@ -61,9 +61,9 @@ namespace Prenzl {
 						if(green<=0) red += (blue <=0) ? +colorInteraction : -colorInteraction;
 					}
 
-					current[I_BLUE(i,j,width)] = saturate(blue, 0, 255);
+					current[I_BLUE(i,j,width) ] = saturate(blue, 0, 255);
 					current[I_GREEN(i,j,width)] = saturate(green, 0, 255);
-					current[I_RED(i,j,width)] = saturate(red, 0, 255);					
+					current[I_RED(i,j,width)  ] = saturate(red, 0, 255);					
 				}
 			}
 

@@ -18,14 +18,22 @@ namespace Prenzl {
 
 		PhaseCheulouF()
 			: coeffs(0, 90, 0, 0, 0, 90, -90, 0, 0)
+			, useRandomProfile(false)
 		{
 			readFromRegistry();
+			createProfiles();
 		}
 
 		Rule * createRule() {
-			return new PhaseCheulou(coeffs.coeffBG, coeffs.coeffBR, coeffs.coeffGR, coeffs.coeffGB, coeffs.coeffRB,
-									coeffs.coeffRG, coeffs.coeffBB, coeffs.coeffGG, coeffs.coeffRR);
- 
+			if(useRandomProfile) {
+				size_t index = rand() % profiles.size();
+				if(index) {
+					return createRule(profiles[index].second);
+				}
+				// index = 0 -> custom : use current parameters
+			}
+
+			return createRule(coeffs); 
 		}
 
 		std::string getName() {
@@ -37,11 +45,12 @@ namespace Prenzl {
 		}
 
 		void showProperties(HWND parent) {
-			PropDialog dial(coeffs, parent);
+			PropDialog dial(coeffs, profiles, useRandomProfile, parent);
 			INT_PTR ret = dial.DoModal();
 
 			if(ret == IDOK) {
 				coeffs = dial.coeffs;
+				useRandomProfile = dial.useRandomProfile;
 				writeToRegistry();
 			}
 		}
@@ -78,77 +87,16 @@ namespace Prenzl {
 		//! Properties Dialog for Phase Cheulou
 		class PropDialog : public PrenzlDialog {
 		public:
-			PropDialog(	const CoeffMatrix& coeffs, HWND parent) 
+			PropDialog(	const CoeffMatrix& coeffs, 
+						const std::vector< std::pair<std::string, CoeffMatrix> >& profiles, 
+						bool useRandomProfile,
+						HWND parent) 
 				: PrenzlDialog(IDD_PHASECHEULOUDIALOG, parent)
 				, coeffs(coeffs)
+				, profiles(profiles)
+				, useRandomProfile(useRandomProfile)
 				, notificationSuspended(false)
-			{
-				// create profiles
-
-				// dummy : not used
-				profiles.push_back(std::pair<std::string, CoeffMatrix>("Custom", 
-					CoeffMatrix(0, 0, 0, 0, 0, 0, 0, 0, 0)));
-
-				// standard
-				profiles.push_back(std::pair<std::string, CoeffMatrix>("Standard", 
-					CoeffMatrix(0, 90, 0, 0, 0, 90, -90, 0, 0)));
-
-				// standard inverted
-				profiles.push_back(std::pair<std::string, CoeffMatrix>("Standard Inverted", 
-					CoeffMatrix(0, 0, -90, 90, 0, 0, 0, 90, 0)));
-
-				// standard GreenPink
-				profiles.push_back(std::pair<std::string, CoeffMatrix>("Standard GreenPink", 
-					CoeffMatrix(0, 90, 0, 0, 0, -90, 90, 0, 0)));
-
-				// standard Rainbow
-				profiles.push_back(std::pair<std::string, CoeffMatrix>("Standard Rainbow", 
-					CoeffMatrix(0, -90, 0, 0, 0, 90, 90, 0, 0)));
-
-				// Petrol
-				profiles.push_back(std::pair<std::string, CoeffMatrix>("Petrol", 
-					CoeffMatrix(0, -90, 0, 0, 0, -90, -90, 0, 0)));
-
-				// Marie
-				profiles.push_back(std::pair<std::string, CoeffMatrix>("Marie", 
-					CoeffMatrix(0, 100, -100, -100, 0, 100, 100, -100, 0)));
-
-				// Naive Sweden
-				profiles.push_back(std::pair<std::string, CoeffMatrix>("Naive Sweden", 
-					CoeffMatrix(0, -90, -90, 90, 0, 90, 90, 90, 0)));
-
-				// Naive
-				profiles.push_back(std::pair<std::string, CoeffMatrix>("Naive", 
-					CoeffMatrix(0, -90, 90, 90, 0, -90, -90, -90, 0)));
-
-				// Flashy Aztec
-				profiles.push_back(std::pair<std::string, CoeffMatrix>("Flashy Aztec", 
-					CoeffMatrix(0, -200, 200, 90, 0, -90, -90, -90, 0)));
-
-				// Obscenity
-				profiles.push_back(std::pair<std::string, CoeffMatrix>("Obscenity", 
-					CoeffMatrix(0, -120, 120, 90 , 0, -90, -90, -90, 0)));
-
-				// cristal
-				profiles.push_back(std::pair<std::string, CoeffMatrix>("Cristal", 
-					CoeffMatrix(0, -200, -100, 100, -50, 100, 100, 100, 0)));
-
-				// Nadja
-				profiles.push_back(std::pair<std::string, CoeffMatrix>("Nadja", 
-					CoeffMatrix(0, -200, 200, 120 , 0, -120, -120, -120, 0)));
-
-				// Psychedelic
-				profiles.push_back(std::pair<std::string, CoeffMatrix>("Psychedelic", 
-					CoeffMatrix(0, -50, -100, 200, -50, 100, 100, -50, -20)));
-
-				// Square
-				profiles.push_back(std::pair<std::string, CoeffMatrix>("Squares", 
-					CoeffMatrix(90, 90, 90, -70, 0, 90, -70, 90, 0)));
-
-				// Groussherzogtum
-				profiles.push_back(std::pair<std::string, CoeffMatrix>("Groussherzogtum", 
-					CoeffMatrix(0, 90, -100, 90, 0, -100, 90, 90, 90)));
-			}
+			{}
 
 			BOOL OnInitDialog( ) {
 				// init the textbox
@@ -156,12 +104,15 @@ namespace Prenzl {
 
 				// init the combobox
 				initProfileCombobox();
+
+				setCheckBoxChecked(IDC_RANDOMPROFILE, useRandomProfile);
 				
 				return TRUE;
 			}
 
 			void OnOK() {
 				retrieveCoeffMatrixFromDisplay();
+				useRandomProfile = checkBoxChecked(IDC_RANDOMPROFILE);
 				PrenzlDialog::OnOK();
 			}
 
@@ -255,12 +206,84 @@ namespace Prenzl {
 
 		public:
 			CoeffMatrix coeffs;
+			bool useRandomProfile;
 
 		private:
 			// profiles
 			bool notificationSuspended;
-			std::vector< std::pair<std::string, CoeffMatrix> > profiles;
+			const std::vector< std::pair<std::string, CoeffMatrix> >& profiles;
 		};
+
+		void createProfiles() {
+			// dummy : not used
+			profiles.push_back(std::pair<std::string, CoeffMatrix>("Custom", 
+				CoeffMatrix(0, 0, 0, 0, 0, 0, 0, 0, 0)));
+
+			// standard
+			profiles.push_back(std::pair<std::string, CoeffMatrix>("Standard", 
+				CoeffMatrix(0, 90, 0, 0, 0, 90, -90, 0, 0)));
+
+			// standard inverted
+			profiles.push_back(std::pair<std::string, CoeffMatrix>("Standard Inverted", 
+				CoeffMatrix(0, 0, -90, 90, 0, 0, 0, 90, 0)));
+
+			// standard GreenPink
+			profiles.push_back(std::pair<std::string, CoeffMatrix>("Standard GreenPink", 
+				CoeffMatrix(0, 90, 0, 0, 0, -90, 90, 0, 0)));
+
+			// standard Rainbow
+			profiles.push_back(std::pair<std::string, CoeffMatrix>("Standard Rainbow", 
+				CoeffMatrix(0, -90, 0, 0, 0, 90, 90, 0, 0)));
+
+			// Petrol
+			profiles.push_back(std::pair<std::string, CoeffMatrix>("Petrol", 
+				CoeffMatrix(0, -90, 0, 0, 0, -90, -90, 0, 0)));
+
+			// Marie
+			profiles.push_back(std::pair<std::string, CoeffMatrix>("Marie", 
+				CoeffMatrix(0, 100, -100, -100, 0, 100, 100, -100, 0)));
+
+			// Naive Sweden
+			profiles.push_back(std::pair<std::string, CoeffMatrix>("Naive Sweden", 
+				CoeffMatrix(0, -90, -90, 90, 0, 90, 90, 90, 0)));
+
+			// Naive
+			profiles.push_back(std::pair<std::string, CoeffMatrix>("Naive", 
+				CoeffMatrix(0, -90, 90, 90, 0, -90, -90, -90, 0)));
+
+			// Flashy Aztec
+			profiles.push_back(std::pair<std::string, CoeffMatrix>("Flashy Aztec", 
+				CoeffMatrix(0, -200, 200, 90, 0, -90, -90, -90, 0)));
+
+			// Obscenity
+			profiles.push_back(std::pair<std::string, CoeffMatrix>("Obscenity", 
+				CoeffMatrix(0, -120, 120, 90 , 0, -90, -90, -90, 0)));
+
+			// cristal
+			profiles.push_back(std::pair<std::string, CoeffMatrix>("Cristal", 
+				CoeffMatrix(0, -200, -100, 100, -50, 100, 100, 100, 0)));
+
+			// Nadja
+			profiles.push_back(std::pair<std::string, CoeffMatrix>("Nadja", 
+				CoeffMatrix(0, -200, 200, 120 , 0, -120, -120, -120, 0)));
+
+			// Psychedelic
+			profiles.push_back(std::pair<std::string, CoeffMatrix>("Psychedelic", 
+				CoeffMatrix(0, -50, -100, 200, -50, 100, 100, -50, -20)));
+
+			// Square
+			profiles.push_back(std::pair<std::string, CoeffMatrix>("Squares", 
+				CoeffMatrix(90, 90, 90, -70, 0, 90, -70, 90, 0)));
+
+			// Groussherzogtum
+			profiles.push_back(std::pair<std::string, CoeffMatrix>("Groussherzogtum", 
+				CoeffMatrix(0, 90, -100, 90, 0, -100, 90, 90, 90)));
+		}
+
+		static Rule * createRule(const CoeffMatrix& c) {
+			return new PhaseCheulou(c.coeffBG, c.coeffBR, c.coeffGR, c.coeffGB, c.coeffRB,
+									c.coeffRG, c.coeffBB, c.coeffGG, c.coeffRR);
+		}
 
 		void readFromRegistry() {
 			RegistryAccessor accessor;
@@ -273,6 +296,7 @@ namespace Prenzl {
 			coeffs.coeffBB = accessor.readDWORD("PhaseCheulou_coeffBB", coeffs.coeffBB);
 			coeffs.coeffGG = accessor.readDWORD("PhaseCheulou_coeffGG", coeffs.coeffGG);
 			coeffs.coeffRR = accessor.readDWORD("PhaseCheulou_coeffRR", coeffs.coeffRR);
+			useRandomProfile = accessor.readDWORD("PhaseCheulou_randomProfile", useRandomProfile) != 0;
 		}
 
 		void writeToRegistry() {
@@ -286,11 +310,14 @@ namespace Prenzl {
 			accessor.writeDWORD("PhaseCheulou_coeffBB", coeffs.coeffBB);
 			accessor.writeDWORD("PhaseCheulou_coeffGG", coeffs.coeffGG);
 			accessor.writeDWORD("PhaseCheulou_coeffRR", coeffs.coeffRR);
+			accessor.writeDWORD("PhaseCheulou_randomProfile", useRandomProfile);
 		}
 
 	private:
 
 		CoeffMatrix coeffs;
+		bool useRandomProfile;
+		std::vector< std::pair<std::string, CoeffMatrix> > profiles;
 
 	};
 

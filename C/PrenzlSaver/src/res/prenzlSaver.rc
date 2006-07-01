@@ -128,7 +128,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_MATRIX              ICON                    "prenzlSaver.ico"
+IDI_PRENZLSAVER         ICON                    "prenzlSaver.ico"
 #endif    // Anglais (États-Unis) resources
 /////////////////////////////////////////////////////////////////////////////
 
@@ -147,14 +147,14 @@ LANGUAGE LANG_FRENCH, SUBLANG_FRENCH
 // Dialog
 //
 
-IDD_PHASECHEULOUDIALOG DIALOGEX 0, 0, 178, 126
+IDD_PHASECHEULOUDIALOG DIALOGEX 0, 0, 178, 138
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "Phase Cheulou"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,65,105,50,14
-    PUSHBUTTON      "Annuler",IDCANCEL,121,105,50,14
+    DEFPUSHBUTTON   "OK",IDOK,65,117,50,14
+    PUSHBUTTON      "Annuler",IDCANCEL,121,117,50,14
     EDITTEXT        IDC_PHASECHEULOU_coeffBB,43,48,40,14,ES_AUTOHSCROLL,
                     WS_EX_RIGHT
     EDITTEXT        IDC_PHASECHEULOU_coeffGB,43,64,40,14,ES_AUTOHSCROLL,
@@ -184,6 +184,8 @@ BEGIN
     LTEXT           "red",IDC_STATIC,142,37,12,8
     GROUPBOX        "Delta",IDC_STATIC,7,27,30,71
     GROUPBOX        "Sensibility to",IDC_STATIC,39,27,132,71
+    CONTROL         "Random among profiles",IDC_RANDOMPROFILE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,11,102,91,10
 END
 
 IDD_LSDDIALOG DIALOGEX 0, 0, 240, 99
@@ -290,6 +292,40 @@ BEGIN
     LTEXT           "Head Lower Limit",IDC_STATIC,7,39,55,8
 END
 
+IDD_BRAQUEDIALOG DIALOGEX 0, 0, 155, 74
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Braque"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,27,53,50,14
+    PUSHBUTTON      "Annuler",IDCANCEL,98,53,50,14
+    COMBOBOX        IDC_VOLATILITY_COMBO,89,12,37,97,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_SIGNBIT_COMBO,89,28,37,92,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Volatility",IDC_STATIC,28,15,28,8
+    LTEXT           "Shift",IDC_STATIC,28,31,16,8
+END
+
+IDD_ANYRULEDIALOG DIALOGEX 0, 0, 236, 110
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Any (Random)"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,117,89,50,14
+    PUSHBUTTON      "Annuler",IDCANCEL,179,89,50,14
+    LISTBOX         IDC_NONACTIVATEDRULES,14,18,86,60,LBS_NOINTEGRALHEIGHT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LISTBOX         IDC_ACTIVATEDRULES,135,18,86,60,LBS_NOINTEGRALHEIGHT | 
+                    WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      ">>",IDC_ADDBUTTON,108,33,20,14
+    PUSHBUTTON      "<<",IDC_REMOVEBUTTON,108,51,20,14
+    LTEXT           "Pick randomly among",IDC_STATIC,136,7,68,8
+    LTEXT           "Do not use",IDC_STATIC,14,7,36,8
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -304,7 +340,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 171
         TOPMARGIN, 7
-        BOTTOMMARGIN, 119
+        BOTTOMMARGIN, 131
     END
 
     IDD_LSDDIALOG, DIALOG
@@ -345,6 +381,22 @@ BEGIN
         RIGHTMARGIN, 231
         TOPMARGIN, 7
         BOTTOMMARGIN, 75
+    END
+
+    IDD_BRAQUEDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 148
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 67
+    END
+
+    IDD_ANYRULEDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 229
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 103
     END
 END
 #endif    // APSTUDIO_INVOKED

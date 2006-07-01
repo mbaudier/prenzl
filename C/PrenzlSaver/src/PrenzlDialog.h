@@ -68,6 +68,46 @@ namespace Prenzl {
 			this->SendDlgItemMessage(nID, CB_ADDSTRING, 0, (LPARAM)value);
 		}
 
+		void addStringToListBox(int nID, const char * value) {
+			this->SendDlgItemMessage(nID, LB_ADDSTRING, 0, (LPARAM)value);
+		}
+
+		bool listBoxHasSelection(int nID, unsigned int& index) {
+			unsigned int res = (unsigned int)this->SendDlgItemMessage(nID, LB_GETCURSEL, 0, 0);
+			if(res == LB_ERR) {
+				return false;
+			}
+			else {
+				index = res;
+				return true;
+			}
+		}
+
+		void clearListBox(int nID) {
+			this->SendDlgItemMessage(nID, LB_RESETCONTENT, 0, 0);
+		}
+
+		void configureSlider(int nID, unsigned short min, unsigned short max, unsigned short step) {
+			this->SendDlgItemMessage(nID, TBM_SETRANGE, FALSE, MAKELONG(min, max));
+			this->SendDlgItemMessage(nID, TBM_SETPAGESIZE, 0, step);
+		}
+
+		void setSliderPosition(int nID, unsigned short position) {
+			this->SendDlgItemMessage(nID, TBM_SETPOS, TRUE, position);
+		}
+
+		unsigned short getSliderPosition(int nID) {
+			return (unsigned short) this->SendDlgItemMessage(nID, TBM_GETPOS, 0, 0);
+		}
+
+		bool checkBoxChecked(int nID) {
+			return this->SendDlgItemMessage(nID, BM_GETCHECK, 0, 0) != 0;
+		}
+
+		void setCheckBoxChecked(int nID, bool checked) {
+			this->SendDlgItemMessage(nID, BM_SETCHECK, checked ? BST_CHECKED : BST_UNCHECKED, 0/*not used*/);
+		}
+
 	private:
 		//! To have a real modal functioning
 		HWND parent_;
