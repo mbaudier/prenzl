@@ -100,9 +100,9 @@ public class Log {
 					location = "<unknown location>";
 				}
 			}
-			buf.append(location);
-			buf.append('\n');
 			buf.append(msg);
+			buf.append(' ');
+			buf.append(location);
 			buf.append('\n');
 			if(e != null){
 				StringWriter strOut = new StringWriter();
