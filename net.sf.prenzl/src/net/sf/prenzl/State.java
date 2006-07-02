@@ -72,15 +72,4 @@ public class State implements IPersistableElement, IAdaptable {
 		mementoLaunchModel.putString(KEY_LIBARY,launchModel.getRuleDescriptor().getLibrary().getName());
 		mementoLaunchModel.putString(KEY_RULE,launchModel.getRuleDescriptor().getRuleName());
 	}
-	
-//	public RuleDescriptor getRuleDescriptor() {
-//		return new RuleDescriptor(
-//				LaunchModel.findLibrary(memento.getString(KEY_LIBARY)),
-//				memento.getString(KEY_RULE));
-//	}
-		
-//	public void setRule(RuleDescriptor rd){
-//		memento.putString(KEY_LIBARY,rd.getLibrary().getName());
-//		memento.putString(KEY_RULE,rd.getRuleName());
-//	}
 }

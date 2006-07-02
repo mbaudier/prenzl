@@ -33,7 +33,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		
 		IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
 		
-		//State previousState = PrenzlPlugin.getDefault().getPreviousState();
 		configurer.setInitialSize(new Point(state.getWidth(), state.getHeight()));
 		configurer.setShowCoolBar(true);
 		configurer.setShowStatusLine(true);
@@ -61,7 +60,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 				FileReader reader = new FileReader(file);
 				IMemento memento = XMLMemento.createReadRoot(reader);
 				reader.close();
-				StateFactory factory = new StateFactory();
+				StateFactory factory = (StateFactory)PrenzlPlugin.getDefaultWorkbench().getElementFactory(StateFactory.ID);
 				state = (State)factory.createElement(memento).getAdapter(State.class);
 				
 			}

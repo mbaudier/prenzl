@@ -3,7 +3,6 @@ package net.sf.prenzl.ui.actions;
 import java.util.Observable;
 import java.util.Observer;
 
-import net.sf.prenzl.ICommandIds;
 import net.sf.prenzl.PrenzlPlugin;
 import net.sf.prenzl.SharedImages;
 import net.sf.prenzl.ui.computation.ComputationUI;
@@ -17,14 +16,8 @@ public class RunAction extends Action implements Observer {
 	private final ComputationUI computationUI;
 	
 	public RunAction(ComputationUI computationUI) {
-		setId(ICommandIds.CMD_RUN);
-		setActionDefinitionId(ICommandIds.CMD_RUN);
-
 		this.computationUI = computationUI; 
 		this.computationUI.addObserver(this);
-		
-	   // setAccelerator(' ');
-
 	    update(this.computationUI, null);
 	}
 	

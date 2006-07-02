@@ -61,7 +61,6 @@ public class PrenzlPlugin extends AbstractUIPlugin {
 		
 		launchModel = new LaunchModel();
 
-		//restorePreviousState();
 		launchModel.addLastInputLocations(loadLastPicFilesState());
 		launchModel.notifyObservers();
 	}
@@ -91,7 +90,6 @@ public class PrenzlPlugin extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		saveLastPicFilesState();
-		//savePreviousState();
 		Computation.cleanRegistries();
 
 		super.stop(context);

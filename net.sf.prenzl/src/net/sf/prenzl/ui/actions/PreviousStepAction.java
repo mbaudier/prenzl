@@ -3,7 +3,6 @@ package net.sf.prenzl.ui.actions;
 import java.util.Observable;
 import java.util.Observer;
 
-import net.sf.prenzl.ICommandIds;
 import net.sf.prenzl.SharedImages;
 import net.sf.prenzl.launch.ICountListener;
 import net.sf.prenzl.ui.computation.ComputationUI;
@@ -14,16 +13,12 @@ public class PreviousStepAction extends Action implements Observer,ICountListene
 	
 	private final ComputationUI computationUI;
 	
-	public PreviousStepAction(ComputationUI computationUI) {
-		setId(ICommandIds.CMD_PREVIOUS_STEP);
-		setActionDefinitionId(ICommandIds.CMD_PREVIOUS_STEP);
-		setImageDescriptor(SharedImages.IMGD_BACKWARD);
-		
+	public PreviousStepAction(ComputationUI computationUI) {		
 		this.computationUI = computationUI;
 		this.computationUI.addObserver(this);
 		this.computationUI.addCountListener(this);
 
-	//    setAccelerator(SWT.PAGE_DOWN);
+		setImageDescriptor(SharedImages.IMGD_BACKWARD);
 	}
 	
 	public void run() {
