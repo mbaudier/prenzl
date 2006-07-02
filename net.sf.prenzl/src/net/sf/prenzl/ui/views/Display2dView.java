@@ -8,6 +8,7 @@ import net.sf.prenzl.launch.ComputationInput;
 import net.sf.prenzl.launch.Configuration;
 import net.sf.prenzl.launch.ICountListener;
 import net.sf.prenzl.launch.LaunchModel;
+import net.sf.prenzl.ui.actions.DisplayModeCI;
 import net.sf.prenzl.ui.actions.FirstGenerationAction;
 import net.sf.prenzl.ui.actions.NextStepAction;
 import net.sf.prenzl.ui.actions.PreviousStepAction;
@@ -57,15 +58,18 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
 			new SaveImageAction(computationUI,false,SWT.IMAGE_BMP);
 
 		IToolBarManager toolBarManager= getViewSite().getActionBars().getToolBarManager();
-    toolBarManager.add(firstGenerationAction);
-    toolBarManager.add(previousStepAction);
-    toolBarManager.add(nextStepAction);
-    toolBarManager.add(runAction);
-    //toolBarManager.add();
-
-    RunAction runActionText = new RunAction(computationUI,"");
+	    toolBarManager.add(firstGenerationAction);
+	    toolBarManager.add(previousStepAction);
+	    toolBarManager.add(nextStepAction);
+	    toolBarManager.add(runAction);
+	    //toolBarManager.add();
+	
+	    RunAction runActionText = new RunAction(computationUI,"");
+	    DisplayModeCI displayModeCIOriginal = new DisplayModeCI(computationUI);
 		menuManager = new MenuManager();
 		menuManager.add(runActionText);
+		menuManager.add(new Separator());
+		menuManager.add(displayModeCIOriginal);
 		menuManager.add(new Separator());
 		menuManager.add(saveDisplayJPEG);
 		menuManager.add(saveDisplayBMP);
@@ -76,12 +80,14 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
 		IMenuManager viewMenuManager = getViewSite().getActionBars().getMenuManager();
 		viewMenuManager.add(runActionText);
 		viewMenuManager.add(new Separator());
+		viewMenuManager.add(displayModeCIOriginal);
+ 		viewMenuManager.add(new Separator());
 		viewMenuManager.add(saveDisplayJPEG);
 		viewMenuManager.add(saveDisplayBMP);
 		viewMenuManager.add(new Separator());
 		viewMenuManager.add(saveImageJPEG);
 		viewMenuManager.add(saveImageBMP);
-        
+       
 		statusLineManager = getViewSite().getActionBars().getStatusLineManager();
 		computationUI.addCountListener(this);
 		//statusLineManager.add(new CountContributionItem(computationUI,statusLineManager));
@@ -90,6 +96,7 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
 		update(null,null);
 	}
 
+	
 	public void update(Observable observable, Object arg) {
 		if (observable==PrenzlPlugin.getLaunchModel() || observable == null) {
 			LaunchModel launchModel = PrenzlPlugin.getLaunchModel();
@@ -105,12 +112,6 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
 			else if(arg == null){//complete reset
 				computationUI.reset(launchModel.getConfiguration(),launchModel.getComputationInput());
 			}
-//			if(launchModel.isReadyToLaunch()){
-//				Library library = launchModel.getLibrary();
-//				String ruleName = launchModel.getRuleName();
-//				String firstGenPicPath = launchModel.getPicturePath();
-//				computationUI.reset(library,ruleName,firstGenPicPath);
-//			}
 		}
 	}
 
@@ -129,6 +130,7 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
 		return computationUI;
 	}
 	public void setCount(final int count) {
+		if(computationUI.getDc().getLabel()==null)return;
 		computationUI.getDc().getLabel().getDisplay().asyncExec(new Runnable(){
 			public void run(){
 				if(statusLineManager!=null)

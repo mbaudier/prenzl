@@ -25,6 +25,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 public class ComputationUI extends Observable{
+	public static final int DISPLAY_ORIGINAL = 0;
+	public static final int DISPLAY_FIT = 1;
+	public static final int DISPLAY_STRECH = 2;
+	
 	private Vector countListeners = new Vector();
 	
 	// Rule
@@ -41,6 +45,7 @@ public class ComputationUI extends Observable{
 	private Shell fullScreen = null;
 	private boolean isFullScreen = false;
 	private Point drawOrigin = null;
+	private int displayMode = DISPLAY_ORIGINAL;
 	
 	private final MouseListener mouseListener;
 	// History
@@ -60,31 +65,86 @@ public class ComputationUI extends Observable{
 	}
 
 	private void drawImage() {
-		if (imageData != null) {
-			Image imageT = new Image(dc.getDisplay(), imageData);
-			int width = imageData.width;
-			int height = imageData.height;
+		if(dc.getLabel()==null)return;
+		dc.getDisplay().syncExec(new Runnable(){
+			public void run(){
+				if (imageData != null) {
+					int displayWidth = dc.getLabel().getParent().getBounds().width;
+					int displayHeight = dc.getLabel().getParent().getBounds().height;
 
-			int x = drawOrigin.x % width;
-			if (x < 0)
-				x = width + x;
-			int y = drawOrigin.y % height;
-			if (y < 0)
-				y = height + y;
+					final ImageData imageDataScaled;
+					if(displayMode == DISPLAY_ORIGINAL){
+						imageDataScaled = imageData;
+					}
+					else if(displayMode == DISPLAY_FIT){
+						float scale = Math.min(
+								((float)displayWidth)/imageData.width,
+								((float)displayHeight)/imageData.height);
+						if(displayWidth!=0 && displayHeight!=0) {
+							imageDataScaled = imageData.scaledTo(
+									(int)(imageData.width*scale),
+									(int)(imageData.height*scale));
+						}
+						else{
+							imageDataScaled = imageData;
+						}
+					}
+					else if(displayMode == DISPLAY_STRECH){
+						if(displayWidth!=0 && displayHeight!=0) {
+							imageDataScaled = imageData.scaledTo(
+									displayWidth,
+									displayHeight);
+						}
+						else{
+							imageDataScaled = imageData;
+						}
+					}
+					else{
+						throw new RuntimeException("Unknown display mode "+displayMode);
+					}
+					
+					// Centers the label
+					int locX = 0;
+					int locY = 0;
+					if(displayWidth!=0 && displayHeight!=0){
+						if (displayWidth > imageDataScaled.width) {
+							locX = (displayWidth - imageDataScaled.width) / 2;
+						}
+						if (displayHeight > imageDataScaled.height) {
+							locY = (displayHeight - imageDataScaled.height) / 2;
+						}
+					}
+					dc.getLabel().setLocation(locX, locY);
 
-			synchronized (dc) {
-				GC gc = dc.getGC();
-				gc.setClipping(0, 0, width, height);
-				gc.drawImage(imageT, x - width, y - height);// upper left
-				gc.drawImage(imageT, x, y - height);// upper right
-				gc.drawImage(imageT, x - width, y);// lower left
-				gc.drawImage(imageT, x, y);// lower right
+					
+					// Draws the image
+					Image imageT = new Image(dc.getDisplay(), imageDataScaled);
+					int width = imageDataScaled.width;
+					int height = imageDataScaled.height;
+
+					int x = drawOrigin.x % width;
+					if (x < 0)
+						x = width + x;
+					int y = drawOrigin.y % height;
+					if (y < 0)
+						y = height + y;
+
+					synchronized (dc) {
+						GC gc = dc.getGC();
+						gc.setClipping(0, 0, width, height);
+						gc.drawImage(imageT, x - width, y - height);// upper left
+						gc.drawImage(imageT, x, y - height);// upper right
+						gc.drawImage(imageT, x - width, y);// lower left
+						gc.drawImage(imageT, x, y);// lower right
+					}
+
+					imageT.dispose();
+				}
+				
 			}
-
-			imageT.dispose();
-		}
+		});
 	}
-
+/*
 	private void center(Rectangle bounds){
 		int locX = 0;
 		int locY = 0;
@@ -98,7 +158,7 @@ public class ComputationUI extends Observable{
 		}
 		dc.getLabel().setLocation(locX, locY);
 	}
-	
+*/	
 	public void setFocus() {
 		dc.getLabel().setFocus();
 	}
@@ -147,7 +207,7 @@ public class ComputationUI extends Observable{
 		}
 		
 		drawOrigin = new Point(0, 0);
-		center(dc.getLabel().getParent().getBounds());
+		//center(dc.getLabel().getParent().getBounds());
 		drawImage();
 
 		cycleCount = 0;
@@ -202,12 +262,16 @@ public class ComputationUI extends Observable{
 		}
 	}
 
-
+/*
 	public void setFullScreen(boolean doFullScreen){
 		resetDrawingContext(doFullScreen);
 	}
-	
-	private void resetDrawingContext(boolean doFullScreen) {
+	*/
+	private void resetDrawingContext(final boolean doFullScreen) {
+//		dc.getDisplay().syncExec(new Runnable(){
+//			public void run(){
+//			}
+//		});
 		if (doFullScreen) {
 			fullScreen = new Shell(dc.getLabel().getShell(), SWT.NO_TRIM);
 			Rectangle dispBounds = dc.getDisplay().getBounds();
@@ -215,7 +279,7 @@ public class ComputationUI extends Observable{
 
 			Label label = createDrawingLabel(fullScreen, fullScreen.getBounds());
 			dc.setContext(label);
-			center(dispBounds);
+			//center(dispBounds);
 			fullScreen.open();
 		}
 		else {
@@ -260,7 +324,7 @@ public class ComputationUI extends Observable{
 		label.setBackground(label.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 		label.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
-				center(dc.getLabel().getParent().getBounds());
+				//center(dc.getLabel().getParent().getBounds());
 				drawImage();
 			}
 		});
@@ -321,10 +385,22 @@ public class ComputationUI extends Observable{
 	public ImageData getImageData() {
 		return imageData;
 	}
+	
+	public synchronized int getDisplayMode() {
+		return displayMode;
+	}
+
+	public synchronized void setDisplayMode(int displayMode) {
+		this.displayMode = displayMode;
+		paintBackground();
+		drawImage();
+		setChanged();
+		notifyObservers();
+	}
 
 	private class RunnerThread extends ComputationThread {
 
-		protected synchronized void computationStep() throws Exception {
+		protected void computationStep() throws Exception {
 			if(computation==null){
 				computation = configuration.getLibrary().createComputation(
 						configuration.getRuleName(), 
@@ -335,7 +411,7 @@ public class ComputationUI extends Observable{
 			computation.compute();
 		}
 
-		protected synchronized void displayStep() throws Exception {
+		protected void displayStep() throws Exception {
 			cycleCount++;
 			if(computation!=null){
 				computation.getCurrent(getData());

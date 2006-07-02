@@ -32,5 +32,4 @@ public class DrawingContext {
 			gc.dispose();
 		}
 	}
-
 }
