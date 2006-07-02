@@ -63,7 +63,7 @@ public class SaveImageAction extends Action implements Observer {
 		if (saveDisplay) {
 			int width = Math.min(computationUI.getImageData().width, label.getBounds().width);
 			int height = Math.min(computationUI.getImageData().height, label.getBounds().height);
-			System.out.println("width=" + width + ", height=" + height);
+//			System.out.println("width=" + width + ", height=" + height);
 			Image image = new Image(label.getDisplay(), width, height);
 			computationUI.getDc().getGC().copyArea(image, 0, 0);
 			imgd = image.getImageData();

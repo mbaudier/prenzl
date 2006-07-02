@@ -29,13 +29,21 @@ public class SharedImages {
 		PrenzlPlugin.getImageDescriptor("icons/save.gif"); 
 	public final static ImageDescriptor IMGD_OPEN = 
 		PrenzlPlugin.getImageDescriptor("icons/open.gif"); 
+	public final static ImageDescriptor IMGD_FILE = 
+		PrenzlPlugin.getImageDescriptor("icons/file.gif"); 
 	
 	public final static Hashtable extensionImageDescriptors = new Hashtable();
 	
 	public final static ImageDescriptor getExtensionIMGD(String extension){
 		if(!extensionImageDescriptors.containsKey(extension)){
-			ImageDescriptor imgd = ImageDescriptor.createFromImageData(
-					Program.findProgram(extension).getImageData());
+			Program program = Program.findProgram(extension);
+			final ImageDescriptor imgd;
+			if(program!=null){
+				imgd = ImageDescriptor.createFromImageData(program.getImageData());
+			}
+			else{
+				imgd = IMGD_FILE;
+			}
 			extensionImageDescriptors.put(extension,imgd);
 		}
 		return (ImageDescriptor)extensionImageDescriptors.get(extension);
