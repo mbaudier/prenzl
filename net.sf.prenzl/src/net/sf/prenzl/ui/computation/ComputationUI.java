@@ -38,6 +38,7 @@ public class ComputationUI extends Observable{
 
 	// Data
 	private ImageData imageData = null;
+	private ImageData imageDataScaled = null;
 
 	// Graphics and SWT
 	private Composite parent;
@@ -72,7 +73,6 @@ public class ComputationUI extends Observable{
 					int displayWidth = dc.getLabel().getParent().getBounds().width;
 					int displayHeight = dc.getLabel().getParent().getBounds().height;
 
-					final ImageData imageDataScaled;
 					if(displayMode == DISPLAY_ORIGINAL){
 						imageDataScaled = imageData;
 					}
@@ -382,8 +382,8 @@ public class ComputationUI extends Observable{
 		return dc;
 	}
 
-	public ImageData getImageData() {
-		return imageData;
+	public ImageData getImageDataScaled() {
+		return imageDataScaled;
 	}
 	
 	public synchronized int getDisplayMode() {

@@ -37,7 +37,7 @@ public class RunAction extends Action implements Observer {
 		if(computationUI.isRunning()){
 			computationUI.setRunning(false);
 			
-			ImageData id = (ImageData)computationUI.getImageData().clone();
+			ImageData id = (ImageData)computationUI.getImageDataScaled().clone();
 			float factor; 
 			if(id.width>=id.height){
 				factor = 128f/id.width;

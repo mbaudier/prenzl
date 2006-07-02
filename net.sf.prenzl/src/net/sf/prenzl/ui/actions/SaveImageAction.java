@@ -1,5 +1,6 @@
 package net.sf.prenzl.ui.actions;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,6 +11,8 @@ import net.sf.prenzl.ui.computation.ComputationUI;
 import net.sf.prenzl.util.Log;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -58,17 +61,16 @@ public class SaveImageAction extends Action implements Observer {
 
 	private void saveAsPicture() {
 		ImageData imgd = null;
-		Label label = computationUI.getDc().getLabel();
+		final Label label = computationUI.getDc().getLabel();
 		if (saveDisplay) {
-			//TODO: take scaling into account
-			int width = Math.min(computationUI.getImageData().width, label.getBounds().width);
-			int height = Math.min(computationUI.getImageData().height, label.getBounds().height);
+			int width = Math.min(computationUI.getImageDataScaled().width, label.getBounds().width);
+			int height = Math.min(computationUI.getImageDataScaled().height, label.getBounds().height);
 			Image image = new Image(label.getDisplay(), width, height);
 			computationUI.getDc().getGC().copyArea(image, 0, 0);
 			imgd = image.getImageData();
 		}
 		else {
-			imgd = computationUI.getImageData();
+			imgd = computationUI.getImageDataScaled();
 		}
 
 		FileDialog fileDialog = new FileDialog(label.getShell(), SWT.SAVE);
@@ -97,6 +99,16 @@ public class SaveImageAction extends Action implements Observer {
 			label.getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					try {
+						if(new File(path).exists()){
+							if(new MessageDialog(label.getShell(),
+									"File already exists",
+									null,
+									"File already exists. Do you want to override?",
+									MessageDialog.WARNING,
+									new String[]{"Save","Cancel"},1).open()==Window.CANCEL){
+								return;
+							}
+						}
 						OutputStream out = new FileOutputStream(path);
 						imgl.save(out, type);
 						out.close();
