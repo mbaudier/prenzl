@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -41,9 +42,8 @@ public class PrenzlPlugin extends AbstractUIPlugin {
 	private static PrenzlPlugin plugin;
 	
 	private LaunchModel launchModel;
-//	private RunModel runModel;
 
-	
+	private State state;
 
 	public PrenzlPlugin() {
 		plugin = this;
@@ -52,9 +52,6 @@ public class PrenzlPlugin extends AbstractUIPlugin {
 	public static LaunchModel getLaunchModel(){
 		return getDefault().launchModel;
 	}
-//	public static RunModel getRunModel(){
-//		return getDefault().runModel;
-//	}
 
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -63,11 +60,12 @@ public class PrenzlPlugin extends AbstractUIPlugin {
 		LaunchModel.setLibraries(loadLibraries());
 		
 		launchModel = new LaunchModel();
-//		runModel = new RunModel();
 
+		//restorePreviousState();
 		launchModel.addLastInputLocations(loadLastPicFilesState());
 		launchModel.notifyObservers();
 	}
+	
 
   private List loadLibraries() {
 		Vector libraries = new Vector();
@@ -93,6 +91,7 @@ public class PrenzlPlugin extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		saveLastPicFilesState();
+		//savePreviousState();
 		Computation.cleanRegistries();
 
 		super.stop(context);
@@ -146,6 +145,10 @@ public class PrenzlPlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 
+	public static IWorkbench getDefaultWorkbench() {
+		return plugin.getWorkbench();
+	}
+
 	/**
 	 * Returns an image descriptor for the image file at the given
 	 * plug-in relative path.
@@ -168,6 +171,10 @@ public class PrenzlPlugin extends AbstractUIPlugin {
 	
 	public static void removeCountListener(ICountListener countListener){
 		findRunView().getComputationUI().removeCountListener(countListener);
+	}
+
+	public State getPreviousState() {
+		return state;
 	}
 
 }

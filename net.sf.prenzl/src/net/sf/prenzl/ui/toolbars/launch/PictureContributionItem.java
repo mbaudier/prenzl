@@ -57,11 +57,14 @@ public class PictureContributionItem extends ContributionItem {
 		
 		public void update(Observable o, Object arg) {
 			if(o==PrenzlPlugin.getLaunchModel()){
-				String path = PrenzlPlugin.getLaunchModel().getComputationInput().getLocation();
-				if(path!=null){					
-					toolItem.setText(new File(path).getName());
-					toolItem.setToolTipText(path);
-					toolItem.setWidth(WIDTH);
+				ComputationInput computationInput = PrenzlPlugin.getLaunchModel().getComputationInput();
+				if(computationInput!=null){
+					String path = computationInput.getLocation();
+					if(path!=null){					
+						toolItem.setText(new File(path).getName());
+						toolItem.setToolTipText(path);
+						toolItem.setWidth(WIDTH);
+					}
 				}
 			}
 		}

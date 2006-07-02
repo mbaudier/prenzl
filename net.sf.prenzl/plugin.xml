@@ -63,5 +63,11 @@
                value="Prenzl!!&#x0A;&#x0A;Home page: http://prenzl.sourceforge.net&#x0A;Dev page: http://sourceforge.net/projects/prenzl&#x0A;&#x0A;LGPL license&#x0A;(c) 2006 Mathieu Baudier and Olivier Capillon"/>
       </product>
    </extension>
+   <extension
+         point="org.eclipse.ui.elementFactories">
+      <factory
+            class="net.sf.prenzl.StateFactory"
+            id="net.sf.prenzl.stateFactory"/>
+   </extension>
 
 </plugin>
