@@ -202,61 +202,6 @@ public class ComputationUI extends Observable{
 		}
 	}
 
-	/*
-	public void reset(Library library, String ruleName, String firstGenPicPath) {
-		
-		paintBackground();
-
-		// First clean previous state
-		if (computation != null) {
-			computation.cleanUp();
-			computation = null;
-		}
-
-		if (firstGenPicPath != null && library != null) {
-			try {
-				imageData = new ImageData(firstGenPicPath);
-				
-				// Initializes history
-				int dataLength = imageData.data.length;
-				history = new byte[MAX_HISTORY_MEMORY / dataLength][];
-				Log.verbose("Computation history size is "+history.length);
-				
-				// Clones first generation (history[0] will be empty for the first generations)
-				firstGeneration = new byte[imageData.data.length];
-				for(int i=0;i<imageData.data.length;i++){
-					firstGeneration[i] = imageData.data[i];
-				}
-				
-				for(int i=0; i<history.length; i++){
-					history[i] = new byte[imageData.data.length];
-				}
-				// TODO: adds ability to load an anteprevious state
-				computation = library.createComputation(ruleName, imageData.width, imageData.height,
-						imageData.data,null);
-				
-				drawOrigin = new Point(0, 0);
-				center(dc.getLabel().getParent().getBounds());
-				drawImage();
-
-				cycleCount = 0;
-				PrenzlPlugin.notifyCycleCount(cycleCount);
-				
-				if (runnerThread != null) {
-					runnerThread.dispose();
-				}
-				runnerThread = new RunnerThread();
-				runnerThread.start();
-				
-				setChanged();
-				notifyObservers();
-			}
-			catch (Exception e) {
-				Log.error("Could not initialize computation",e);
-			}
-		}
-	}
-		*/
 
 	public void setFullScreen(boolean doFullScreen){
 		resetDrawingContext(doFullScreen);
@@ -379,7 +324,7 @@ public class ComputationUI extends Observable{
 
 	private class RunnerThread extends ComputationThread {
 
-		protected void computationStep() throws Exception {
+		protected synchronized void computationStep() throws Exception {
 			if(computation==null){
 				computation = configuration.getLibrary().createComputation(
 						configuration.getRuleName(), 
@@ -390,14 +335,15 @@ public class ComputationUI extends Observable{
 			computation.compute();
 		}
 
-		protected void displayStep() throws Exception {
-			if(computation==null)throw new Exception("Computation not initialized.");
+		protected synchronized void displayStep() throws Exception {
 			cycleCount++;
-			computation.getCurrent(getData());
-			imageData.data = getData();
-			
-			if (!dc.getLabel().isDisposed()) {
-				drawImage();
+			if(computation!=null){
+				computation.getCurrent(getData());
+				imageData.data = getData();
+				
+				if (!dc.getLabel().isDisposed()) {
+					drawImage();
+				}
 			}
 			notifyCycleCount(cycleCount);
 		}

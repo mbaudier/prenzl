@@ -13,7 +13,6 @@ abstract class ComputationThread extends Thread {
 
 	private long computeDurationSum = 0;
 	private long displayDurationSum = 0;
-//	private int cycleCount = 0;
 
 	public void run() {
 		try {
@@ -23,9 +22,6 @@ abstract class ComputationThread extends Thread {
 			// takes next/previousStep into account
 			int loopCount = 0; 
 			
-			// TODO: find a cleaner way to propagate the cycle count
-//			PrenzlPlugin.getRunModel().setCount(cycleCount);
-
 			while (valid) {
 				synchronized (this) {
 					while (!running && valid) {
@@ -47,7 +43,6 @@ abstract class ComputationThread extends Thread {
 						wait((long) timeToSleep);
 					}
 				}
-
 			}
 
 			synchronized (this) {
@@ -78,23 +73,14 @@ abstract class ComputationThread extends Thread {
 		// ***** DISPLAY ***** //
 		displayStep();
 		// ******************* //
-		// TODO: find a cleaner way to propagate the cycle count
-//		PrenzlPlugin.getRunModel().setCount(cycleCount);
 		Thread.yield();// lets graphical threads takes the hand, before sleeping anyhow
 		long displayDuration = System.currentTimeMillis() - beginDisplay;
-//		cycleCount++;
 		displayDurationSum = displayDurationSum + displayDuration;
 
 
 		double cycleDuration = (double) (computeDuration + displayDuration);
 		return cycleDuration / load	- cycleDuration;
 	}
-	
-//	public void decrementCount(){
-//		cycleCount--;
-//		// TODO: find a cleaner way to propagate the cycle count
-//		PrenzlPlugin.getRunModel().setCount(cycleCount);
-//	}
 	
 	public synchronized void setRunning(boolean running) {
 		this.running = running;
@@ -108,10 +94,6 @@ abstract class ComputationThread extends Thread {
 		notifyAll();
 	}
 
-//	public int getCycleCount(){
-//		return cycleCount;
-//	}
-	
 	private static void logStatReport(long duration, int cycleCount, long computeDurationSum,
 			long paintDurationSum) {
 		long avgCycleDuration = duration / cycleCount;
