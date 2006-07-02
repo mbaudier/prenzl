@@ -76,7 +76,16 @@ public class SaveImageAction extends Action implements Observer {
 		final String path;
 		if ((path = fileDialog.open()) != null) {
 			final int type;
-			if(path.substring(path.lastIndexOf('.')).equals("bmp")){
+			int dotIndex = path.lastIndexOf('.');
+			final String extension;
+			if(dotIndex+1<path.length()){
+				extension = path.substring(dotIndex+1);
+				Log.debug("File extension: "+extension);
+			}
+			else{
+				extension = "jpg";
+			}
+			if(extension.equals("bmp")){
 				type = SWT.IMAGE_BMP;
 			}
 			else{
