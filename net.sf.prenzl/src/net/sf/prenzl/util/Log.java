@@ -101,9 +101,9 @@ public class Log {
 				}
 			}
 			buf.append(msg);
-			buf.append(' ');
+			buf.append(" [");
 			buf.append(location);
-			buf.append('\n');
+			buf.append("\n");
 			if(e != null){
 				StringWriter strOut = new StringWriter();
 				e.printStackTrace(new PrintWriter(strOut));
