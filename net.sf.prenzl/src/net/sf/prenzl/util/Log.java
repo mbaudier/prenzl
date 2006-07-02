@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.StringTokenizer;
 
 public class Log {
-	public static String prefix = "_ ";
+	//public static String prefix = "_ ";
 	public final static SimpleDateFormat sdfLog = 
 		new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 	
@@ -65,7 +65,7 @@ public class Log {
 	private static void log(int level, Object msg, Throwable e){
 		if(getLogLevel()>=level){
 			StringBuffer buf = new StringBuffer("");
-			buf.append(prefix);
+			//buf.append(prefix);
 			String levelStr = "<unknown>";
 			switch(level){
 				case LOG_ERROR: levelStr   = "ERROR"; break;
