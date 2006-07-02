@@ -48,14 +48,19 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
 		NextStepAction nextStepAction = new NextStepAction(computationUI);
 		RunAction runAction = new RunAction(computationUI);
 		
-		SaveImageAction saveDisplayJPEG = 
-			new SaveImageAction(computationUI,true,SWT.IMAGE_JPEG);
-		SaveImageAction saveDisplayBMP = 
-			new SaveImageAction(computationUI,true,SWT.IMAGE_BMP);
-		SaveImageAction saveImageJPEG = 
-			new SaveImageAction(computationUI,false,SWT.IMAGE_JPEG);
-		SaveImageAction saveImageBMP = 
-			new SaveImageAction(computationUI,false,SWT.IMAGE_BMP);
+//		SaveImageAction saveDisplayJPEG = 
+//			new SaveImageAction(computationUI,true,SWT.IMAGE_JPEG);
+//		SaveImageAction saveDisplayBMP = 
+//			new SaveImageAction(computationUI,true,SWT.IMAGE_BMP);
+//		SaveImageAction saveImageJPEG = 
+//			new SaveImageAction(computationUI,false,SWT.IMAGE_JPEG);
+//		SaveImageAction saveImageBMP = 
+//			new SaveImageAction(computationUI,false,SWT.IMAGE_BMP);
+//
+		SaveImageAction saveDisplay = 
+			new SaveImageAction(computationUI,true);
+		SaveImageAction saveImage = 
+			new SaveImageAction(computationUI,false);
 
 		IToolBarManager toolBarManager= getViewSite().getActionBars().getToolBarManager();
 	    toolBarManager.add(firstGenerationAction);
@@ -71,22 +76,26 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
 		menuManager.add(new Separator());
 		menuManager.add(displayModeCIOriginal);
 		menuManager.add(new Separator());
-		menuManager.add(saveDisplayJPEG);
-		menuManager.add(saveDisplayBMP);
-		menuManager.add(new Separator());
-		menuManager.add(saveImageJPEG);
-		menuManager.add(saveImageBMP);
+		menuManager.add(saveDisplay);
+		menuManager.add(saveImage);
+//		menuManager.add(saveDisplayJPEG);
+//		menuManager.add(saveDisplayBMP);
+//		menuManager.add(new Separator());
+//		menuManager.add(saveImageJPEG);
+//		menuManager.add(saveImageBMP);
 
 		IMenuManager viewMenuManager = getViewSite().getActionBars().getMenuManager();
 		viewMenuManager.add(runActionText);
 		viewMenuManager.add(new Separator());
 		viewMenuManager.add(displayModeCIOriginal);
  		viewMenuManager.add(new Separator());
-		viewMenuManager.add(saveDisplayJPEG);
-		viewMenuManager.add(saveDisplayBMP);
-		viewMenuManager.add(new Separator());
-		viewMenuManager.add(saveImageJPEG);
-		viewMenuManager.add(saveImageBMP);
+ 		viewMenuManager.add(saveDisplay);
+ 		viewMenuManager.add(saveImage);
+//		viewMenuManager.add(saveDisplayJPEG);
+//		viewMenuManager.add(saveDisplayBMP);
+//		viewMenuManager.add(new Separator());
+//		viewMenuManager.add(saveImageJPEG);
+//		viewMenuManager.add(saveImageBMP);
        
 		statusLineManager = getViewSite().getActionBars().getStatusLineManager();
 		computationUI.addCountListener(this);

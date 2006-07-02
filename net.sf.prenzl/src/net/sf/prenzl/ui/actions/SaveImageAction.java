@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.util.Observable;
 import java.util.Observer;
 
-import net.sf.prenzl.SharedImages;
 import net.sf.prenzl.ui.computation.ComputationUI;
 import net.sf.prenzl.util.Log;
 
@@ -20,32 +19,32 @@ import org.eclipse.swt.widgets.Label;
 
 public class SaveImageAction extends Action implements Observer {
 	private final boolean saveDisplay;
-	private final int type;
+	//private final int type;
 
 	private final ComputationUI computationUI;
 	
-	public SaveImageAction(ComputationUI computationUI, boolean saveDisplay, int type) {
+	public SaveImageAction(ComputationUI computationUI, boolean saveDisplay) {
 		this.computationUI = computationUI;
 		this.saveDisplay = saveDisplay;
-		this.type = type;
-		setText("Save "+(saveDisplay?"display":"image")+" as "+typeExtension(type));
-		setImageDescriptor(SharedImages.getExtensionIMGD(typeExtension(type)));
+		//this.type = type;
+		setText("Save "+(saveDisplay?"display":"image"));//+" as "+typeExtension(type));
+		//setImageDescriptor(SharedImages.getExtensionIMGD(typeExtension(type)));
 		computationUI.addObserver(this);
 	}
 
-	private static String typeExtension(int type){
-		if(type == SWT.IMAGE_JPEG){
-			return "jpg";
-		}
-		else if(type == SWT.IMAGE_BMP)
-		{
-			return "bmp";
-		}
-		else{
-			throw new RuntimeException("Unknown image type "+type);
-		}
-	}
-	
+//	private static String typeExtension(int type){
+//		if(type == SWT.IMAGE_JPEG){
+//			return "jpg";
+//		}
+//		else if(type == SWT.IMAGE_BMP)
+//		{
+//			return "bmp";
+//		}
+//		else{
+//			throw new RuntimeException("Unknown image type "+type);
+//		}
+//	}
+//	
 	public void run() {
 		saveAsPicture();
 	}
@@ -73,9 +72,16 @@ public class SaveImageAction extends Action implements Observer {
 		}
 
 		FileDialog fileDialog = new FileDialog(label.getShell(), SWT.SAVE);
-		fileDialog.setFilterExtensions(new String[]{"*."+typeExtension(type)});
+		fileDialog.setFilterExtensions(new String[]{"*.jpg","*.bmp"});
 		final String path;
 		if ((path = fileDialog.open()) != null) {
+			final int type;
+			if(path.substring(path.lastIndexOf('.')).equals("bmp")){
+				type = SWT.IMAGE_BMP;
+			}
+			else{
+				type = SWT.IMAGE_JPEG;
+			}
 			final ImageLoader imgl = new ImageLoader();
 			ImageData[] arr = {imgd};
 			imgl.data = arr;

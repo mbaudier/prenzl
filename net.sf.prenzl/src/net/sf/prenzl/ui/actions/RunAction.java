@@ -69,7 +69,7 @@ public class RunAction extends Action implements Observer {
 			    if(getText()!=null){
 			    	setText("Pause");
 			    }
-				setImageDescriptor(SharedImages.IMGD_STOP);
+			    setImageDescriptor(SharedImages.IMGD_STOP);
 			}
 			
 		}
