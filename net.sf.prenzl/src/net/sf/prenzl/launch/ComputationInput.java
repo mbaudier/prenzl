@@ -3,7 +3,7 @@ package net.sf.prenzl.launch;
 import org.eclipse.swt.graphics.ImageData;
 
 public class ComputationInput {
-	private String filePath;
+	private final String filePath;
 	private ImageData imageData;
 	
 	public ComputationInput(String filePath)
@@ -12,6 +12,7 @@ public class ComputationInput {
 	}
 	public ComputationInput(ImageData imageData)
 	{
+		filePath = "[MEMORY]";
 		this.imageData = imageData;
 	}
 	
@@ -25,5 +26,4 @@ public class ComputationInput {
 	public String getLocation(){
 		return filePath!=null?filePath:"INTERNAL";
 	}
-
 }

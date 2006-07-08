@@ -6,7 +6,6 @@ import java.io.FileWriter;
 
 import net.sf.prenzl.util.Log;
 
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.XMLMemento;
@@ -33,7 +32,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		
 		IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
 		
-		configurer.setInitialSize(new Point(state.getWidth(), state.getHeight()));
+		configurer.setInitialSize(state.getShellSize());
 		configurer.setShowCoolBar(true);
 		configurer.setShowStatusLine(true);
 		configurer.setTitle("Prenzl!!");
@@ -44,11 +43,13 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		super.postWindowOpen();
 	}
 
-	public boolean preWindowShellClose() {
-		Shell shell = PrenzlPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getShell();
-		state.setSize(shell.getBounds().width,shell.getBounds().height);
-		state.saveLaunchModel(PrenzlPlugin.getLaunchModel());
+	public void createWindowContents(Shell shell) {
+		super.createWindowContents(shell);
+		//state.restoreShell(shell);
+		shell.setLocation(state.getShellLocation());
+	}
 
+	public boolean preWindowShellClose() {
 		savePreviousState();
 		return super.preWindowShellClose();
 	}
@@ -72,7 +73,12 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	}
 	
 	private void savePreviousState(){
-		XMLMemento memento = XMLMemento.createWriteRoot("PreviousState");
+		Shell shell = PrenzlPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getShell();
+		state.saveShell(shell);
+//		state.saveShell(shell.getBounds());
+		state.saveLaunchModel(PrenzlPlugin.getLaunchModel());
+
+		XMLMemento memento = XMLMemento.createWriteRoot("State");
 		state.saveState(memento);
 		try {
 			FileWriter writer = new FileWriter(PrenzlPlugin.getDefault().getStateLocation()+File.separator+PREVIOUS_STATE_FILE);

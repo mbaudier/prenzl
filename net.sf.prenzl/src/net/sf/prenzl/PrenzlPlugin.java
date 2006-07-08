@@ -1,13 +1,6 @@
 package net.sf.prenzl;
 
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.List;
 import java.util.Vector;
 
@@ -36,14 +29,12 @@ public class PrenzlPlugin extends AbstractUIPlugin {
 	public final static String ID = "net.sf.prenzl";
 	public final static String ID_LIBRARY = ID+".library";
 
-	public final static String STATE_LAST_PICFILES = "prenzl-lastpictfiles";
+	//public final static String STATE_LAST_PICFILES = "prenzl-lastpictfiles";
 	
 	//The shared instance.
 	private static PrenzlPlugin plugin;
 	
 	private LaunchModel launchModel;
-
-	private State state;
 
 	public PrenzlPlugin() {
 		plugin = this;
@@ -61,7 +52,7 @@ public class PrenzlPlugin extends AbstractUIPlugin {
 		
 		launchModel = new LaunchModel();
 
-		launchModel.addLastInputLocations(loadLastPicFilesState());
+		//launchModel.addLastInputLocations(loadLastPicFilesState());
 		launchModel.notifyObservers();
 	}
 	
@@ -89,53 +80,53 @@ public class PrenzlPlugin extends AbstractUIPlugin {
 	 * This method is called when the plug-in is stopped
 	 */
 	public void stop(BundleContext context) throws Exception {
-		saveLastPicFilesState();
+		//saveLastPicFilesState();
 		Computation.cleanRegistries();
 
 		super.stop(context);
 		plugin = null;
 	}
 
-	private List loadLastPicFilesState(){
-		List list = new Vector();
-		try {
-			File f = new File(getStateLocation()+STATE_LAST_PICFILES);		
-			f.createNewFile();
-			BufferedReader in = new BufferedReader(new FileReader(f));
-			String line = null;
-			while((line=in.readLine())!=null){
-				list.add(line);
-			}
-			in.close();
-		}
-		catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
+//	private List loadLastPicFilesState(){
+//		List list = new Vector();
+//		try {
+//			File f = new File(getStateLocation()+STATE_LAST_PICFILES);		
+//			f.createNewFile();
+//			BufferedReader in = new BufferedReader(new FileReader(f));
+//			String line = null;
+//			while((line=in.readLine())!=null){
+//				list.add(line);
+//			}
+//			in.close();
+//		}
+//		catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//		catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		return list;
+//	}
 	
-	private void saveLastPicFilesState(){
-		List list = launchModel.getLastInputLocations();
-		try {
-			File f = new File(getStateLocation()+STATE_LAST_PICFILES);		
-			f.createNewFile();
-			Writer out = new FileWriter(f);
-			for(int i=0;i<list.size();i++){
-				out.write((String)list.get(i));
-				out.write("\n");
-			}
-			out.close();
-		}
-		catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+//	private void saveLastPicFilesState(){
+//		List list = launchModel.getLastInputLocations();
+//		try {
+//			File f = new File(getStateLocation()+STATE_LAST_PICFILES);		
+//			f.createNewFile();
+//			Writer out = new FileWriter(f);
+//			for(int i=0;i<list.size();i++){
+//				out.write((String)list.get(i));
+//				out.write("\n");
+//			}
+//			out.close();
+//		}
+//		catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//		catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 	/**
 	 * Returns the shared instance.
 	 */
@@ -170,9 +161,4 @@ public class PrenzlPlugin extends AbstractUIPlugin {
 	public static void removeCountListener(ICountListener countListener){
 		findRunView().getComputationUI().removeCountListener(countListener);
 	}
-
-	public State getPreviousState() {
-		return state;
-	}
-
 }
