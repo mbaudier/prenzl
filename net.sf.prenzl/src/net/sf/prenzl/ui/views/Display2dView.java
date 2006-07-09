@@ -4,7 +4,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import net.sf.prenzl.PrenzlPlugin;
-import net.sf.prenzl.launch.ComputationInput;
 import net.sf.prenzl.launch.Configuration;
 import net.sf.prenzl.launch.ICountListener;
 import net.sf.prenzl.launch.LaunchModel;
@@ -24,6 +23,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.part.ViewPart;
@@ -113,13 +113,16 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
 				computationUI.reset(configuration);
 				setPartName(configuration.getRuleName());
 			}
-			else if(arg instanceof ComputationInput){
-				computationUI.reset(launchModel.getComputationInput());
+			else if(arg instanceof String){
+				Rectangle bounds = getSite().getWorkbenchWindow().getShell().getDisplay().getBounds();
+				
+				computationUI.reset(launchModel.loadComputationInput(bounds.width,bounds.height));
 				
 			}
-			else if(arg == null){//complete reset
-				computationUI.reset(launchModel.getConfiguration(),launchModel.getComputationInput());
-			}
+//			else if(arg == null){//complete reset
+//				Rectangle bounds = getSite().getWorkbenchWindow().getShell().getDisplay().getBounds();
+//				computationUI.reset(launchModel.getConfiguration(),launchModel.loadComputationInput(bounds.width,bounds.height));
+//			}
 		}
 	}
 
@@ -138,8 +141,7 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
 		return computationUI;
 	}
 	public void setCount(final int count) {
-		if(computationUI.getDc().getLabel()==null)return;
-		computationUI.getDc().getLabel().getDisplay().asyncExec(new Runnable(){
+		getSite().getWorkbenchWindow().getShell().getDisplay().asyncExec(new Runnable(){
 			public void run(){
 				if(statusLineManager!=null)
 					statusLineManager.setMessage(Integer.toString(count));

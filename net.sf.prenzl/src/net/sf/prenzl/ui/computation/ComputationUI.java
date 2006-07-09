@@ -7,6 +7,7 @@ import net.sf.prenzl.adapter.Computation;
 import net.sf.prenzl.launch.ComputationInput;
 import net.sf.prenzl.launch.Configuration;
 import net.sf.prenzl.launch.ICountListener;
+import net.sf.prenzl.util.ImageUtil;
 import net.sf.prenzl.util.Log;
 
 import org.eclipse.swt.SWT;
@@ -77,13 +78,8 @@ public class ComputationUI extends Observable{
 						imageDataScaled = imageData;
 					}
 					else if(displayMode == DISPLAY_FIT){
-						float scale = Math.min(
-								((float)displayWidth)/imageData.width,
-								((float)displayHeight)/imageData.height);
 						if(displayWidth!=0 && displayHeight!=0) {
-							imageDataScaled = imageData.scaledTo(
-									(int)(imageData.width*scale),
-									(int)(imageData.height*scale));
+							imageDataScaled = ImageUtil.fit(imageData,displayWidth,displayHeight);
 						}
 						else{
 							imageDataScaled = imageData;
@@ -91,9 +87,7 @@ public class ComputationUI extends Observable{
 					}
 					else if(displayMode == DISPLAY_STRECH){
 						if(displayWidth!=0 && displayHeight!=0) {
-							imageDataScaled = imageData.scaledTo(
-									displayWidth,
-									displayHeight);
+							imageDataScaled = ImageUtil.strech(imageData,displayWidth,displayHeight);
 						}
 						else{
 							imageDataScaled = imageData;

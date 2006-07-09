@@ -8,7 +8,6 @@ import java.util.Observer;
 
 import net.sf.prenzl.PrenzlPlugin;
 import net.sf.prenzl.SharedImages;
-import net.sf.prenzl.launch.ComputationInput;
 
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
@@ -56,15 +55,12 @@ public class PictureContributionItem extends ContributionItem {
 		}
 		
 		public void update(Observable o, Object arg) {
-			if(o==PrenzlPlugin.getLaunchModel()){
-				ComputationInput computationInput = PrenzlPlugin.getLaunchModel().getComputationInput();
-				if(computationInput!=null){
-					String path = computationInput.getLocation();
-					if(path!=null){					
-						toolItem.setText(new File(path).getName());
-						toolItem.setToolTipText(path);
-						toolItem.setWidth(WIDTH);
-					}
+			if (o == PrenzlPlugin.getLaunchModel()) {
+				String path = PrenzlPlugin.getLaunchModel().getInputPath();
+				if (path != null) {
+					toolItem.setText(new File(path).getName());
+					toolItem.setToolTipText(path);
+					toolItem.setWidth(WIDTH);
 				}
 			}
 		}
@@ -118,7 +114,7 @@ public class PictureContributionItem extends ContributionItem {
 	    return menu;
 		}
 		void updatePicturePath(String path){
-			PrenzlPlugin.getLaunchModel().setComputationInput(new ComputationInput(path));
+			PrenzlPlugin.getLaunchModel().setInputPath(path);
 			PrenzlPlugin.getLaunchModel().notifyObservers();
 		}
 		

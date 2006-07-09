@@ -1,6 +1,7 @@
 package net.sf.prenzl;
 
 import net.sf.prenzl.ui.toolbars.launch.ComputationContributionItem;
+import net.sf.prenzl.ui.toolbars.launch.LoadModeContributionItem;
 import net.sf.prenzl.ui.toolbars.launch.PictureContributionItem;
 
 import org.eclipse.jface.action.ICoolBarManager;
@@ -58,18 +59,13 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	}
 
     protected void fillCoolBar(ICoolBarManager coolBarManager) {
-    	//coolBarManager.add(new PictureContributionItem());
-    	
         IToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
-        coolBarManager.add(new ToolBarContributionItem(toolBarManager, "main"));
-        coolBarManager.setLockLayout(false);
-//        toolBarManager.add(runAction);
-//        toolBarManager.add(previousStepAction);
-//        toolBarManager.add(nextStepAction);
         toolBarManager.add(new ComputationContributionItem());
         toolBarManager.add(new PictureContributionItem());
-        //toolBarManager.add(new CountContributionItem());
-        
+        toolBarManager.add(new LoadModeContributionItem());
+
+        coolBarManager.add(new ToolBarContributionItem(toolBarManager, "main"));
+        coolBarManager.setLockLayout(false);
      }
 
 }

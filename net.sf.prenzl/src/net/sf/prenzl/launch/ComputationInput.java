@@ -6,14 +6,14 @@ public class ComputationInput {
 	private final String filePath;
 	private ImageData imageData;
 	
-	public ComputationInput(String filePath)
+	public ComputationInput(String filePath, ImageData imageData)
 	{
 		this.filePath = filePath;
+		this.imageData = imageData;
 	}
 	public ComputationInput(ImageData imageData)
 	{
-		filePath = "[MEMORY]";
-		this.imageData = imageData;
+		this("[MEMORY]",imageData);
 	}
 	
 	public ImageData getData(){

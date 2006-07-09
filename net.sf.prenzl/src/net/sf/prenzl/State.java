@@ -23,6 +23,7 @@ public class State implements IPersistableElement, IAdaptable {
 	private final static String CHILD_LAUNCH_MODEL = "LaunchModel";
 	private final static String KEY_LIBARY = "library";
 	private final static String KEY_RULE = "rule";
+	private final static String KEY_LOAD_MODE = "loadMode";
 	
 	private final static String CHILD_COMPUTATION_INPUT = "ComputationInput";
 	private final static String KEY_PATH= "path";
@@ -30,6 +31,7 @@ public class State implements IPersistableElement, IAdaptable {
 	private Point shellLocation, shellSize;
 	private RuleDescriptor ruleDescriptor;
 	private List inputLocations;
+	private int loadMode;
 
 	/** Default values*/
 	public State(){
@@ -37,22 +39,26 @@ public class State implements IPersistableElement, IAdaptable {
 		shellSize = new Point(800,600);
 		ruleDescriptor = new RuleDescriptor(LaunchModel.findLibrary("stdrules"),"Phase Cheulou");
 		inputLocations = new Vector();
+		loadMode = LaunchModel.LOADMODE_ORIGINAL;
 	}
 	public State(IMemento memento){
 		shellLocation = new Point(memento.getInteger(KEY_SHELL_X).intValue(),memento.getInteger(KEY_SHELL_Y).intValue());
 		shellSize = new Point(memento.getInteger(KEY_SHELL_WIDTH).intValue(),memento.getInteger(KEY_SHELL_HEIGHT).intValue());
 		
-		IMemento mementoLaunchModel = memento.getChild(CHILD_LAUNCH_MODEL);
+		IMemento mementoLM = memento.getChild(CHILD_LAUNCH_MODEL);
 		ruleDescriptor = new RuleDescriptor(
-				LaunchModel.findLibrary(mementoLaunchModel.getString(KEY_LIBARY)),
-				mementoLaunchModel.getString(KEY_RULE));
+				LaunchModel.findLibrary(mementoLM.getString(KEY_LIBARY)),
+				mementoLM.getString(KEY_RULE));
+		loadMode = mementoLM.getInteger(KEY_LOAD_MODE).intValue();
 		
 		inputLocations = new Vector();
-		IMemento[] ci = mementoLaunchModel.getChildren(CHILD_COMPUTATION_INPUT);
+		IMemento[] ci = mementoLM.getChildren(CHILD_COMPUTATION_INPUT);
 		for (int i = 0; i < ci.length; i++) {
 			inputLocations.add(ci[i].getString(KEY_PATH));
 		}
 	}
+	
+	
 	
 	public void saveState(IMemento memento) {
 		memento.putInteger(KEY_SHELL_X,shellLocation.x);
@@ -60,14 +66,15 @@ public class State implements IPersistableElement, IAdaptable {
 		memento.putInteger(KEY_SHELL_WIDTH,shellSize.x);
 		memento.putInteger(KEY_SHELL_HEIGHT,shellSize.y);
 		
-		IMemento mementoLaunchModel = memento.createChild(CHILD_LAUNCH_MODEL);
-		mementoLaunchModel.putString(KEY_LIBARY,ruleDescriptor.getLibrary().getName());
-		mementoLaunchModel.putString(KEY_RULE,ruleDescriptor.getRuleName());
+		IMemento mementoLM = memento.createChild(CHILD_LAUNCH_MODEL);
+		mementoLM.putString(KEY_LIBARY,ruleDescriptor.getLibrary().getName());
+		mementoLM.putString(KEY_RULE,ruleDescriptor.getRuleName());
+		mementoLM.putInteger(KEY_LOAD_MODE,loadMode);
 		
 		Iterator it = inputLocations.iterator();
 		while (it.hasNext()) {
 			String ci = (String) it.next();
-			IMemento mementoCi = mementoLaunchModel.createChild(CHILD_COMPUTATION_INPUT);
+			IMemento mementoCi = mementoLM.createChild(CHILD_COMPUTATION_INPUT);
 			mementoCi.putString(KEY_PATH,ci);
 		}
 	}
@@ -97,18 +104,15 @@ public class State implements IPersistableElement, IAdaptable {
 		shellSize = new Point(bounds.width,bounds.height);
 	}
 	
-//	public void restoreShell(Shell shell){
-//		shell.setSize(shellSize);
-//		shell.setLocation(shellLocation);
-//	}
-	
 	public void restoreLaunchModel(LaunchModel launchModel){
 		launchModel.setRuleDescriptor(ruleDescriptor);
+		launchModel.setLoadMode(loadMode);// has to be before load lastInput
 		launchModel.addLastInputLocations(inputLocations);
 	}
 	
 	public void saveLaunchModel(LaunchModel launchModel){
 		ruleDescriptor = launchModel.getRuleDescriptor();
 		inputLocations = launchModel.getLastInputLocations();
+		loadMode = launchModel.getLoadMode();
 	}
 }

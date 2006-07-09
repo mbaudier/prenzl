@@ -15,6 +15,12 @@ import org.eclipse.swt.widgets.MenuItem;
 public class DisplayModeCI extends ContributionItem{
 
 	private final ComputationUI computationUI;
+	
+	private DisplayModeMenu dmmOriginal;
+	private DisplayModeMenu dmmFit;
+	private DisplayModeMenu dmmStrech;
+	
+	
 	public DisplayModeCI(ComputationUI computationUI){
 		this.computationUI = computationUI;
 	}
@@ -24,11 +30,17 @@ public class DisplayModeCI extends ContributionItem{
 		parentI.setText("Display");
 		Menu parent = new Menu(menu);
 		parentI.setMenu(parent);
-		new DisplayModeMenu(ComputationUI.DISPLAY_ORIGINAL,parent);
-		new DisplayModeMenu(ComputationUI.DISPLAY_FIT,parent);
-		new DisplayModeMenu(ComputationUI.DISPLAY_STRECH,parent);
+		dmmOriginal = new DisplayModeMenu(ComputationUI.DISPLAY_ORIGINAL,parent);
+		dmmFit = new DisplayModeMenu(ComputationUI.DISPLAY_FIT,parent);
+		dmmStrech = new DisplayModeMenu(ComputationUI.DISPLAY_STRECH,parent);
 	}
 
+	public void dispose() {
+		if(dmmOriginal!=null)dmmOriginal.dispose();
+		if(dmmFit!=null)dmmOriginal.dispose();
+		if(dmmStrech!=null)dmmOriginal.dispose();
+		super.dispose();
+	}
 	
 	private class DisplayModeMenu implements Observer{
 		final MenuItem item;
@@ -39,7 +51,7 @@ public class DisplayModeCI extends ContributionItem{
 			item = new MenuItem(menu, SWT.CHECK);
 			String label;
 			switch (displayMode) {
-			case ComputationUI.DISPLAY_ORIGINAL:label = "Original";break;
+			case ComputationUI.DISPLAY_ORIGINAL:label = "Original (faster)";break;
 			case ComputationUI.DISPLAY_FIT:label = "Fit";break;
 			case ComputationUI.DISPLAY_STRECH:label = "Strech";break;
 			default:label = "<null>";break;
@@ -57,10 +69,16 @@ public class DisplayModeCI extends ContributionItem{
 			computationUI.addObserver(this);
 		}
 
+		public void dispose(){
+			computationUI.deleteObserver(this);
+		}
+		
 		public void update(Observable o, Object arg) {
 			if(o instanceof ComputationUI){
-				if(item!=null)item.setSelection(computationUI.getDisplayMode()==displayMode);
+				if(item!=null && !item.isDisposed())item.setSelection(computationUI.getDisplayMode()==displayMode);
 			}
 		}
 	}
+
+
 }

@@ -6,15 +6,24 @@ import java.util.Observable;
 import java.util.Vector;
 
 import net.sf.prenzl.adapter.Library;
+import net.sf.prenzl.util.ImageUtil;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 
 public class LaunchModel extends Observable{
 	
+	public final static int LOADMODE_ORIGINAL = 0;
+	public final static int LOADMODE_FIT_TO_SCREEN = 1;
+	public final static int LOADMODE_STRECH_TO_SCREEN = 2;
+	public final static int LOADMODE_FIT_TO_800_600 = 3;
+	public final static int LOADMODE_STRECH_TO_800_600 = 4;
+	
 	private int lastPicturesMaxSize = 15;
 	
-	private ComputationInput input;
-
+//	private ComputationInput input;
+	private String inputPath;
+	
 	private Configuration configuration;
 	/** List of Configuration*/
 	private final Vector lastConfigurations;
@@ -22,10 +31,16 @@ public class LaunchModel extends Observable{
 	private final Vector lastInputs;
 	/** List of Library*/
 	private static List libraries;
+	/** Load mode */
+	private int loadMode = LOADMODE_ORIGINAL;
 	
 	public LaunchModel(){
 		lastInputs = new Vector();
 		lastConfigurations = new Vector();
+	}
+	
+	public synchronized void setLoadMode(int loadMode){
+		this.loadMode = loadMode;
 	}
 	
 	public synchronized void setRuleProperties(RuleProperties ruleProperties) {
@@ -58,11 +73,15 @@ public class LaunchModel extends Observable{
 		notifyObservers(lastConfigurations);
 	}
 
-	public synchronized void setComputationInput(ComputationInput input) {
-		this.input = input;
-		addToLastInputLocations(input.getLocation());
+	public synchronized void setInputPath(String inputPath) {
+		this.inputPath = inputPath;
+		addToLastInputLocations(inputPath);
 		setChanged();
-		notifyObservers(input);
+		notifyObservers(inputPath);
+	}
+
+	public synchronized String getInputPath() {
+		return inputPath;
 	}
 
 	
@@ -82,7 +101,7 @@ public class LaunchModel extends Observable{
 			addToLastInputLocations((String)locationList.get(i));
 		}
 		if(!locationList.isEmpty()){
-			setComputationInput(new ComputationInput((String)locationList.get(0)));
+			setInputPath((String)locationList.get(0));
 		}
 		setChanged();
 	}
@@ -99,8 +118,28 @@ public class LaunchModel extends Observable{
 	}
 	
 
-	public synchronized ComputationInput getComputationInput() {
-		return input;
+	public synchronized int getLoadMode(){
+		return loadMode;
+	}
+	
+	public synchronized ComputationInput loadComputationInput(int displayWith, int displayHeight) {
+		ImageData imageDataOrig = new ImageData(inputPath);
+		final ImageData imageData;
+		switch(loadMode){
+		case LOADMODE_ORIGINAL: imageData = imageDataOrig;break;
+		case LOADMODE_FIT_TO_SCREEN: imageData = ImageUtil.fit(imageDataOrig,displayWith,displayHeight);break;
+		case LOADMODE_STRECH_TO_SCREEN: imageData = ImageUtil.strech(imageDataOrig,displayWith,displayHeight);break;
+		case LOADMODE_FIT_TO_800_600: 
+			if(imageDataOrig.width>imageDataOrig.height)imageData = ImageUtil.fit(imageDataOrig,800,600);
+			else imageData = ImageUtil.fit(imageDataOrig,600,800);
+			break;
+		case LOADMODE_STRECH_TO_800_600: 
+			if(imageDataOrig.width>imageDataOrig.height)imageData = ImageUtil.strech(imageDataOrig,800,600);
+			else imageData = ImageUtil.strech(imageDataOrig,600,800);
+			break;
+		default: imageData = imageDataOrig;break;
+		}
+		return new ComputationInput(inputPath,imageData);
 	}
 
 	public synchronized Configuration getConfiguration() {
@@ -131,5 +170,21 @@ public class LaunchModel extends Observable{
 		return libraries;
 	}
 
+	public static String getLoadModeName(int loadMode)
+	{
+		switch(loadMode){
+		case LaunchModel.LOADMODE_ORIGINAL:
+			return "Original";
+		case LaunchModel.LOADMODE_FIT_TO_SCREEN:
+			return "Fit to screen";
+		case LaunchModel.LOADMODE_STRECH_TO_SCREEN:
+			return "Strech to screen";
+		case LaunchModel.LOADMODE_FIT_TO_800_600:
+			return "Fit to 800x600";
+		case LaunchModel.LOADMODE_STRECH_TO_800_600:
+			return "Strech to 800x600";
+		default: return "Unknown";
+		}
+	}
 
 }
