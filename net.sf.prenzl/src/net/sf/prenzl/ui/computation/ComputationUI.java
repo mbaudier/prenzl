@@ -70,7 +70,7 @@ public class ComputationUI extends Observable{
 		if(dc.getLabel()==null)return;
 		dc.getDisplay().syncExec(new Runnable(){
 			public void run(){
-				if (imageData != null) {
+				if (imageData != null && !dc.getLabel().isDisposed()) {
 					int displayWidth = dc.getLabel().getParent().getBounds().width;
 					int displayHeight = dc.getLabel().getParent().getBounds().height;
 
@@ -256,16 +256,18 @@ public class ComputationUI extends Observable{
 		}
 	}
 
-/*
 	public void setFullScreen(boolean doFullScreen){
+		// interrupts the thread in order to prevent blocking
+		boolean wasRunning = runnerThread.isRunning();
+		if (wasRunning) runnerThread.setRunning(false);
+
 		resetDrawingContext(doFullScreen);
+		isFullScreen = doFullScreen;
+		
+		if (wasRunning)	runnerThread.setRunning(true);
 	}
-	*/
+	
 	private void resetDrawingContext(final boolean doFullScreen) {
-//		dc.getDisplay().syncExec(new Runnable(){
-//			public void run(){
-//			}
-//		});
 		if (doFullScreen) {
 			fullScreen = new Shell(dc.getLabel().getShell(), SWT.NO_TRIM);
 			Rectangle dispBounds = dc.getDisplay().getBounds();
@@ -425,18 +427,7 @@ public class ComputationUI extends Observable{
 		private int relY = 0;
 
 		public void mouseDoubleClick(MouseEvent e) {
-			// interrupts the thread in order to prevent blocking
-			boolean wasRunning = runnerThread.isRunning();
-			if (wasRunning) runnerThread.setRunning(false);
-			if (isFullScreen) {
-				resetDrawingContext(false);
-				isFullScreen = false;
-			}
-			else {
-				resetDrawingContext(true);
-				isFullScreen = true;
-			}
-			if (wasRunning)	runnerThread.setRunning(true);
+			setFullScreen(!isFullScreen);
 		}
 
 		public void mouseDown(MouseEvent e) {

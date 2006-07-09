@@ -8,7 +8,6 @@ import java.util.Observer;
 import net.sf.prenzl.PrenzlPlugin;
 import net.sf.prenzl.SharedImages;
 import net.sf.prenzl.adapter.Library;
-import net.sf.prenzl.launch.LaunchModel;
 import net.sf.prenzl.launch.RuleDescriptor;
 
 import org.eclipse.jface.action.ContributionItem;
@@ -47,7 +46,7 @@ public class ComputationContributionItem extends ContributionItem {
 			this.toolBar = toolBar;
 			PrenzlPlugin.getLaunchModel().addObserver(this);
 			
-			List libraries = LaunchModel.getLibraries();
+			List libraries = PrenzlPlugin.getLaunchModel().getLibraries();
 			if(libraries!=null && libraries.size()>0){
 				Library library = (Library)libraries.get(0);
 				String ruleNames[] = library.listComputations();
@@ -82,7 +81,7 @@ public class ComputationContributionItem extends ContributionItem {
 	    
 	    Menu menu = new Menu(toolBar.getShell(), SWT.POP_UP);
 	    
-	    List libraries = LaunchModel.getLibraries();
+	    List libraries = PrenzlPlugin.getLaunchModel().getLibraries();
 	    for(int j=0;j<libraries.size();j++){
 	    	final Library library = (Library)libraries.get(j);
 	    	MenuItem miLib = new MenuItem(menu,SWT.CASCADE);

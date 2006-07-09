@@ -48,11 +48,10 @@ public class PrenzlPlugin extends AbstractUIPlugin {
 		super.start(context);
 
 		Computation.initRegistries();
-		LaunchModel.setLibraries(loadLibraries());
-		
-		launchModel = new LaunchModel();
 
-		//launchModel.addLastInputLocations(loadLastPicFilesState());
+		launchModel = new LaunchModel();
+		launchModel.setLibraries(loadLibraries());
+		
 		launchModel.notifyObservers();
 	}
 	

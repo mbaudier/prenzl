@@ -21,7 +21,6 @@ public class LaunchModel extends Observable{
 	
 	private int lastPicturesMaxSize = 15;
 	
-//	private ComputationInput input;
 	private String inputPath;
 	
 	private Configuration configuration;
@@ -163,10 +162,10 @@ public class LaunchModel extends Observable{
 		return null;
 	}
 	
-	public static synchronized void setLibraries(List libraries) {
+	public synchronized void setLibraries(List libraries) {
 		LaunchModel.libraries = libraries;
 	}
-	public static List getLibraries() {
+	public List getLibraries() {
 		return libraries;
 	}
 
