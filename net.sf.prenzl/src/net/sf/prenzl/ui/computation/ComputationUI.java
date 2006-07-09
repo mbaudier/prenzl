@@ -229,7 +229,7 @@ public class ComputationUI extends Observable{
 			reset(new ComputationInput(clone));
 		}
 	}
-	
+/*	
 	public synchronized void reset(Configuration configuration, ComputationInput computationInput) {
 		this.configuration = configuration;		
 		paintBackground();
@@ -241,7 +241,7 @@ public class ComputationUI extends Observable{
 			notifyObservers();
 		}
 	}
-	
+*/	
 	public void addCountListener(ICountListener countListener){
 		countListeners.add(countListener);
 	}

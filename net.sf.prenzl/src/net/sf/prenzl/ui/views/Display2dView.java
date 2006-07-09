@@ -38,24 +38,13 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
 	
 	/** Creates the viewer and initialize it.*/
 	public void createPartControl(Composite parent) {
-
-		
 		computationUI = new ComputationUI(parent, new ComputationUIlMouseListener());
 
 		FirstGenerationAction firstGenerationAction = new FirstGenerationAction(computationUI);
 		PreviousStepAction previousStepAction = new PreviousStepAction(computationUI);
 		NextStepAction nextStepAction = new NextStepAction(computationUI);
 		RunAction runAction = new RunAction(computationUI);
-		
-//		SaveImageAction saveDisplayJPEG = 
-//			new SaveImageAction(computationUI,true,SWT.IMAGE_JPEG);
-//		SaveImageAction saveDisplayBMP = 
-//			new SaveImageAction(computationUI,true,SWT.IMAGE_BMP);
-//		SaveImageAction saveImageJPEG = 
-//			new SaveImageAction(computationUI,false,SWT.IMAGE_JPEG);
-//		SaveImageAction saveImageBMP = 
-//			new SaveImageAction(computationUI,false,SWT.IMAGE_BMP);
-//
+
 		SaveImageAction saveDisplay = 
 			new SaveImageAction(computationUI,true);
 		SaveImageAction saveImage = 
@@ -77,11 +66,6 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
 		menuManager.add(new Separator());
 		menuManager.add(saveDisplay);
 		menuManager.add(saveImage);
-//		menuManager.add(saveDisplayJPEG);
-//		menuManager.add(saveDisplayBMP);
-//		menuManager.add(new Separator());
-//		menuManager.add(saveImageJPEG);
-//		menuManager.add(saveImageBMP);
 
 		IMenuManager viewMenuManager = getViewSite().getActionBars().getMenuManager();
 		viewMenuManager.add(runActionText);
@@ -90,18 +74,11 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
  		viewMenuManager.add(new Separator());
  		viewMenuManager.add(saveDisplay);
  		viewMenuManager.add(saveImage);
-//		viewMenuManager.add(saveDisplayJPEG);
-//		viewMenuManager.add(saveDisplayBMP);
-//		viewMenuManager.add(new Separator());
-//		viewMenuManager.add(saveImageJPEG);
-//		viewMenuManager.add(saveImageBMP);
        
 		statusLineManager = getViewSite().getActionBars().getStatusLineManager();
 		computationUI.addCountListener(this);
-		//statusLineManager.add(new CountContributionItem(computationUI,statusLineManager));
 		
 		PrenzlPlugin.getLaunchModel().addObserver(this);
-		update(null,null);
 	}
 
 	
@@ -119,10 +96,6 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
 				computationUI.reset(launchModel.loadComputationInput(bounds.width,bounds.height));
 				
 			}
-//			else if(arg == null){//complete reset
-//				Rectangle bounds = getSite().getWorkbenchWindow().getShell().getDisplay().getBounds();
-//				computationUI.reset(launchModel.getConfiguration(),launchModel.loadComputationInput(bounds.width,bounds.height));
-//			}
 		}
 	}
 
