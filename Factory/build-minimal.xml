@@ -1,8 +1,6 @@
 <project name="factory.mini">
 	<import file="build.xml"/>
 	
-	<property name="swt.version" value="3129"/>
-	
 	<property name="mini.dist.dir" location="dist/PrenzlMini"/>
 	<property name="mini.build.dir" location="build/PrenzlMini"/>
 	
@@ -98,7 +96,6 @@
 		<copy file="webstart/prenzlmini.jnlp" todir="${mini.dist.dir}">
 			<filterset>
 				<filter token="prenzl.version" value="${prenzl.version}"/>
-				<filter token="swt.version" value="${swt.version}"/>
 			</filterset>
 		</copy>
 		<copy file="${prenzl.java.home}/icons/prenzl-32.gif" todir="${mini.dist.dir}"/>
