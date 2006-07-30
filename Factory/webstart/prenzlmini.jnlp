@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jnlp 
     spec="1.0+" 
-    codebase="http://localhost/prenzlmini" 
+    codebase="http://prenzl.sourceforge.net/prenzlmini" 
     href="prenzlmini.jnlp">
   <information>
     <title>Prenzl!!</title>  
