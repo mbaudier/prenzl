@@ -1,10 +1,16 @@
 <project name="factory">
+	<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask">
+		<classpath>
+			<fileset dir="factorylib" includes="*.jar"/>
+		</classpath>
+	</taskdef>
+
 	<loadproperties srcfile="factory.properties"/>
 
 	<property name="prenzl.release.version" value="2.0.4"/>
 	
 	<property name="factory.dist.dir" location="dist/Prenzl"/>
-	<property name="factory.build.dir" location="build"/>
+	<property name="factory.build.dir" location="build/Prenzl"/>
 	<property name="factory.dist.plugins.dir" location="${factory.dist.dir}/plugins"/>
 	<property name="factory.eclipse.dir" location="eclipse/3.1.2"/>
 	
@@ -18,20 +24,7 @@
 	<property name="stdrules.build.dir" location="${factory.build.dir}/net.sf.prenzlstdrules"/>
 	<property name="stdrules.build.manifest.dir" location="${stdrules.build.dir}/META-INF"/>
 	
-	<target name="init.subversion.release" if="release">
-		<!-- Forces prenzl.version to prenzl.release.version in case the release property is set 
-			otherwise the build is considered as a development build 
-			(revision is added to the version in the standard init) -->
-		<property name="prenzl.version" value="${prenzl.release.version}"/>
-	</target>
-	
-	<target name="init.subversion" depends="init.subversion.release" unless="skip.subversion">
-		<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask">
-			<classpath>
-				<fileset dir="factorylib" includes="*.jar"/>
-			</classpath>
-		</taskdef>
-		
+	<target name="init.subversion.checkout" if="svncheckout">
 		<!-- Checkout to make sure that the trunk directory (that is .. relative to Factory) 
 		has been properly initialized for SVN -->
 		<svn>
@@ -45,6 +38,10 @@
 		<svn>
 			<update dir=".."/>
 		</svn>
+	</target>
+	
+	<target name="init.subversion" depends="init.subversion.checkout" unless="skip.subversion">
+		
 		<!-- Get the revision -->
 		<svn>
 			<status revisionproperty="prenzl.svn.revision" path=".."/>
@@ -59,7 +56,15 @@
 		<echo message="Version is ${prenzl.version}"/>
 	</target>
 	
-	<target name="prenzl.build" depends="init">
+	<target name="prenzl.build.jni">
+		<!-- Build JNI -->
+		<ant 
+			antfile="${prenzl.jni.home}/build.xml" 
+			target="build" 
+			dir="${prenzl.jni.home}"/>
+	</target>
+	
+	<target name="prenzl.build" depends="init,prenzl.build.jni">
 		<!-- Builds java -->
 		<mkdir dir="${prenzl.build.dir}"/>
 		<javac source="1.3" debug="true" destdir="${prenzl.build.dir}" srcdir="${prenzl.java.home}/src">
@@ -67,11 +72,6 @@
 				<fileset dir="${factory.eclipse.dir}/plugins" includes="*.jar"/>
 			</classpath>
 		</javac>
-		<!-- Build JNI -->
-		<ant 
-			antfile="${prenzl.jni.home}/build.xml" 
-			target="build" 
-			dir="${prenzl.jni.home}"/>
 		<copy file="${prenzl.jni.home}/dist/prenzl.dll" todir="${prenzl.build.dir}"/>
 		<!-- Copies other files -->
 		<copy todir="${prenzl.build.dir}">
@@ -88,6 +88,8 @@
 		<copy file="${prenzl.java.home}/META-INF/MANIFEST.MF" todir="${prenzl.build.manifest.dir}"/>
 		<manifest file="${prenzl.build.manifest.dir}/MANIFEST.MF"  mode="update">
 			<attribute name="Bundle-Version" value="${prenzl.version}"/>
+			<attribute name="Specification-Version" value="${prenzl.release.version}"/>
+			<attribute name="Implementation-Version" value="${prenzl.version}"/> 
 		</manifest>
 		<mkdir dir="${factory.dist.plugins.dir}"/>
 		<jar destfile="${factory.dist.plugins.dir}/net.sf.prenzl_${prenzl.version}.jar"
@@ -99,7 +101,15 @@
 		</jar>
 	</target>
 
-	<target name="stdrules.build" depends="init,prenzl.build">
+	<target name="stdrules.build.jni">
+		<!-- Build JNI -->
+		<ant 
+			antfile="${stdrules.jni.home}/build.xml" 
+			target="build" 
+			dir="${stdrules.jni.home}"/>
+	</target>
+	
+	<target name="stdrules.build" depends="init,prenzl.build,stdrules.build.jni">
 		<!-- Builds java -->
 		<mkdir dir="${stdrules.build.dir}"/>
 		<javac source="1.3" debug="true" destdir="${stdrules.build.dir}" srcdir="${stdrules.java.home}/src">
@@ -108,11 +118,6 @@
 				<path location="${prenzl.build.dir}"/>
 			</classpath>
 		</javac>
-		<!-- Build JNI -->
-		<ant 
-			antfile="${stdrules.jni.home}/build.xml" 
-			target="build" 
-			dir="${stdrules.jni.home}"/>
 		<copy file="${stdrules.jni.home}/dist/stdrules.dll" todir="${stdrules.build.dir}"/>
 		<!-- Copies other files -->
 		<copy todir="${stdrules.build.dir}">
@@ -125,6 +130,8 @@
 		<copy file="${stdrules.java.home}/META-INF/MANIFEST.MF" todir="${stdrules.build.manifest.dir}"/>
 		<manifest file="${stdrules.build.manifest.dir}/MANIFEST.MF" mode="update">
 			<attribute name="Bundle-Version" value="${prenzl.version}"/>
+			<attribute name="Specification-Version" value="${prenzl.release.version}"/>
+			<attribute name="Implementation-Version" value="${prenzl.version}"/> 
 		</manifest>
 		<mkdir dir="${factory.dist.plugins.dir}"/>
 		<jar destfile="${factory.dist.plugins.dir}/net.sf.prenzl.stdrules_${prenzl.version}.jar"
@@ -185,6 +192,7 @@
 			dir="${stdrules.jni.home}"/>
 
 	</target>
+	
 	<target name="backup.src" depends="clean">
 		<!--
 		<property name="backup.src.dir" location="../../backup-src"/>
