@@ -24,7 +24,7 @@
 	<property name="stdrules.build.dir" location="${factory.build.dir}/net.sf.prenzlstdrules"/>
 	<property name="stdrules.build.manifest.dir" location="${stdrules.build.dir}/META-INF"/>
 	
-	<target name="init.subversion.checkout" if="svncheckout">
+	<target name="init.subversion.checkout">
 		<!-- Checkout to make sure that the trunk directory (that is .. relative to Factory) 
 		has been properly initialized for SVN -->
 		<svn>
