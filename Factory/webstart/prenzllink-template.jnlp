@@ -16,8 +16,8 @@
 	        value="http://my_host/my_picture_path/my_picture.jpg"/>
 
 		<!-- DO NOT CHANGE -->
-	    <extension href="http://localhost/prenzlmini/prenzlmini.jnlp"/>
-	    <jar href="http://localhost/prenzlmini/prenzlmini_boot.jar"/>
+	    <extension href="http://prenzl.sourceforge.net/prenzlmini/prenzlmini.jnlp"/>
+	    <jar href="http://prenzl.sourceforge.net/prenzlmini/prenzlmini_boot.jar"/>
 	    <j2se version="1.3+" max-heap-size="512m"/>
 	</resources>
   
