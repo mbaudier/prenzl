@@ -20,14 +20,6 @@
   <resources>
     <jar href="prenzlmini_@prenzl.version@.jar"/>
     <jar href="swt.jar"/>
- 
-    <property 
-        name="prenzl.configuration.url" 
-        value="http://localhost/config.properties"/>
-    <property 
-        name="prenzl.input.url" 
-        value="http://localhost/QD0011001.jpg"/>
-
     <j2se version="1.3+" max-heap-size="512m"/>
   </resources>
 
