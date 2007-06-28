@@ -39,6 +39,7 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
 	/** Creates the viewer and initialize it.*/
 	public void createPartControl(Composite parent) {
 		computationUI = new ComputationUI(parent, new ComputationUIlMouseListener());
+		parent.setToolTipText("Double-click to toggle full screen");
 
 		FirstGenerationAction firstGenerationAction = new FirstGenerationAction(computationUI);
 		PreviousStepAction previousStepAction = new PreviousStepAction(computationUI);
@@ -114,12 +115,14 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
 		return computationUI;
 	}
 	public void setCount(final int count) {
-		getSite().getWorkbenchWindow().getShell().getDisplay().asyncExec(new Runnable(){
-			public void run(){
-				if(statusLineManager!=null)
-					statusLineManager.setMessage(Integer.toString(count));
-			}
-		});
+		if(!getSite().getWorkbenchWindow().getShell().isDisposed()){
+			getSite().getWorkbenchWindow().getShell().getDisplay().asyncExec(new Runnable(){
+				public void run(){
+					if(statusLineManager!=null)
+						statusLineManager.setMessage(Integer.toString(count));
+				}
+			});
+		}
 	}
 
 	

@@ -5,8 +5,8 @@
 	</target>
 	
 	<target name="clean">
-		<ant antfile="JNI/prenzl/build.xml" target="clean" dir="JNI/prenzl"/>
-		<ant antfile="JNI/stdrules/build.xml" target="clean" dir="JNI/stdrules"/>
+		<ant antfile="build.xml" dir="JNI/prenzl" target="clean"/>
+		<ant antfile="build.xml" dir="JNI/stdrules" target="clean"/>
 	</target>
 	
 </project>

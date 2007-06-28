@@ -5,7 +5,19 @@
 
 	<property name="stdrules.plugin.dir" location="../../../net.sf.prenzl.stdrules"/> 
 
-	<target name="build" depends="clean">
+	<target name="build" depends="build.mac">
+	</target>
+
+	<target name="build.mac" depends="clean">
+		<gcc.compile.mac component="StdRules"/>
+		<gcc.link.rule.mac component="StdRules" output="libstdrules.jnilib"/>
+
+		<copy todir="${stdrules.plugin.dir}" verbose="true" overwrite="true">
+			<fileset dir="${dist.dir}" includes="*.jnilib"/>
+		</copy>
+	</target>
+
+	<target name="build.win32" depends="clean">
 		<gcc.compile component="StdRules"/>
 		<gcc.link.rule component="StdRules" output="stdrules.dll"/>
 

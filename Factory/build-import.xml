@@ -14,8 +14,22 @@
 			<echo message="Compile @{component}..."/>
 			<exec executable="${gcc.bin.dir}/g++.exe" dir="." failonerror="true">
 				<env key="Path" path="${gcc.bin.dir}"/>
-				<arg line="-D_REENTRANT -D_GNU_SOURCE -D__int64=&quot;long long&quot; -O3 -Wall -c -fmessage-length=0  -mno-cygwin"/>
+				<arg line="-D_REENTRANT -D_GNU_SOURCE -D__int64=&quot;long long&quot; -O3 -fast -Wall -c -fmessage-length=0  -mno-cygwin"/>
 				<arg line="-I${factory.dir}\include\jdk-1.4.1\win32 -I${factory.dir}\include\jdk-1.4.1 -I..\.."/>
+				<arg line="-o${obj.dir}/@{component}.o ${src.dir}/@{component}.cpp"/>
+			</exec>
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="gcc.compile.mac">
+		<attribute name="component"/>
+		<sequential>
+			<mkdir dir="${obj.dir}"/>
+			<echo message="Compile @{component}..."/>
+			<exec executable="${gcc.bin.dir}/g++" dir="." failonerror="true">
+				<env key="Path" path="${gcc.bin.dir}"/>
+				<arg line="-D_REENTRANT -D_GNU_SOURCE -D__int64=&quot;long long&quot; -O3 -Wall -c -fmessage-length=0 "/>
+				<arg line="-I${factory.dir}/include/jdk-1.4.2/macos -I${factory.dir}/include/jdk-1.4.2 -I../.."/>
 				<arg line="-o${obj.dir}/@{component}.o ${src.dir}/@{component}.cpp"/>
 			</exec>
 		</sequential>
@@ -32,6 +46,21 @@
 				<arg line="-mno-cygwin -Wl,--add-stdcall-alias -shared"/>
 				<arg line="-L&quot;${prenzljni.lib.dir}&quot;"/>
 				<arg line="-o${dist.dir}/@{output} ${obj.dir}/@{component}.o"/>
+				<arg line="-lprenzl"/>
+			</exec>
+		</sequential>
+	</macrodef>
+	<macrodef name="gcc.link.rule.mac">
+		<attribute name="component"/>
+		<attribute name="output"/>
+		<sequential>
+			<mkdir dir="${dist.dir}"/>
+			<echo message="Link @{component} to @{output}..."/>
+			<exec executable="${gcc.bin.dir}/g++" dir=".">
+				<env key="Path" path="${gcc.bin.dir}"/>
+				<arg line="-dynamiclib" />
+				<arg line="-L&quot;${prenzljni.lib.dir}&quot;"/>
+				<arg line="-o ${dist.dir}/@{output} ${obj.dir}/@{component}.o"/>
 				<arg line="-lprenzl"/>
 			</exec>
 		</sequential>
