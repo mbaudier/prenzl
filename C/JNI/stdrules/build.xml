@@ -8,7 +8,7 @@
 	<target name="build" depends="build.mac">
 	</target>
 
-	<target name="build.mac" depends="clean">
+	<target name="build.mac">
 		<gcc.compile.mac component="StdRules"/>
 		<gcc.link.rule.mac component="StdRules" output="libstdrules.jnilib"/>
 

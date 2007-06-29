@@ -7,7 +7,7 @@
 	<target name="build" depends="build.mac">
 	</target>
 
-	<target name="build.mac" depends="clean">
+	<target name="build.mac">
 		<gcc.compile.mac component="JNIComputation" />
 
 		<mkdir dir="${dist.dir}" />
@@ -17,7 +17,7 @@
 			<env key="Path" path="${gcc.bin.dir}" />
 			<arg line=" ${obj.dir}/JNIComputation.o" />
 			<arg line="-dynamiclib" />
-			<arg line="-o ${dist.dir}/libprenzl.jnilib" />
+			<arg line="-o ${dist.dir}/libprenzl.jnilib -framework JavaVM -L/usr/local/lib" />
 		</exec>
 
 		<copy file="${dist.dir}/libprenzl.jnilib" tofile="${prenzljni.lib.dir}/libprenzl.dylib" />
