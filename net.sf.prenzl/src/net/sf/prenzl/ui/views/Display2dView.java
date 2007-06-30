@@ -11,6 +11,7 @@ import net.sf.prenzl.ui.actions.DisplayModeCI;
 import net.sf.prenzl.ui.actions.FirstGenerationAction;
 import net.sf.prenzl.ui.actions.NextStepAction;
 import net.sf.prenzl.ui.actions.PreviousStepAction;
+import net.sf.prenzl.ui.actions.RecordAction;
 import net.sf.prenzl.ui.actions.RunAction;
 import net.sf.prenzl.ui.actions.SaveImageAction;
 import net.sf.prenzl.ui.computation.ComputationUI;
@@ -51,7 +52,9 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
 		SaveImageAction saveImage = 
 			new SaveImageAction(computationUI,false);
 
+	    RecordAction recordActionText = new RecordAction(computationUI,"");
 		IToolBarManager toolBarManager= getViewSite().getActionBars().getToolBarManager();
+	    toolBarManager.add(recordActionText);
 	    toolBarManager.add(firstGenerationAction);
 	    toolBarManager.add(previousStepAction);
 	    toolBarManager.add(nextStepAction);
@@ -67,6 +70,8 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
 		menuManager.add(new Separator());
 		menuManager.add(saveDisplay);
 		menuManager.add(saveImage);
+		menuManager.add(new Separator());
+		menuManager.add(recordActionText);
 
 		IMenuManager viewMenuManager = getViewSite().getActionBars().getMenuManager();
 		viewMenuManager.add(runActionText);
@@ -75,7 +80,9 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
  		viewMenuManager.add(new Separator());
  		viewMenuManager.add(saveDisplay);
  		viewMenuManager.add(saveImage);
-       
+		menuManager.add(new Separator());
+		menuManager.add(recordActionText);
+      
 		statusLineManager = getViewSite().getActionBars().getStatusLineManager();
 		computationUI.addCountListener(this);
 		

@@ -19,6 +19,10 @@ public class SharedImages {
 		PrenzlPlugin.getImageDescriptor("icons/run.gif"); 
 	public final static ImageDescriptor IMGD_STOP = 
 		PrenzlPlugin.getImageDescriptor("icons/stop.gif"); 
+	public final static ImageDescriptor IMGD_MOVIE_ON = 
+		PrenzlPlugin.getImageDescriptor("icons/movie-on.gif"); 
+	public final static ImageDescriptor IMGD_MOVIE_OFF = 
+		PrenzlPlugin.getImageDescriptor("icons/movie-off.gif"); 
 	public final static ImageDescriptor IMGD_FIRST_GENERATION_ACTION = 
 		PrenzlPlugin.getImageDescriptor("icons/firstGenAction.gif"); 
 	public final static ImageDescriptor IMGD_BACKWARD = 
