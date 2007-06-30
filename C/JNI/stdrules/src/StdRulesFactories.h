@@ -14,6 +14,7 @@
 #include "Rules/stdrules/Hydra.h"
 #include "Rules/stdrules/ColorHydra.h"
 #include "Rules/stdrules/Braque.h"
+#include "Rules/stdrules/Roger.h"
 
 namespace Prenzl {
 
@@ -227,6 +228,14 @@ namespace Prenzl {
 		}			
 	};		
 	
+	class RogerFact : public RFactory {
+	public:
+		std::string getName() { return "Roger";}
+		Rule * createRule(const CProperties& prop) {
+			return new Roger();
+		}				
+	};	
+	
 	void registerFactory(RFactory * factory, std::map<std::string, RFactory *>& factories) {
 		factories[factory->getName()] = factory;
 	}
@@ -245,6 +254,7 @@ namespace Prenzl {
 		registerFactory( new HydraFact(), factories);
 		registerFactory( new ColorHydraFact(), factories);
 		registerFactory( new BraqueFact(), factories);
+		registerFactory( new RogerFact(), factories);
 		std::cout << factories.size() << " Factories created" << std::endl;
 		return factories;
 	}	
