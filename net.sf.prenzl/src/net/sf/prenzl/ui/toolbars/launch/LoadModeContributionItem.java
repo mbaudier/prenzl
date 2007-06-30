@@ -52,6 +52,7 @@ public class LoadModeContributionItem extends ContributionItem implements Listen
 		createMenuItem(menu, LaunchModel.LOADMODE_STRECH_TO_SCREEN);
 		createMenuItem(menu, LaunchModel.LOADMODE_FIT_TO_800_600);
 		createMenuItem(menu, LaunchModel.LOADMODE_STRECH_TO_800_600);
+		createMenuItem(menu, LaunchModel.LOADMODE_FIT_TO_756_576);
 		menu.setLocation(pt.x, pt.y);
 		return menu;
 	}

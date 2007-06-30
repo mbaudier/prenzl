@@ -18,6 +18,7 @@ public class LaunchModel extends Observable{
 	public final static int LOADMODE_STRECH_TO_SCREEN = 2;
 	public final static int LOADMODE_FIT_TO_800_600 = 3;
 	public final static int LOADMODE_STRECH_TO_800_600 = 4;
+	public final static int LOADMODE_FIT_TO_756_576 = 5;
 	
 	private int lastPicturesMaxSize = 15;
 	
@@ -136,6 +137,10 @@ public class LaunchModel extends Observable{
 			if(imageDataOrig.width>imageDataOrig.height)imageData = ImageUtil.strech(imageDataOrig,800,600);
 			else imageData = ImageUtil.strech(imageDataOrig,600,800);
 			break;
+		case LOADMODE_FIT_TO_756_576: 
+			if(imageDataOrig.width>imageDataOrig.height)imageData = ImageUtil.fit(imageDataOrig,800,600);
+			else imageData = ImageUtil.fit(imageDataOrig,576,756);
+			break;
 		default: imageData = imageDataOrig;break;
 		}
 		return new ComputationInput(inputPath,imageData);
@@ -182,6 +187,8 @@ public class LaunchModel extends Observable{
 			return "Fit to 800x600";
 		case LaunchModel.LOADMODE_STRECH_TO_800_600:
 			return "Strech to 800x600";
+		case LaunchModel.LOADMODE_FIT_TO_756_576:
+			return "Fit to 756x576";
 		default: return "Unknown";
 		}
 	}

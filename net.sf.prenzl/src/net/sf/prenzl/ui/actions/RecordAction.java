@@ -3,11 +3,13 @@ package net.sf.prenzl.ui.actions;
 import java.util.Observable;
 import java.util.Observer;
 
+import net.sf.prenzl.PrenzlPlugin;
 import net.sf.prenzl.SharedImages;
 import net.sf.prenzl.ui.computation.ComputationUI;
 import net.sf.prenzl.ui.video.Recorder;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 
 public class RecordAction extends Action implements Observer {
 	private final ComputationUI computationUI;
@@ -26,6 +28,11 @@ public class RecordAction extends Action implements Observer {
 	public void run() {
 		if (computationUI.isRecording()) {
 			computationUI.closeRecorder();
+//			MessageDialog dialog = new MessageDialog(PrenzlPlugin
+//					.getDefaultWorkbench().getActiveWorkbenchWindow()
+//					.getShell(), "Movie completed", null, "Movie saved to "
+//					+ moviePath, MessageDialog.INFORMATION, null, 0);
+//			dialog.open();
 		} else {
 			Recorder recorder = Recorder.askForMovieLocation();
 			computationUI.setRecorder(recorder);

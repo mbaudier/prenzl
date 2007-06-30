@@ -6,6 +6,7 @@ import java.awt.image.DirectColorModel;
 import java.awt.image.IndexColorModel;
 import java.awt.image.WritableRaster;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Vector;
 
 import net.sf.prenzl.PrenzlPlugin;
@@ -112,6 +113,9 @@ public class Recorder {
 				JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
 				JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(img);
 				param.setQuality(qual, true);
+				param.setDensityUnit(JPEGEncodeParam.DENSITY_UNIT_DOTS_INCH);
+				param.setXDensity(72);
+				param.setYDensity(72);
 				encoder.encode(img, param);
 			} else if (quality.equals("fast")) {// swt
 				ImageLoader imgl = new ImageLoader();
@@ -146,6 +150,14 @@ public class Recorder {
 	public void cleanUp() {
 		if (imagesToMovie != null) {
 			imagesToMovie.cleanUp();
+		}
+		
+		File dir = new File(moviePath).getParentFile();
+		File[] files = dir.listFiles();
+		for(int i=0;i<files.length;i++){
+			if(files[i].getName().indexOf(".nonstreamable")>=0){
+				files[i].delete();
+			}
 		}
 	}
 
@@ -280,6 +292,10 @@ public class Recorder {
 			}
 			return bufferedImage;
 		}
+	}
+
+	public String getMoviePath() {
+		return moviePath;
 	}
 
 }

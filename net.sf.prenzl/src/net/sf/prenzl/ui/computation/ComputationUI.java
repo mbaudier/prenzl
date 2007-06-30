@@ -337,8 +337,16 @@ public class ComputationUI extends Observable {
 		notifyObservers();
 	}
 	
-	public void closeRecorder() {
+//	public String getMoviePath(){
+//		if(recorder!=null){
+//			return recorder.getMoviePath();
+//		}
+//		return null;
+//	}
+	
+	public String closeRecorder() {
 		if(recorder!=null){
+			String moviePath = recorder.getMoviePath();
 			recorder.setEnded(true);
 			recorder.waitForFileDone();
 			recorder.cleanUp();
@@ -346,7 +354,9 @@ public class ComputationUI extends Observable {
 			
 			setChanged();
 			notifyObservers();
+			return moviePath;
 		}
+		return null;
 	}
 	
 	private Label createDrawingLabel(Composite parent, Rectangle bounds) {
