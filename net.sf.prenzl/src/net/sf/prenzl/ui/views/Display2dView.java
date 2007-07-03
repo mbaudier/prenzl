@@ -80,8 +80,8 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
  		viewMenuManager.add(new Separator());
  		viewMenuManager.add(saveDisplay);
  		viewMenuManager.add(saveImage);
-		menuManager.add(new Separator());
-		menuManager.add(recordActionText);
+ 		viewMenuManager.add(new Separator());
+ 		viewMenuManager.add(recordActionText);
       
 		statusLineManager = getViewSite().getActionBars().getStatusLineManager();
 		computationUI.addCountListener(this);

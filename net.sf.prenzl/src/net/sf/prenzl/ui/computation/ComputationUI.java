@@ -22,6 +22,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -73,8 +74,13 @@ public class ComputationUI extends Observable {
 
 	private int cycleCount = 0;
 
-	public ComputationUI(Composite parent, MouseListener mouseListener) {
-		this.parent = parent;
+	public ComputationUI(Composite gdParent, MouseListener mouseListener) {
+		gdParent.setLayout(new FillLayout(SWT.VERTICAL));
+		this.parent = new Composite(gdParent, SWT.NONE);
+		this.parent.setLayout(new FillLayout(SWT.VERTICAL));
+		
+//		this.parent = gdParent;
+		
 		this.mouseListener = mouseListener;
 
 		drawOrigin = new Point(0, 0);
@@ -86,7 +92,7 @@ public class ComputationUI extends Observable {
 		if (dc.getLabel() == null)
 			return;
 		dc.getDisplay().syncExec(new Runnable() {
-			public void run() {
+			public void run() {				
 				if (imageData != null && !dc.getLabel().isDisposed()) {
 					int displayWidth = dc.getLabel().getParent().getBounds().width;
 					int displayHeight = dc.getLabel().getParent().getBounds().height;
@@ -112,6 +118,8 @@ public class ComputationUI extends Observable {
 								+ displayMode);
 					}
 
+//					Log.debug("Display dims: " + displayWidth + ","
+//							+ displayHeight);
 					// Centers the label
 					int locX = 0;
 					int locY = 0;
@@ -123,7 +131,11 @@ public class ComputationUI extends Observable {
 							locY = (displayHeight - imageDataScaled.height) / 2;
 						}
 					}
+//					Log.debug("ImageDataScaled dims: " + imageDataScaled.width
+//							+ "," + imageDataScaled.height);
+//					Log.debug("Center: " + locX + "," + locY);
 					dc.getLabel().setLocation(locX, locY);
+//					dc.getLabel().setLocation(0, 0);
 
 					// Draws the image
 					Image imageT = new Image(dc.getDisplay(), imageDataScaled);
@@ -136,6 +148,9 @@ public class ComputationUI extends Observable {
 					int y = drawOrigin.y % height;
 					if (y < 0)
 						y = height + y;
+
+//					Log.debug("Origin: " + x + "," + y);
+//					Log.debug("Dims: " + width + "," + height);
 
 					synchronized (dc) {
 						GC gc = dc.getGC();
@@ -155,13 +170,6 @@ public class ComputationUI extends Observable {
 		});
 	}
 
-	/*
-	 * private void center(Rectangle bounds){ int locX = 0; int locY = 0;
-	 * if(bounds!=null && imageData!=null){ if (bounds.width > imageData.width) {
-	 * locX = (bounds.width - imageData.width) / 2; } if (bounds.height >
-	 * imageData.height) { locY = (bounds.height - imageData.height) / 2; } }
-	 * dc.getLabel().setLocation(locX, locY); }
-	 */
 	public void setFocus() {
 		dc.getLabel().setFocus();
 	}
@@ -246,13 +254,6 @@ public class ComputationUI extends Observable {
 		}
 	}
 
-	/*
-	 * public synchronized void reset(Configuration configuration,
-	 * ComputationInput computationInput) { this.configuration = configuration;
-	 * paintBackground(); if(computationInput!=null){
-	 * resetImpl(computationInput.getData()); notifyCycleCount(cycleCount);
-	 * resetThreadImpl(); setChanged(); notifyObservers(); } }
-	 */
 	public void addCountListener(ICountListener countListener) {
 		countListeners.add(countListener);
 	}
@@ -268,6 +269,8 @@ public class ComputationUI extends Observable {
 	}
 
 	public void setFullScreen(boolean doFullScreen) {
+//		Log.debug("## Full screen: "+doFullScreen);
+
 		// interrupts the thread in order to prevent blocking
 		boolean wasRunning = runnerThread.isRunning();
 		if (wasRunning)
@@ -278,6 +281,7 @@ public class ComputationUI extends Observable {
 
 		if (wasRunning)
 			runnerThread.setRunning(true);
+
 	}
 
 	private void resetDrawingContext(final boolean doFullScreen) {
@@ -292,7 +296,9 @@ public class ComputationUI extends Observable {
 			fullScreen.open();
 		} else {
 			Label label = createDrawingLabel(parent, parent.getClientArea());
+
 			dc.setContext(label);
+			
 			if (fullScreen != null) {
 				fullScreen.close();
 				fullScreen.dispose();
@@ -318,7 +324,7 @@ public class ComputationUI extends Observable {
 	}
 
 	public void setRunning(boolean running) {
-		if (runnerThread != null)  {
+		if (runnerThread != null) {
 			runnerThread.setRunning(running);
 			setChanged();
 			notifyObservers();
@@ -326,47 +332,46 @@ public class ComputationUI extends Observable {
 	}
 
 	public void setRecorder(Recorder recorder) {
-		if(this.recorder!=null) {
+		if (this.recorder != null) {
 			throw new RuntimeException("There is already one active recorder.");
 		}
 		this.recorder = recorder;
 		recorder.record(imageData.width, imageData.height);
 		recorder.recordImage(imageData);
-		
+
 		setChanged();
 		notifyObservers();
 	}
-	
-//	public String getMoviePath(){
-//		if(recorder!=null){
-//			return recorder.getMoviePath();
-//		}
-//		return null;
-//	}
-	
+
 	public String closeRecorder() {
-		if(recorder!=null){
+		if (recorder != null) {
 			String moviePath = recorder.getMoviePath();
 			recorder.setEnded(true);
 			recorder.waitForFileDone();
 			recorder.cleanUp();
 			recorder = null;
-			
+
 			setChanged();
 			notifyObservers();
 			return moviePath;
 		}
 		return null;
 	}
-	
+
 	private Label createDrawingLabel(Composite parent, Rectangle bounds) {
+//		Log.debug("Parent location: " + parent.getLocation());
+//		Log.debug("Parent bounds: " + parent.getBounds());
+//		Log.debug("Parent client area: " + parent.getClientArea());
+
 		Label label = new Label(parent, SWT.CENTER);
+//		Log.debug("Child location: " + label.getLocation());
+		
+		
 		parent.setBackground(parent.getDisplay()
-				.getSystemColor(SWT.COLOR_BLACK));
-		label.setBackground(label.getDisplay().getSystemColor(SWT.COLOR_BLACK));
+				.getSystemColor(SWT.COLOR_DARK_GRAY));
+		label.setBackground(label.getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY));
 		label.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
-				// center(dc.getLabel().getParent().getBounds());
 				drawImage();
 			}
 		});
@@ -413,9 +418,9 @@ public class ComputationUI extends Observable {
 			return false;
 		return runnerThread.isRunning();
 	}
-	
+
 	public boolean isRecording() {
-		return recorder!=null;
+		return recorder != null;
 	}
 
 	public int getCycleCount() {
