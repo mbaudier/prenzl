@@ -6,6 +6,7 @@
 #include "RuleFactory.h"
 #include "PrenzlDialog.h"
 #include "RegistryAccessor.h"
+#include "ExhaustiveRandomGenerator.h"
 
 #include "Rules/stdrules/PhaseCheulou.h"
 
@@ -18,15 +19,17 @@ namespace Prenzl {
 
 		PhaseCheulouF()
 			: coeffs(0, 90, 0, 0, 0, 90, -90, 0, 0)
-			, useRandomProfile(false)
+			, useRandomProfile(true)
 		{
 			readFromRegistry();
 			createProfiles();
+
+			randomGenerator = ExhaustiveRandomGenerator(profiles.size());
 		}
 
 		Rule * createRule() {
 			if(useRandomProfile) {
-				size_t index = rand() % profiles.size();
+				unsigned index = randomGenerator.next();
 				if(index) {
 					return createRule(profiles[index].second);
 				}
@@ -318,6 +321,8 @@ namespace Prenzl {
 		CoeffMatrix coeffs;
 		bool useRandomProfile;
 		std::vector< std::pair<std::string, CoeffMatrix> > profiles;
+
+		ExhaustiveRandomGenerator randomGenerator;
 
 	};
 

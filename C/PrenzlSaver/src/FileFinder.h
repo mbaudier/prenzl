@@ -4,40 +4,63 @@
 #include <vector>
 #include <string>
 
-void addFilesInDirectory(const char * dir, const char * extension, std::vector<std::string>& files) {
+#include "ExhaustiveRandomGenerator.h"
+
+void addFilesInDirectory(const char * dir, 
+						 const std::vector<std::string>& extensions, 
+						 std::vector<std::string>& files,
+						 bool recurseInSubDirectories) 
+{
 	WIN32_FIND_DATA FindFileData;
-	std::string queryString = std::string(dir) + "\\*." + extension;
-	HANDLE hFind = FindFirstFile(queryString.c_str(), &FindFileData);
+	for(unsigned int i = 0; i < extensions.size(); i++) {
+		std::string queryString = std::string(dir) + "\\*." + extensions[i];
+		HANDLE hFind = FindFirstFile(queryString.c_str(), &FindFileData);
 
-	if (hFind != INVALID_HANDLE_VALUE) {
-		files.push_back(std::string(std::string(dir) + "\\" + FindFileData.cFileName));
-		
-		while (FindNextFile(hFind, &FindFileData) != 0) {
-			files.push_back(std::string(std::string(dir) + "\\" + FindFileData.cFileName));
+		if (hFind != INVALID_HANDLE_VALUE) {			
+			do {
+				files.push_back(std::string(std::string(dir) + "\\" + FindFileData.cFileName));
+			} while (FindNextFile(hFind, &FindFileData) != 0);
+	    
+			FindClose(hFind);
 		}
-    
-		FindClose(hFind);
-   }
-}
-
-void addPicturesInDirectory(const char * dir, std::vector<std::string>& files) {
-	addFilesInDirectory(dir, "bmp", files);
-	addFilesInDirectory(dir, "jpg", files);
-	addFilesInDirectory(dir, "gif", files);
-}
-
-class RandomFileAccessor {
-public:
-	RandomFileAccessor() 
-		: nbFileAccessed_(0)
-	{
 	}
 
-	void init(const char * inputDirectory) {
+	if(recurseInSubDirectories) {
+		// get the subdirectories
+		std::string queryString = std::string(dir) + "\\*";
+		HANDLE hFind = FindFirstFile(queryString.c_str(), &FindFileData);
+		if (hFind != INVALID_HANDLE_VALUE) {
+			do {
+				if(FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+					std::string fileName = FindFileData.cFileName;
+					if((fileName != ".") && (fileName != "..")) {
+						std::string subDirPath = std::string(dir) + "\\" + fileName;
+						addFilesInDirectory(subDirPath.c_str(), extensions, files, true);
+					}
+				}
+			} while (FindNextFile(hFind, &FindFileData) != 0);
+		
+			FindClose(hFind);
+		}
+	}
+}
+
+void addPicturesInDirectory(const char * dir, std::vector<std::string>& files, bool recurseInSubDirectories) {
+	std::vector<std::string> extensions;
+	extensions.push_back("bmp");
+	extensions.push_back("jpg");
+	extensions.push_back("gif");
+	addFilesInDirectory(dir, extensions, files, recurseInSubDirectories);
+}	
+
+class RandomFileAccessor {
+
+public:
+
+	void init(const char * inputDirectory, bool recurseInSubDirectories) {
 		files_.clear();
-		addPicturesInDirectory(inputDirectory, files_);
-		filesAccessed_ = std::vector<bool>(files_.size(), false);
-		nbFileAccessed_ = 0;
+		addPicturesInDirectory(inputDirectory, files_, recurseInSubDirectories);
+		randomGenerator = Prenzl::ExhaustiveRandomGenerator(files_.size());
 	}
 
 	bool hasNoFiles() {
@@ -49,43 +72,10 @@ public:
 	}
 
 	std::string getFile() {
-	/*	if(hasNoFiles()) {
-			throw std::exception("No Files Found");
-		}*/
-		unsigned int nbFiles = (unsigned int)files_.size();
-		if(nbFileAccessed_ == nbFiles) {
-			// all files were accessed, reinit
-			filesAccessed_ = std::vector<bool>(nbFiles, false);
-			nbFileAccessed_ = 0;
-		}
-		unsigned int randomIncrement = rand() % nbFiles;
-		unsigned int circularIndex = 0;
-		unsigned int incr=0;
-		while(true) {
-			// find the next unaccessed file
-			while(filesAccessed_[circularIndex]) {
-				incrementCircularIndex(circularIndex);
-			}
-			if(incr == randomIncrement) {
-				filesAccessed_[circularIndex] = true;
-				nbFileAccessed_++;
-				return files_[circularIndex];
-			}
-			incr++;
-			incrementCircularIndex(circularIndex);
-		}	
-	}
-
-private:
-	void incrementCircularIndex(unsigned int& index) {
-		index++;
-		if(index >= files_.size()) {
-			index -= (unsigned int)files_.size();
-		}
+		return files_[randomGenerator.next()];
 	}
 
 private:
 	std::vector<std::string> files_;
-	std::vector<bool> filesAccessed_;
-	unsigned int nbFileAccessed_;
+	Prenzl::ExhaustiveRandomGenerator randomGenerator;
 };

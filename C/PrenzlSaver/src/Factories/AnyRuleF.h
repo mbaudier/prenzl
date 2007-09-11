@@ -4,6 +4,7 @@
 #include <algorithm>
 
 #include "RuleFactory.h"
+#include "ExhaustiveRandomGenerator.h"
 
 namespace Prenzl {
 
@@ -13,13 +14,13 @@ namespace Prenzl {
 		AnyRuleF(const std::vector<RuleFactory*>& ruleFactories)
 			: allRuleFactories_(ruleFactories)
 		{
-			readFromRegistry();		
+			readFromRegistry();	
+			randomGenerator = ExhaustiveRandomGenerator(activatedRuleFactories_.size());
 		}
 
 		Rule * createRule() {
 			// get a random position in ruleFactories
-			unsigned int randomIndex = rand() % (unsigned int)activatedRuleFactories_.size();
-			return activatedRuleFactories_[randomIndex]->createRule(); 
+			return activatedRuleFactories_[randomGenerator.next()]->createRule(); 
 		}
 
 		std::string getName() {
@@ -210,6 +211,8 @@ namespace Prenzl {
 
 		std::vector<RuleFactory*> activatedRuleFactories_;
 		std::vector<RuleFactory*> allRuleFactories_;
+
+		ExhaustiveRandomGenerator randomGenerator;
 
 	};
 

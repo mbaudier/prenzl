@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <scrnsave.h>
+#include <Shlobj.h>
 
 #include "res/resource.h"
 

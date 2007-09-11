@@ -14,6 +14,7 @@
 #define IDD_ANYRULEDIALOG               113
 #define IDC_SPEED                       1005
 #define IDC_DELAY                       1006
+#define IDC_MAX_PIC_RATIO               1007
 #define IDC_TILE                        1014
 #define IDC_RULECOMBO                   1015
 #define IDC_VDIVCOMBO                   1016
@@ -46,6 +47,7 @@
 #define IDC_CLIPBOARD_CHECK             1036
 #define IDC_RED_DY                      1037
 #define IDC_COEFF_B                     1037
+#define IDC_RECURSE_INTO_SUBDIR         1037
 #define IDC_COEFF_G                     1038
 #define IDC_COEFF_R                     1039
 #define IDC_COLOR_INTERACTION           1040
@@ -65,6 +67,7 @@
 #define IDC_ACTIVATEDRULES              1053
 #define IDC_CHECK1                      1053
 #define IDC_RANDOMPROFILE               1053
+#define IDC_SPIN1                       1054
 #define DLG_SCRNSAVECONFIGURE           2003
 
 // Next default values for new objects
@@ -73,7 +76,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        114
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1054
+#define _APS_NEXT_CONTROL_VALUE         1055
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

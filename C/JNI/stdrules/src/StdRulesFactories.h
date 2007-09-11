@@ -15,6 +15,9 @@
 #include "Rules/stdrules/ColorHydra.h"
 #include "Rules/stdrules/Braque.h"
 #include "Rules/stdrules/Roger.h"
+#include "Rules/stdrules/Genetic.h"
+#include "Rules/stdrules/Pipes.h"
+
 
 namespace Prenzl {
 
@@ -236,6 +239,37 @@ namespace Prenzl {
 		}				
 	};	
 	
+	class GeneticFact : public RFactory {
+	public:
+		std::string getName() { return "Genetic";}
+		Rule * createRule(const CProperties& prop) {
+			return new Genetic();
+		}				
+	};	
+	
+	class PipesFact : public RFactory {
+	public:
+		std::string getName() { return "Pipes";}
+		Rule * createRule(const CProperties& prop) {
+			return new Pipes(
+				prop.getValueAsInt("DirectionBit"),
+				prop.getValueAsInt("UnconnectedDecrease"),
+				prop.getValueAsInt("ConnectedDecrease"),	
+				prop.getValueAsInt("CreationDecrease"),
+				prop.getValueAsInt("FullyConnectedDecrease")	
+			);
+		}			
+		CProperties getDefaultProperties() {
+			CProperties prop;
+			prop.setIntValue("DirectionBit", 4);			
+			prop.setIntValue("UnconnectedDecrease", 2);			
+			prop.setIntValue("ConnectedDecrease", 1);			
+			prop.setIntValue("CreationDecrease", 1);			
+			prop.setIntValue("FullyConnectedDecrease", 0);			
+			return prop;
+		}			
+	};	
+	
 	void registerFactory(RFactory * factory, std::map<std::string, RFactory *>& factories) {
 		factories[factory->getName()] = factory;
 	}
@@ -255,6 +289,8 @@ namespace Prenzl {
 		registerFactory( new ColorHydraFact(), factories);
 		registerFactory( new BraqueFact(), factories);
 		registerFactory( new RogerFact(), factories);
+		registerFactory( new GeneticFact(), factories);
+		registerFactory( new PipesFact(), factories);
 		std::cout << factories.size() << " Factories created" << std::endl;
 		return factories;
 	}	

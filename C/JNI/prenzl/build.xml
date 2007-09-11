@@ -1,13 +1,23 @@
 <project>
-	<property name="factory.dir" location="../../../PrenzlFactory" />
+	<property name="factory.dir" location="../../../Factory" />
 	<property name="prenzl.plugin.dir" location="../../../net.sf.prenzl" />
 
 	<import file="${factory.dir}/build-import.xml" />
 
-	<target name="build" depends="build.mac">
+	<target name="build" depends="init,build.mac,build.win">
 	</target>
 
-	<target name="build.mac">
+	<target name="init">
+		<condition property="os.win">
+			<os family="windows" />
+		</condition>
+		<condition property="os.mac">
+			<os family="mac" />
+		</condition>
+	</target>
+
+
+	<target name="build.mac" if="os.mac">
 		<gcc.compile.mac component="JNIComputation" />
 
 		<mkdir dir="${dist.dir}" />
@@ -27,7 +37,7 @@
 		</copy>
 	</target>
 
-	<target name="build.win32" depends="clean">
+	<target name="build.win" if="os.win">
 		<gcc.compile component="JNIComputation" />
 
 		<mkdir dir="${dist.dir}" />

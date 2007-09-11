@@ -52,7 +52,7 @@ namespace Prenzl {
 
 			// get all the pictures files if config.useFileAsInput is true 
 			if(config.useFileAsInput) {
-				fileAccessor.init(config.inputDirectory.c_str());
+				fileAccessor.init(config.inputDirectory.c_str(), config.recurseIntoSubDirectories);
 				if(fileAccessor.hasNoFiles()) {
 					config.useFileAsInput = false;
 				}
@@ -188,16 +188,59 @@ namespace Prenzl {
 				HBITMAP tmpBMP = findBitMapInPictureFiles();	
 
 				if(tmpBMP) {
-					if(screenBMP) {
-						DeleteObject(screenBMP);
-						screenBMP = 0;
-					}
-					screenBMP = tmpBMP;
+					BITMAP bm;
+					::GetObject( tmpBMP, sizeof( bm ), &bm );
 
-					SelectObject(bmpHDC, screenBMP);			
+					int maxWidth = saturate(screen.right*config.maxPictureRatio / 100, 40, screen.right);
+					int maxHeight = saturate(screen.bottom*config.maxPictureRatio / 100, 40, screen.bottom);
+
+					// see if the bmp is not bigger than the screen
+					if((bm.bmWidth > maxWidth) || (bm.bmHeight > maxHeight)) {
+						// the picture is two big
+						// downscale it
+
+						// find the right zoom (isomorph)
+						float xZoom = (float) maxWidth / (float) bm.bmWidth;
+						float yZoom = (float) maxHeight / (float) bm.bmHeight;
+
+						// take the min zoom
+						float zoom = (xZoom < yZoom) ? xZoom : yZoom;
+
+						int displayWidth  = (int) (bm.bmWidth * zoom);
+						int displayHeight = (int) (bm.bmHeight * zoom);
+
+						// put the tmpBMP in the transitHDC
+						SelectObject(transitHDC, tmpBMP);			
+
+						// create a new BMP with the screens size
+						if(screenBMP) {
+							DeleteObject(screenBMP);
+							screenBMP = 0;
+						}
+						screenBMP = CreateCompatibleBitmap(transitHDC, displayWidth, displayHeight);   
+						SelectObject(bmpHDC, screenBMP);			
+
+						// to have a nice streching
+						SetStretchBltMode(bmpHDC, HALFTONE);
+
+						StretchBlt(bmpHDC, 0, 0, displayWidth, displayHeight, 
+								transitHDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY); 
+
+						DeleteObject(tmpBMP);
+					}
+					else {
+						// no downscaling necessary
+
+						if(screenBMP) {
+							DeleteObject(screenBMP);
+							screenBMP = 0;
+						}
+						screenBMP = tmpBMP;
+
+						SelectObject(bmpHDC, screenBMP);			
+					}
 
 					// get the size of the bitmap
-					BITMAP bm;
 					::GetObject( screenBMP, sizeof( bm ), &bm );
 					width = bm.bmWidth;
 					height = bm.bmHeight ;

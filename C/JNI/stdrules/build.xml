@@ -1,33 +1,43 @@
 <project>
-	<property name="factory.dir" location="../../../PrenzlFactory"/> 
-	
-	<import file="${factory.dir}/build-import.xml"/>
+	<property name="factory.dir" location="../../../Factory" />
 
-	<property name="stdrules.plugin.dir" location="../../../net.sf.prenzl.stdrules"/> 
+	<import file="${factory.dir}/build-import.xml" />
 
-	<target name="build" depends="build.mac">
+	<property name="stdrules.plugin.dir" location="../../../net.sf.prenzl.stdrules" />
+
+	<target name="build" depends="init,build.win,build.mac">
+
 	</target>
 
-	<target name="build.mac">
-		<gcc.compile.mac component="StdRules"/>
-		<gcc.link.rule.mac component="StdRules" output="libstdrules.jnilib"/>
+	<target name="init">
+		<condition property="os.win">
+			<os family="windows" />
+		</condition>
+		<condition property="os.mac">
+			<os family="mac" />
+		</condition>
+	</target>
+
+	<target name="build.mac" if="os.mac">
+		<gcc.compile.mac component="StdRules" />
+		<gcc.link.rule.mac component="StdRules" output="libstdrules.jnilib" />
 
 		<copy todir="${stdrules.plugin.dir}" verbose="true" overwrite="true">
-			<fileset dir="${dist.dir}" includes="*.jnilib"/>
+			<fileset dir="${dist.dir}" includes="*.jnilib" />
 		</copy>
 	</target>
 
-	<target name="build.win32" depends="clean">
-		<gcc.compile component="StdRules"/>
-		<gcc.link.rule component="StdRules" output="stdrules.dll"/>
+	<target name="build.win" if="os.win">
+		<gcc.compile component="StdRules" />
+		<gcc.link.rule component="StdRules" output="stdrules.dll" />
 
 		<copy todir="${stdrules.plugin.dir}" verbose="true" overwrite="true">
-			<fileset dir="${dist.dir}" includes="*.dll"/>
+			<fileset dir="${dist.dir}" includes="*.dll" />
 		</copy>
 	</target>
 
 	<target name="clean">
-		<clean/>
+		<clean />
 	</target>
-	
+
 </project>

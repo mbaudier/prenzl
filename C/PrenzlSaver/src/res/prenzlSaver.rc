@@ -52,22 +52,22 @@ END
 // Dialog
 //
 
-DLG_SCRNSAVECONFIGURE DIALOGEX 0, 0, 237, 281
+DLG_SCRNSAVECONFIGURE DIALOGEX 0, 0, 237, 308
 STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "PrenzlSaver"
 FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
-    RTEXT           "Slow",IDC_STATIC,15,140,16,8
+    RTEXT           "Slow",IDC_STATIC,15,169,16,8
     CONTROL         "Slider1",IDC_SPEED,"msctls_trackbar32",TBS_BOTH | 
-                    TBS_NOTICKS | WS_TABSTOP,35,139,171,12
-    RTEXT           "=",IDC_STATIC,101,154,10,8
-    EDITTEXT        IDC_DELAY,117,152,44,12,ES_CENTER | ES_AUTOHSCROLL | 
+                    TBS_NOTICKS | WS_TABSTOP,35,168,171,12
+    RTEXT           "=",IDC_STATIC,101,183,10,8
+    EDITTEXT        IDC_DELAY,117,181,44,12,ES_RIGHT | ES_AUTOHSCROLL | 
                     ES_NUMBER
-    DEFPUSHBUTTON   "&OK",IDOK,123,242,50,14
-    PUSHBUTTON      "&Cancel",IDCANCEL,180,242,50,14
-    RTEXT           "Vertical Divisions:",IDC_STATIC,33,62,56,8
-    RTEXT           "Horizontal Divisions:",IDC_STATIC,33,76,64,8
+    DEFPUSHBUTTON   "&OK",IDOK,123,270,50,14
+    PUSHBUTTON      "&Cancel",IDCANCEL,180,270,50,14
+    RTEXT           "Vertical split",IDC_STATIC,33,62,38,8
+    RTEXT           "Horizontal split",IDC_STATIC,33,76,46,8
     COMBOBOX        IDC_RULECOMBO,22,15,108,74,CBS_DROPDOWNLIST | 
                     CBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
     COMBOBOX        IDC_VDIVCOMBO,106,60,91,74,CBS_DROPDOWNLIST | 
@@ -75,30 +75,36 @@ BEGIN
     COMBOBOX        IDC_HDIVCOMBO,106,74,91,74,CBS_DROPDOWNLIST | 
                     CBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
     PUSHBUTTON      "Properties",IDC_PROPBUTTON,158,14,50,14
-    RTEXT           "Fast",IDC_STATIC,207,140,14,8
-    RTEXT           "ms delay",IDC_STATIC,165,154,29,8
-    LTEXT           "PrenzlSaver 1.0 - Copyright 2006 - Mathieu Baudier/Olivier Capillon",
-                    IDC_STATIC,10,264,220,10
-    COMBOBOX        IDC_POSITION_COMBO,83,187,91,74,CBS_DROPDOWNLIST | 
+    RTEXT           "Fast",IDC_STATIC,207,169,14,8
+    RTEXT           "ms delay",IDC_STATIC,165,183,29,8
+    LTEXT           "PrenzlSaver 1.1 - Copyright 2006 - Mathieu Baudier/Olivier Capillon",
+                    IDC_STATIC,10,291,220,10
+    COMBOBOX        IDC_POSITION_COMBO,83,216,91,74,CBS_DROPDOWNLIST | 
                     CBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
-    RTEXT           "Position:",IDC_STATIC,15,190,28,8
+    RTEXT           "Position:",IDC_STATIC,15,219,28,8
     CONTROL         "Restart after",IDC_RESTART_CHECK,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,18,204,55,10
-    EDITTEXT        IDC_RESTART_NB,83,202,57,14,ES_RIGHT | ES_AUTOHSCROLL | 
+                    BS_AUTOCHECKBOX | WS_TABSTOP,18,233,55,10
+    EDITTEXT        IDC_RESTART_NB,83,231,57,14,ES_RIGHT | ES_AUTOHSCROLL | 
                     ES_NUMBER
-    LTEXT           "iterations",IDC_STATIC,146,205,29,8
+    LTEXT           "iterations",IDC_STATIC,146,234,29,8
     CONTROL         "Put last image in clipboard",IDC_CLIPBOARD_CHECK,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,18,219,98,10
-    CONTROL         "Use Screen as Input",IDC_SCREEN_RADIO,"Button",
-                    BS_AUTORADIOBUTTON,21,49,81,10
-    CONTROL         "Use Pictures from Directory as Input",IDC_DIR_RADIO,
-                    "Button",BS_AUTORADIOBUTTON,21,90,129,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,18,248,98,10
+    CONTROL         "Use screen as input",IDC_SCREEN_RADIO,"Button",
+                    BS_AUTORADIOBUTTON,21,49,79,10
+    CONTROL         "Use pictures from directory as input",IDC_DIR_RADIO,
+                    "Button",BS_AUTORADIOBUTTON,21,90,126,10
     EDITTEXT        IDC_DIRECTORY,34,103,148,14,ES_AUTOHSCROLL
     GROUPBOX        "Rule",IDC_STATIC,7,4,223,31
-    GROUPBOX        "Speed",IDC_STATIC,7,128,223,44
-    GROUPBOX        "Input",IDC_STATIC,7,38,223,86
-    GROUPBOX        "Other",IDC_STATIC,7,176,223,58
+    GROUPBOX        "Speed",IDC_STATIC,7,157,223,44
+    GROUPBOX        "Input",IDC_STATIC,7,38,223,115
+    GROUPBOX        "Other",IDC_STATIC,7,205,223,58
     PUSHBUTTON      "...",IDC_BROWSEDIRBUTTON,186,103,31,14
+    EDITTEXT        IDC_MAX_PIC_RATIO,122,134,22,12,ES_RIGHT | 
+                    ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Resize pictures bigger than",IDC_STATIC,34,136,88,8
+    LTEXT           "% of screen dimensions",IDC_STATIC,146,136,79,8
+    CONTROL         "Recurse into subdirectories",IDC_RECURSE_INTO_SUBDIR,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,34,121,101,10
 END
 
 
@@ -115,7 +121,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 230
         TOPMARGIN, 7
-        BOTTOMMARGIN, 274
+        BOTTOMMARGIN, 301
     END
 END
 #endif    // APSTUDIO_INVOKED

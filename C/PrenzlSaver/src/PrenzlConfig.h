@@ -43,6 +43,8 @@ namespace Prenzl {
 		bool saveToClipBoard;
 		bool useFileAsInput;
 		std::string inputDirectory;
+		int maxPictureRatio;		// max percentage of screen a picture can have
+		bool recurseIntoSubDirectories;
 
 		std::vector<RuleFactory*> ruleFactories;
 
@@ -53,16 +55,19 @@ namespace Prenzl {
 
 			try {
 				RegistryAccessor accessor;
-				delay = accessor.readDWORD("Delay", 35);
-				ruleID = saturate(accessor.readDWORD("RuleID"), 0, (int)ruleFactories.size() - 1);
-				vdiv = saturate(accessor.readDWORD("V_DIV"), 0, 3);
-				hdiv = saturate(accessor.readDWORD("H_DIV"), 0, 3);
-				position = saturate(accessor.readDWORD("Tile"), 0, MAX_VALUE);
-				nbGenBeforeRestart = saturate(accessor.readDWORD("RESTART_NB"), 0, 0x7FFFFFFF);
-				restartActivated = accessor.readDWORD("RESTART_ACTIVATED") != 0;
+				delay = accessor.readDWORD("DELAY", 35);
+				int randomRuleIndex = (int)ruleFactories.size() - 1; // also the last rule index
+				ruleID = saturate(accessor.readDWORD("RULE_ID", randomRuleIndex), 0, randomRuleIndex); // Any Rule is default
+				vdiv = saturate(accessor.readDWORD("V_DIV", 1), 0, 3); // split in 2 by default
+				hdiv = saturate(accessor.readDWORD("H_DIV", 1), 0, 3); // split in 2 by default
+				position = saturate(accessor.readDWORD("SCREEN_POSITION", RANDOM), 0, MAX_VALUE);
+				nbGenBeforeRestart = saturate(accessor.readDWORD("RESTART_NB", 500), 0, 0x7FFFFFFF);
+				restartActivated = accessor.readDWORD("RESTART_ACTIVATED", 1) != 0;
 				saveToClipBoard = accessor.readDWORD("SAVE_TO_CLIPBOARD") != 0;
 				useFileAsInput = accessor.readDWORD("FILE_AS_INPUT") != 0;
 				inputDirectory = accessor.readString("INPUT_DIR");
+				maxPictureRatio = saturate(accessor.readDWORD("MAX_PIC_RATIO", 50),10,100);
+				recurseIntoSubDirectories = accessor.readDWORD("RECURSE_INTO_SUBDIR", 0) != 0;
 				return TRUE;
 			}
 			catch(std::exception& /*e*/) {
@@ -73,16 +78,18 @@ namespace Prenzl {
 		BOOL writeToRegistry() {
 			try {
 				RegistryAccessor accessor;
-				accessor.writeDWORD("Delay", delay);
-				accessor.writeDWORD("RuleID", ruleID);
+				accessor.writeDWORD("DELAY", delay);
+				accessor.writeDWORD("RULE_ID", ruleID);
 				accessor.writeDWORD("V_DIV", vdiv);
 				accessor.writeDWORD("H_DIV", hdiv);
-				accessor.writeDWORD("Tile", position);
+				accessor.writeDWORD("SCREEN_POSITION", position);
 				accessor.writeDWORD("RESTART_NB", nbGenBeforeRestart);
 				accessor.writeDWORD("RESTART_ACTIVATED", restartActivated ? 1 : 0);				
 				accessor.writeDWORD("SAVE_TO_CLIPBOARD", saveToClipBoard ? 1 : 0);
 				accessor.writeDWORD("FILE_AS_INPUT", useFileAsInput ? 1 : 0);
 				accessor.writeString("INPUT_DIR", inputDirectory.c_str());
+				accessor.writeDWORD("MAX_PIC_RATIO", maxPictureRatio);
+				accessor.writeDWORD("RECURSE_INTO_SUBDIR", recurseIntoSubDirectories ? 1 : 0);
 				return TRUE;
 			}
 			catch(std::exception& /*e*/) {
@@ -104,7 +111,7 @@ namespace Prenzl {
 				ruleFactories.push_back(new ColorHydraF());
 				ruleFactories.push_back(new BraqueF());
 				ruleFactories.push_back(new AnyRuleF(ruleFactories));
-//				ruleFactories.push_back(new TestRuleF());
+				ruleFactories.push_back(new TestRuleF());
 			}
 		}
 
