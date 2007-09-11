@@ -1,5 +1,5 @@
 <project>
-	<property name="factory.dir" location="../../../Factory"/> 
+	<property name="factory.dir" location="../../../PrenzlFactory"/> 
 	
 	<import file="${factory.dir}/build-import.xml"/>
 

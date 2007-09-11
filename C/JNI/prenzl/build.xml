@@ -1,5 +1,5 @@
 <project>
-	<property name="factory.dir" location="../../../Factory" />
+	<property name="factory.dir" location="../../../PrenzlFactory" />
 	<property name="prenzl.plugin.dir" location="../../../net.sf.prenzl" />
 
 	<import file="${factory.dir}/build-import.xml" />
