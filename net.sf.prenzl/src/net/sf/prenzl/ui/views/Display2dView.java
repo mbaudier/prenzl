@@ -122,7 +122,7 @@ public class Display2dView extends ViewPart implements Observer, ICountListener{
 		return computationUI;
 	}
 	public void setCount(final int count) {
-		if(!getSite().getWorkbenchWindow().getShell().isDisposed()){
+		if(getSite()!=null){
 			getSite().getWorkbenchWindow().getShell().getDisplay().asyncExec(new Runnable(){
 				public void run(){
 					if(statusLineManager!=null)
