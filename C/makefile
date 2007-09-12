@@ -12,12 +12,9 @@ ifeq ($(PLATFORM),win)
  INCLUDES = -I'$(JDK_HOME)/include' -I'$(JDK_HOME)/include/win32' -I$(SRCDIR)
  LIB_FLAGS = -mno-cygwin -Wl,--add-stdcall-alias -shared
 
- PRENZL_LIB = $(DISTDIR)/prenzl.dll
- PRENZL_BLIB = $(DISTDIR)/libprenzl.a
  STDRULES_LIB = $(DISTDIR)/stdrules.dll
 
  PLUGINS_DIR = ..
- PRENZL_INSTALL = $(PLUGINS_DIR)/net.sf.prenzl/prenzl.dll
  STDRULES_INSTALL = $(PLUGINS_DIR)/net.sf.prenzl.stdrules/stdrules.dll
 else 
 endif
@@ -28,12 +25,8 @@ ifeq ($(PLATFORM),macos)
  INCLUDES = -I/System/Library/Frameworks/JavaVM.framework/Headers -I$(SRCDIR)
  LIB_FLAGS = -dynamiclib -flat_namespace -undefined warning -framework JavaVM -L/usr/local/lib
  
- PRENZL_LIB = $(DISTDIR)/libprenzl.jnilib
- PRENZL_BLIB = $(DISTDIR)/libprenzl.dylib
  STDRULES_LIB = $(DISTDIR)/libstdrules.jnilib
 
- JAVA_EXTDIR = /Library/Java/Extensions
- PRENZL_INSTALL = $(JAVA_EXTDIR)/libprenzl.jnilib
  STDRULES_INSTALL = ../net.sf.prenzl.stdrules/libstdrules.jnilib
 else
 endif
@@ -53,38 +46,14 @@ endif
 
 deploy :
 ifeq ($(PLATFORM),win)
-	copy /Y $(PRENZL_LIB) $(PRENZL_INSTALL)
 	copy /Y $(STDRULES_LIB) $(STDRULES_INSTALL)
 else
-	#cp $(PRENZL_LIB) $(PRENZL_INSTALL)
 	cp $(STDRULES_LIB) $(STDRULES_INSTALL)
 endif
 
 clean :
 	rm -rf $(OUTDIR)
 	rm -rf $(DISTDIR)
-
-# PRENZL LIBRARY
-$(PRENZL_LIB) : $(OUTDIR)/JNIComputation.o
-ifeq ($(PLATFORM),win)
-	$(CC) $(LIB_FLAGS) -Wl,--out-implib=$(PRENZL_BLIB) $? -o $@
-else 
-endif
-
-ifeq ($(PLATFORM),macos)
-	$(CC) $(LIB_FLAGS) -Wl,-install_name,$(PRENZL_INSTALL) $? -o $@
-else
-endif
-
-$(PRENZL_BLIB) : $(PRENZL_LIB)
-ifeq ($(PLATFORM),macos)
-	cp $(PRENZL_LIB) $(PRENZL_BLIB)
-else
- # do nothing
-endif
-
-$(OUTDIR)/JNIComputation.o : $(SRCDIR)/JNI/stdrules/src/JNIComputation.cpp
-	$(CC) $(CFLAGS) $(INCLUDES) -o$@ $?
 
 # STANDARD RULES
 $(STDRULES_LIB) : $(OUTDIR)/StdRules.o
@@ -94,5 +63,5 @@ else
 	$(CC) $(LIB_FLAGS) -L$(DISTDIR) -lprenzl $(OUTDIR)/StdRules.o -o$@
 endif
 	
-$(OUTDIR)/StdRules.o : $(SRCDIR)/JNI/stdrules/src/StdRules.cpp
+$(OUTDIR)/StdRules.o : $(SRCDIR)/JNI/Rules/stdrules/StdRules.cpp
 	$(CC) $(CFLAGS) $(INCLUDES) -o$@ $?

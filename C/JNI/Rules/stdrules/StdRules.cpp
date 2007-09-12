@@ -1,9 +1,9 @@
 #include <string.h>
 #include <map>
 
-#include "JNI/prenzl/src/RegistryUtil.h"
-
+#include "JNI/Util/RegistryUtil.h"
 #include "Model/CProperties.h"
+
 #include "StdRulesFactories.h"
 
 #include "net_sf_prenzl_stdrules_StdRules.h"
