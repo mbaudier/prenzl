@@ -56,7 +56,7 @@ clean :
 	rm -rf $(DISTDIR)
 
 # STANDARD RULES
-$(STDRULES_LIB) : $(OUTDIR)/StdRules.o
+$(STDRULES_LIB) : $(OUTDIR)/StdRules.o $(OUTDIR)/StdRulesFactories.o
 ifeq ($(PLATFORM),macos)
 	$(CC) $(LIB_FLAGS) $? -Wl,-install_name,$(STDRULES_INSTALL) -o $@
 else
@@ -65,3 +65,7 @@ endif
 	
 $(OUTDIR)/StdRules.o : $(SRCDIR)/JNI/Rules/stdrules/StdRules.cpp
 	$(CC) $(CFLAGS) $(INCLUDES) -o$@ $?
+	
+$(OUTDIR)/StdRulesFactories.o : $(SRCDIR)/JNI/Rules/stdrules/StdRulesFactories.cpp
+	$(CC) $(CFLAGS) $(INCLUDES) -o$@ $?
+	
