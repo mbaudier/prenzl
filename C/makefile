@@ -31,8 +31,8 @@ ifeq ($(PLATFORM),macos)
  LIB_FLAGS = -dynamiclib -flat_namespace -undefined warning -framework JavaVM -L/usr/local/lib
  
  STDRULES_LIB = $(DISTDIR)/libstdrules.jnilib
- STDRULES_MAC_INSTALL = @executable_path/plugins/net.sf.prenzl.stdrules/libstdrules.jnilib
- TEST_STDRULES_DEPLOY = ../net.sf.prenzl.stdrules/libstdrules.jnilib
+ STDRULES_MAC_INSTALL = @executable_path/plugins/net.sf.prenzl.stdrules.macosx/libstdrules.jnilib
+ TEST_STDRULES_DEPLOY = ../net.sf.prenzl.stdrules.macosx/libstdrules.jnilib
 else
 endif
 
