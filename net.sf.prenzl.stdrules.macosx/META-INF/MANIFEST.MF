@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Macos Fragment
+Bundle-SymbolicName: net.sf.prenzl.stdrules.macosx
+Bundle-Version: 2.1.0.qualifier
+Fragment-Host: net.sf.prenzl.stdrules;bundle-version="2.1.0"
+Eclipse-PlatformFilter: (osgi.os=macosx)
