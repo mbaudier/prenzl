@@ -46,7 +46,6 @@ LGPL license
       <plugin id="org.eclipse.core.expressions"/>
       <plugin id="org.eclipse.core.jobs"/>
       <plugin id="org.eclipse.core.runtime"/>
-      <plugin id="org.eclipse.core.runtime.compatibility.auth"/>
       <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
       <plugin id="org.eclipse.equinox.app"/>
       <plugin id="org.eclipse.equinox.common"/>
@@ -58,17 +57,8 @@ LGPL license
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.swt"/>
       <plugin id="org.eclipse.swt.carbon.macosx" fragment="true"/>
-      <plugin id="org.eclipse.swt.gtk.linux.ppc"/>
-      <plugin id="org.eclipse.swt.gtk.linux.x86"/>
-      <plugin id="org.eclipse.swt.gtk.linux.x86_64"/>
-      <plugin id="org.eclipse.swt.gtk.solaris.sparc"/>
-      <plugin id="org.eclipse.swt.motif.aix.ppc"/>
-      <plugin id="org.eclipse.swt.motif.hpux.PA_RISC"/>
-      <plugin id="org.eclipse.swt.motif.linux.x86"/>
-      <plugin id="org.eclipse.swt.win32.win32.x86"/>
       <plugin id="org.eclipse.ui"/>
       <plugin id="org.eclipse.ui.carbon" fragment="true"/>
-      <plugin id="org.eclipse.ui.win32"/>
       <plugin id="org.eclipse.ui.workbench"/>
    </plugins>
 
