@@ -49,9 +49,9 @@ public class ComputationContributionItem extends ContributionItem {
 			List libraries = PrenzlPlugin.getLaunchModel().getLibraries();
 			if(libraries!=null && libraries.size()>0){
 				Library library = (Library)libraries.get(0);
-				String ruleNames[] = library.listComputations();
+				String ruleNames[] = library.listRules();
 				if(ruleNames!=null && ruleNames.length>0){
-					String firstRule = library.listComputations()[0];
+					String firstRule = library.listRules()[0];
 					updateComputation(library,firstRule);
 				}
 			}
@@ -90,8 +90,7 @@ public class ComputationContributionItem extends ContributionItem {
 	    	Menu menuLib = new Menu(toolBar.getShell(),SWT.DROP_DOWN);
 	    	miLib.setMenu(menuLib);
 
-		    String[] computations = library.listComputations();
-	    	//String[] computations = {"PhaseCheulou","OlNotBin"};
+		    String[] computations = library.listRules();
 		    for(int i=0; i<computations.length;i++){
 		    	final String computation = computations[i];
 			    MenuItem menuItem = new MenuItem(menuLib, SWT.PUSH);

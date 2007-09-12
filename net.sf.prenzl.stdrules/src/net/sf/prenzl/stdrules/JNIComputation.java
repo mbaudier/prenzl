@@ -1,17 +1,9 @@
-package net.sf.prenzl.adapter;
+package net.sf.prenzl.stdrules;
+
+import net.sf.prenzl.adapter.Computation;
 
 
 class JNIComputation extends Computation {
-  private static String LIB_NAME = "prenzl";
-
-  /** Creates registry on native side*/
-  public synchronized static native void initRegistry();
-  /** Cleans registry on native side*/
-	public synchronized static native void cleanRegistry();
-
-	static{
-		System.loadLibrary(LIB_NAME);
-	}
 	
 	private final int id;
 	JNIComputation(String name, int id){
@@ -25,11 +17,7 @@ class JNIComputation extends Computation {
 	 * @param imageBuffer the array where the native side will write*/
 	public synchronized native void getCurrent(byte[] imageBuffer);
 	/** Cleans assotiated resources and removes it from the registry*/
-	private synchronized native void clean();
-
-	public void cleanUp(){
-		clean();
-	}
+	public synchronized native void cleanUp();
 
 	public int getId(){
 		return id;

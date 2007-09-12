@@ -47,8 +47,6 @@ public class PrenzlPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 
-		Computation.initRegistries();
-
 		launchModel = new LaunchModel();
 		launchModel.setLibraries(loadLibraries());
 		
@@ -80,7 +78,6 @@ public class PrenzlPlugin extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		//saveLastPicFilesState();
-		Computation.cleanRegistries();
 
 		super.stop(context);
 		plugin = null;

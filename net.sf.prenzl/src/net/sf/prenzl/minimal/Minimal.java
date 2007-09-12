@@ -21,8 +21,8 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-public class Minimal implements MouseListener{
-	public final static String PROP_LIBRARIES = "prenzl.libraries";
+public class Minimal {//implements MouseListener{
+/*	public final static String PROP_LIBRARIES = "prenzl.libraries";
 	public final static String PROP_CONFIGURATION_URL = "prenzl.configuration.url";
 	public final static String PROP_INPUT_URL = "prenzl.input.url";
 
@@ -147,5 +147,5 @@ public class Minimal implements MouseListener{
 			throw new Exception("System property '"+propertyKey+"' has to be set.");
 		}
 	}
-
+*/
 }

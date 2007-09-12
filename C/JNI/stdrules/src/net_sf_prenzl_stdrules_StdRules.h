@@ -13,34 +13,34 @@ extern "C" {
 #define net_sf_prenzl_stdrules_StdRules_TYPE_JAVA 2L
 /*
  * Class:     net_sf_prenzl_stdrules_StdRules
- * Method:    init
+ * Method:    initJNIComputation
  * Signature: (Ljava/lang/String;Ljava/lang/String;II[B[BLjava/lang/String;)I
  */
-JNIEXPORT jint JNICALL Java_net_sf_prenzl_stdrules_StdRules_init
+JNIEXPORT jint JNICALL Java_net_sf_prenzl_stdrules_StdRules_initJNIComputation
   (JNIEnv *, jobject, jstring, jstring, jint, jint, jbyteArray, jbyteArray, jstring);
 
 /*
  * Class:     net_sf_prenzl_stdrules_StdRules
- * Method:    listComputations
+ * Method:    listJNIRules
  * Signature: ()[Ljava/lang/String;
  */
-JNIEXPORT jobjectArray JNICALL Java_net_sf_prenzl_stdrules_StdRules_listComputations
+JNIEXPORT jobjectArray JNICALL Java_net_sf_prenzl_stdrules_StdRules_listJNIRules
   (JNIEnv *, jobject);
 
 /*
  * Class:     net_sf_prenzl_stdrules_StdRules
- * Method:    listTopologies
+ * Method:    listJNITopologies
  * Signature: ()[Ljava/lang/String;
  */
-JNIEXPORT jobjectArray JNICALL Java_net_sf_prenzl_stdrules_StdRules_listTopologies
+JNIEXPORT jobjectArray JNICALL Java_net_sf_prenzl_stdrules_StdRules_listJNITopologies
   (JNIEnv *, jobject);
 
 /*
  * Class:     net_sf_prenzl_stdrules_StdRules
- * Method:    describeRuleProperties
+ * Method:    describeJNIRuleProperties
  * Signature: (Ljava/lang/String;)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_net_sf_prenzl_stdrules_StdRules_describeRuleProperties
+JNIEXPORT jstring JNICALL Java_net_sf_prenzl_stdrules_StdRules_describeJNIRuleProperties
   (JNIEnv *, jobject, jstring);
 
 #ifdef __cplusplus

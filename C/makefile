@@ -34,13 +34,13 @@ ifeq ($(PLATFORM),macos)
 
  JAVA_EXTDIR = /Library/Java/Extensions
  PRENZL_INSTALL = $(JAVA_EXTDIR)/libprenzl.jnilib
- STDRULES_INSTALL = $(JAVA_EXTDIR)/libstdrules.jnilib
+ STDRULES_INSTALL = ../net.sf.prenzl.stdrules/libstdrules.jnilib
 else
 endif
 
 
 
-all : init $(PRENZL_LIB) $(STDRULES_LIB)
+all : init $(STDRULES_LIB) deploy
 
 init :
 ifeq ($(PLATFORM),win)
@@ -56,7 +56,7 @@ ifeq ($(PLATFORM),win)
 	copy /Y $(PRENZL_LIB) $(PRENZL_INSTALL)
 	copy /Y $(STDRULES_LIB) $(STDRULES_INSTALL)
 else
-	cp $(PRENZL_LIB) $(PRENZL_INSTALL)
+	#cp $(PRENZL_LIB) $(PRENZL_INSTALL)
 	cp $(STDRULES_LIB) $(STDRULES_INSTALL)
 endif
 
@@ -83,13 +83,13 @@ else
  # do nothing
 endif
 
-$(OUTDIR)/JNIComputation.o : $(SRCDIR)/JNI/prenzl/src/JNIComputation.cpp
+$(OUTDIR)/JNIComputation.o : $(SRCDIR)/JNI/stdrules/src/JNIComputation.cpp
 	$(CC) $(CFLAGS) $(INCLUDES) -o$@ $?
 
 # STANDARD RULES
-$(STDRULES_LIB) : $(PRENZL_BLIB) $(OUTDIR)/StdRules.o
+$(STDRULES_LIB) : $(OUTDIR)/StdRules.o
 ifeq ($(PLATFORM),macos)
-	$(CC) $(LIB_FLAGS) -L$(DISTDIR) -lprenzl $? -Wl,-install_name,$(STDRULES_INSTALL) -o $@
+	$(CC) $(LIB_FLAGS) $? -Wl,-install_name,$(STDRULES_INSTALL) -o $@
 else
 	$(CC) $(LIB_FLAGS) -L$(DISTDIR) -lprenzl $(OUTDIR)/StdRules.o -o$@
 endif
