@@ -1,4 +1,4 @@
-PLATFORM = win
+PLATFORM = macos
 
 
 SRCDIR = .
