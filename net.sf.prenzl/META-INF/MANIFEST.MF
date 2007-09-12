@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Prenzl
 Bundle-SymbolicName: net.sf.prenzl; singleton:=true
-Bundle-Version: 2.0.4
+Bundle-Version: 2.1.0.qualifier
 Bundle-Activator: net.sf.prenzl.PrenzlPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,

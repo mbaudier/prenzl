@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Standard rules for Prenzl for win32
 Bundle-SymbolicName: net.sf.prenzl.stdrules; singleton:=true
-Bundle-Version: 2.0.4
+Bundle-Version: 2.1.0.qualifier
 Bundle-Activator: net.sf.prenzl.stdrules.StdRulesPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
