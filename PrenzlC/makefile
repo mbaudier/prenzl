@@ -15,8 +15,8 @@ ifeq ($(PLATFORM),win)
  INCLUDES = -I'$(JDK_HOME)/include' -I'$(JDK_HOME)/include/win32' -I$(SRCDIR)
  LIB_FLAGS = -mno-cygwin -Wl,--add-stdcall-alias -shared
 
- STDRULES_LIB = $(DISTDIR)/stdrules.dll
- TEST_STDRULES_DEPLOY = ../net.sf.prenzl.stdrules/stdrules.dll
+ STDRULES_LIB = $(DISTDIR)\stdrules.dll
+ TEST_STDRULES_DEPLOY = ..\net.sf.prenzl.stdrules.win32\stdrules.dll
 else 
 endif
 
@@ -37,14 +37,14 @@ else
 endif
 
 
-all : init $(STDRULES_LIB) deploy
+all : $(STDRULES_LIB) deploy
 
 # STANDARD RULES
 $(STDRULES_LIB) : $(OUTDIR)/StdRules.o $(OUTDIR)/StdRulesFactories.o
 ifeq ($(PLATFORM),macos)
 	$(CC) $(LIB_FLAGS) $? -Wl,-install_name,$(STDRULES_MAC_INSTALL) -o $@
 else
-	$(CC) $(LIB_FLAGS) -L$(DISTDIR) -lprenzl $(OUTDIR)/StdRules.o -o$@
+	$(CC) $(LIB_FLAGS) $? -o$@
 endif
 	
 $(OUTDIR)/StdRules.o : $(SRCDIR)/JNI/Rules/stdrules/StdRules.cpp
