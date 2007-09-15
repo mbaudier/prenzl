@@ -37,7 +37,7 @@ else
 endif
 
 
-all : $(STDRULES_LIB) deploy
+all : init $(STDRULES_LIB) deploy
 
 # STANDARD RULES
 $(STDRULES_LIB) : $(OUTDIR)/StdRules.o $(OUTDIR)/StdRulesFactories.o
@@ -55,8 +55,10 @@ $(OUTDIR)/StdRulesFactories.o : $(SRCDIR)/JNI/Rules/stdrules/StdRulesFactories.c
 	
 # UTILS
 init :
+ifeq ($(PLATFORM),macos)
 	$(MKDIR) $(OUTDIR)
 	$(MKDIR) $(DISTDIR)
+endif
 
 deploy :
 	$(COPY) $(STDRULES_LIB) $(TEST_STDRULES_DEPLOY)
