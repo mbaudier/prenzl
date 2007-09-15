@@ -1,7 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Win32 Fragment
-Bundle-SymbolicName: net.sf.prenzl.win32
+Bundle-SymbolicName: net.sf.prenzl.stdrules.win32
 Bundle-Version: 2.1.0
 Fragment-Host: net.sf.prenzl.stdrules;bundle-version="2.1.0"
 Bundle-Localization: plugin
+Eclipse-PlatformFilter: (osgi.os=win32)
