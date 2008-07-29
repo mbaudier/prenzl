@@ -1,4 +1,4 @@
-PLATFORM = macos
+PLATFORM = linux
 
 SRCDIR = .
 OUTDIR = out
@@ -17,10 +17,8 @@ ifeq ($(PLATFORM),win)
 
  STDRULES_LIB = $(DISTDIR)\stdrules.dll
  TEST_STDRULES_DEPLOY = ..\net.sf.prenzl.stdrules.win32\stdrules.dll
-else 
-endif
-
-ifeq ($(PLATFORM),macos)
+ 
+else ifeq ($(PLATFORM),macos)
  CC = /usr/bin/g++
  COPY = cp
  MKDIR = mkdir -p
@@ -33,6 +31,19 @@ ifeq ($(PLATFORM),macos)
  STDRULES_LIB = $(DISTDIR)/libstdrules.jnilib
  STDRULES_MAC_INSTALL = @executable_path/plugins/net.sf.prenzl.stdrules.macosx/libstdrules.jnilib
  TEST_STDRULES_DEPLOY = ../net.sf.prenzl.stdrules.macosx/libstdrules.jnilib
+ 
+else ifeq ($(PLATFORM),linux)
+ CC = /usr/bin/g++
+ COPY = cp
+ MKDIR = mkdir -p
+ DELDIR = rm -rf
+ 
+ CFLAGS = -D_REENTRANT -O3 -Wall -c -fmessage-length=0
+ INCLUDES = -I$(SRCDIR)
+ LIB_FLAGS = -shared    
+ 
+ STDRULES_LIB = $(DISTDIR)/libstdrules.so
+ TEST_STDRULES_DEPLOY = ../net.sf.prenzl.stdrules.linux/libstdrules.so
 else
 endif
 
@@ -43,6 +54,8 @@ all : init $(STDRULES_LIB) deploy
 $(STDRULES_LIB) : $(OUTDIR)/StdRules.o $(OUTDIR)/StdRulesFactories.o
 ifeq ($(PLATFORM),macos)
 	$(CC) $(LIB_FLAGS) $? -Wl,-install_name,$(STDRULES_MAC_INSTALL) -o $@
+else ifeq ($(PLATFORM),linux)
+	$(CC) $(LIB_FLAGS) $? -Wl,-soname,libstdrules.so -static -lc -o $@
 else
 	$(CC) $(LIB_FLAGS) $? -o$@
 endif
@@ -56,6 +69,9 @@ $(OUTDIR)/StdRulesFactories.o : $(SRCDIR)/JNI/Rules/stdrules/StdRulesFactories.c
 # UTILS
 init :
 ifeq ($(PLATFORM),macos)
+	$(MKDIR) $(OUTDIR)
+	$(MKDIR) $(DISTDIR)
+else ifeq ($(PLATFORM),linux)
 	$(MKDIR) $(OUTDIR)
 	$(MKDIR) $(DISTDIR)
 endif

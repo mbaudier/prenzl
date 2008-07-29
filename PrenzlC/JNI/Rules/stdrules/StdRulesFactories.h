@@ -13,6 +13,7 @@ public:
 	virtual CProperties getDefaultProperties() {
 		return CProperties();
 	}
+//	virtual ~RFactory();// causes undefined symbol error
 };
 
 void registerFactory(RFactory * factory,

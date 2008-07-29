@@ -60,7 +60,7 @@ namespace Prenzl {
 			return this->previous_[getPosition(i, j) + color];
 		}
 
-		JNIEXPORT void Topology::setCurrent(int i, int j, int color, unsigned char value) {
+		JNIEXPORT void setCurrent(int i, int j, int color, unsigned char value) {
 			this->current_[getPosition(i, j) + color] = value;
 		}
 
