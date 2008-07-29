@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Linux Fragment
+Bundle-SymbolicName: net.sf.prenzl.stdrules.linux
+Bundle-Version: 2.1.0
+Fragment-Host: net.sf.prenzl;bundle-version="2.1.0"
+Eclipse-PlatformFilter: (osgi.os=linux)
