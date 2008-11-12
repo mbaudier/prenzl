@@ -33,13 +33,14 @@ else ifeq ($(PLATFORM),macos)
  TEST_STDRULES_DEPLOY = ../net.sf.prenzl.stdrules.macosx/libstdrules.jnilib
  
 else ifeq ($(PLATFORM),linux)
+ JDK_HOME=/usr/lib/jvm/java-openjdk
  CC = /usr/bin/g++
  COPY = cp
  MKDIR = mkdir -p
  DELDIR = rm -rf
  
  CFLAGS = -D_REENTRANT -O3 -Wall -c -fmessage-length=0
- INCLUDES = -I$(SRCDIR)
+ INCLUDES =  -I'$(JDK_HOME)/include' -I'$(JDK_HOME)/include/linux' -I$(SRCDIR)
  LIB_FLAGS = -shared    
  
  STDRULES_LIB = $(DISTDIR)/libstdrules.so
