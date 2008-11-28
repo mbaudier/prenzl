@@ -113,7 +113,7 @@ public class Recorder {
 				JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
 				JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(img);
 				param.setQuality(qual, true);
-				param.setDensityUnit(JPEGEncodeParam.DENSITY_UNIT_DOTS_INCH);
+				//param.setDensityUnit(JPEGEncodeParam.DENSITY_UNIT_DOTS_INCH);
 				param.setXDensity(72);
 				param.setYDensity(72);
 				encoder.encode(img, param);
