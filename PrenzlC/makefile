@@ -39,12 +39,13 @@ else ifeq ($(PLATFORM),linux)
  MKDIR = mkdir -p
  DELDIR = rm -rf
  
- CFLAGS = -D_REENTRANT -O3 -Wall -c -fmessage-length=0
+#CFLAGS = -D_REENTRANT -O3 -fPIC -Wall -c -fmessage-length=0
+ CFLAGS = -O3 -fPIC -Wall -c -fmessage-length=0
  INCLUDES =  -I'$(JDK_HOME)/include' -I'$(JDK_HOME)/include/linux' -I$(SRCDIR)
  LIB_FLAGS = -shared    
  
  STDRULES_LIB = $(DISTDIR)/libstdrules.so
- TEST_STDRULES_DEPLOY = ../net.sf.prenzl.stdrules.linux/libstdrules.so
+ TEST_STDRULES_DEPLOY = ../net.sf.prenzl.stdrules.linux/lib/libstdrules.so
 else
 endif
 
@@ -56,7 +57,7 @@ $(STDRULES_LIB) : $(OUTDIR)/StdRules.o $(OUTDIR)/StdRulesFactories.o
 ifeq ($(PLATFORM),macos)
 	$(CC) $(LIB_FLAGS) $? -Wl,-install_name,$(STDRULES_MAC_INSTALL) -o $@
 else ifeq ($(PLATFORM),linux)
-	$(CC) $(LIB_FLAGS) $? -Wl,-soname,libstdrules.so -static -lc -o $@
+	$(CC) $(LIB_FLAGS) $? -Wl,-soname,libstdrules.so -o $@
 else
 	$(CC) $(LIB_FLAGS) $? -o$@
 endif
