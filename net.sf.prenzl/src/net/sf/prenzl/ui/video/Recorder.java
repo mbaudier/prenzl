@@ -9,9 +9,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Vector;
 
-import net.sf.prenzl.PrenzlPlugin;
-import net.sf.prenzl.util.Log;
-
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
@@ -23,9 +20,12 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import net.sf.prenzl.PrenzlPlugin;
+import net.sf.prenzl.util.Log;
+
+//import com.sun.image.codec.jpeg.JPEGCodec;
+//import com.sun.image.codec.jpeg.JPEGEncodeParam;
+//import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 public class Recorder {
 	private final Vector frames;
@@ -109,14 +109,14 @@ public class Recorder {
 			}
 
 			if (isQualityLevel) {
-				BufferedImage img = convertToAWT(imageData);
-				JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-				JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(img);
-				param.setQuality(qual, true);
-				//param.setDensityUnit(JPEGEncodeParam.DENSITY_UNIT_DOTS_INCH);
-				param.setXDensity(72);
-				param.setYDensity(72);
-				encoder.encode(img, param);
+				throw new UnsupportedOperationException("Quality level is currently not supported");
+//				BufferedImage img = convertToAWT(imageData);
+//				JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+//				JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(img);
+//				param.setQuality(qual, true);
+//				param.setXDensity(72);
+//				param.setYDensity(72);
+//				encoder.encode(img, param);
 			} else if (quality.equals("fast")) {// swt
 				ImageLoader imgl = new ImageLoader();
 				imgl.data = new ImageData[] { imageData };
@@ -131,16 +131,15 @@ public class Recorder {
 			Log.info("Recorded image ");
 
 			/*
-			 * String countStr = null; if(cCount<10){ countStr =
-			 * "00000"+cCount; } else if(cCount<100){ countStr = "0000"+cCount; }
-			 * else if(cCount<1000){ countStr = "000"+cCount; } else if(cCount<10000){
-			 * countStr = "00"+cCount; } else if(cCount<100000){ countStr =
-			 * "0"+cCount; } else{ countStr = Integer.toString(cCount); }
+			 * String countStr = null; if(cCount<10){ countStr = "00000"+cCount; } else
+			 * if(cCount<100){ countStr = "0000"+cCount; } else if(cCount<1000){ countStr =
+			 * "000"+cCount; } else if(cCount<10000){ countStr = "00"+cCount; } else
+			 * if(cCount<100000){ countStr = "0"+cCount; } else{ countStr =
+			 * Integer.toString(cCount); }
 			 * 
-			 * File file = new File(dumpDir.getPath() + File.separator + "img-" +
-			 * countStr + ".jpg"); FileOutputStream out = new
-			 * FileOutputStream(file); imgl.save(out, SWT.IMAGE_JPEG);
-			 * out.close(); Log.info("Dumped " + file);
+			 * File file = new File(dumpDir.getPath() + File.separator + "img-" + countStr +
+			 * ".jpg"); FileOutputStream out = new FileOutputStream(file); imgl.save(out,
+			 * SWT.IMAGE_JPEG); out.close(); Log.info("Dumped " + file);
 			 */
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -151,11 +150,11 @@ public class Recorder {
 		if (imagesToMovie != null) {
 			imagesToMovie.cleanUp();
 		}
-		
+
 		File dir = new File(moviePath).getParentFile();
 		File[] files = dir.listFiles();
-		for(int i=0;i<files.length;i++){
-			if(files[i].getName().indexOf(".nonstreamable")>=0){
+		for (int i = 0; i < files.length; i++) {
+			if (files[i].getName().indexOf(".nonstreamable") >= 0) {
 				files[i].delete();
 			}
 		}
@@ -171,8 +170,7 @@ public class Recorder {
 	}
 
 	public static Recorder askForMovieLocation() {
-		Shell shell = PrenzlPlugin.getDefaultWorkbench()
-				.getActiveWorkbenchWindow().getShell();
+		Shell shell = PrenzlPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getShell();
 		FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
 		fileDialog.setFilterExtensions(new String[] { "*.mov" });
 		final String path;
@@ -190,7 +188,7 @@ public class Recorder {
 							return e.getMessage();
 						}
 					}
-					
+
 					if (quality.equals("fast")) {
 						return null;
 					} else if (quality.equals("high")) {
@@ -207,16 +205,14 @@ public class Recorder {
 
 			};
 
-			InputDialog dialog = new InputDialog(
-					shell,
-					"Video quality",
-					"Please enter video quality: 'fast', 'high' or a rate between 0.0 (low) and 1.0 (high)",
-					"fast", validator);
+			InputDialog dialog = new InputDialog(shell, "Video quality",
+					"Please enter video quality: 'fast', 'high' or a rate between 0.0 (low) and 1.0 (high)", "fast",
+					validator);
 			if (dialog.open() == Window.OK) {
 				String[] params = parseParams(dialog.getValue());
 				String quality = params[0];
 				String frameRate = params[1];
-				return new Recorder(path, quality, frameRate!=null?Integer.parseInt(frameRate):10);
+				return new Recorder(path, quality, frameRate != null ? Integer.parseInt(frameRate) : 10);
 			}
 
 		}
@@ -228,9 +224,9 @@ public class Recorder {
 
 		String quality = null;
 		String frameRate = null;
-		if (comaIndex > 0 && comaIndex+1<newText.length()) {
+		if (comaIndex > 0 && comaIndex + 1 < newText.length()) {
 			quality = newText.substring(0, comaIndex).toLowerCase();
-			frameRate = newText.substring(comaIndex+1);
+			frameRate = newText.substring(comaIndex + 1);
 		} else {
 			quality = newText.toLowerCase();
 		}
@@ -242,11 +238,9 @@ public class Recorder {
 		ColorModel colorModel = null;
 		PaletteData palette = data.palette;
 		if (palette.isDirect) {
-			colorModel = new DirectColorModel(data.depth, palette.redMask,
-					palette.greenMask, palette.blueMask);
+			colorModel = new DirectColorModel(data.depth, palette.redMask, palette.greenMask, palette.blueMask);
 			BufferedImage bufferedImage = new BufferedImage(colorModel,
-					colorModel.createCompatibleWritableRaster(data.width,
-							data.height), false, null);
+					colorModel.createCompatibleWritableRaster(data.width, data.height), false, null);
 			WritableRaster raster = bufferedImage.getRaster();
 			int[] pixelArray = new int[3];
 			for (int y = 0; y < data.height; y++) {
@@ -272,15 +266,12 @@ public class Recorder {
 				blue[i] = (byte) rgb.blue;
 			}
 			if (data.transparentPixel != -1) {
-				colorModel = new IndexColorModel(data.depth, rgbs.length, red,
-						green, blue, data.transparentPixel);
+				colorModel = new IndexColorModel(data.depth, rgbs.length, red, green, blue, data.transparentPixel);
 			} else {
-				colorModel = new IndexColorModel(data.depth, rgbs.length, red,
-						green, blue);
+				colorModel = new IndexColorModel(data.depth, rgbs.length, red, green, blue);
 			}
 			BufferedImage bufferedImage = new BufferedImage(colorModel,
-					colorModel.createCompatibleWritableRaster(data.width,
-							data.height), false, null);
+					colorModel.createCompatibleWritableRaster(data.width, data.height), false, null);
 			WritableRaster raster = bufferedImage.getRaster();
 			int[] pixelArray = new int[1];
 			for (int y = 0; y < data.height; y++) {
